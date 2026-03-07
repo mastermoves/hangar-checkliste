@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hangar Studio – Studiomeister Checkliste → Protokoll</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#111826;
+      --soft:#0f1520;
+      --muted:#9aa4b2;
+      --text:#e6edf3;
+      --ok:#2ecc71;
+      --bad:#ff5c5c;
+      --line:#233044;
+      --accent:#4f8cff;
+      --shadow: 0 12px 34px rgba(0,0,0,.35);
+      --shadow2: 0 8px 20px rgba(0,0,0,.25);
+      --radius: 16px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 15% 0%, rgba(79,140,255,.18), transparent 55%),
+        radial-gradient(900px 520px at 80% 10%, rgba(46,204,113,.12), transparent 55%),
+        radial-gradient(600px 400px at 40% 100%, rgba(255,92,92,.08), transparent 60%),
+        var(--bg);
+    }
+
+    .wrap{ max-width: 1040px; margin:0 auto; padding: 22px; }
+    header{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+      margin: 4px 0 14px;
+    }
+    h1{
+      font-size: 20px;
+      margin:0;
+      letter-spacing:.2px;
+    }
+    .subtitle{ color:var(--muted); font-size: 13px; margin-top:6px; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(15,21,32,.75);
+      font-size: 12px;
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .dot{ width:8px; height:8px; border-radius:99px; background: var(--accent); display:inline-block; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+      align-items:start;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+
+    h2{ margin:0 0 10px; font-size: 15px; letter-spacing:.2px; }
+    .muted{ color:var(--muted); font-size: 13px; }
+
+    label{
+      display:block;
+      font-size: 12.5px;
+      margin: 10px 0 6px;
+      color: var(--muted);
+    }
+
+    input[type="text"], input[type="date"], textarea, select{
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border:1px solid var(--line);
+      background: rgba(15,21,32,.9);
+      color: var(--text);
+      outline:none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    input[type="text"]:focus, input[type="date"]:focus, textarea:focus, select:focus{
+      border-color: rgba(79,140,255,.65);
+      box-shadow: 0 0 0 3px rgba(79,140,255,.12);
+    }
+    textarea{ min-height: 92px; resize: vertical; }
+
+    .row{ display:flex; gap:10px; }
+    .row > *{ flex:1; }
+
+    .items{ display:flex; flex-direction:column; gap: 10px; margin-top: 10px; }
+
+    .item{
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(15,21,32,.85);
+      box-shadow: var(--shadow2);
+    }
+
+    .item-top{
+      display:flex; align-items:flex-start; justify-content:space-between; gap: 10px;
+    }
+
+    .item-title{
+      display:flex; gap:10px; align-items:flex-start;
+      min-width: 0;
+    }
+
+    .item-title input[type="checkbox"]{
+      width:18px; height:18px; margin-top: 3px; accent-color: var(--accent);
+    }
+
+    .item h3{
+      margin:0;
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .tag{
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      color: var(--muted);
+      display:inline-block;
+      margin-top: 6px;
+    }
+    .badge-ok{ border-color: rgba(46,204,113,.45); color: var(--ok); }
+    .badge-bad{ border-color: rgba(255,92,92,.45); color: var(--bad); }
+
+    .item-actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-shrink:0;
+    }
+    .item-actions select{
+      width: 92px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .btns{ display:flex; flex-wrap:wrap; gap: 10px; margin-top: 12px; }
+
+    button{
+      border:1px solid var(--line);
+      background: rgba(15,21,32,.9);
+      color:var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 650;
+      transition: transform .04s ease, background .15s ease, border-color .15s ease;
+    }
+    button:hover{ border-color: rgba(79,140,255,.35); }
+    button:active{ transform: translateY(1px); }
+    button.primary{
+      background: linear-gradient(180deg, rgba(79,140,255,.28), rgba(79,140,255,.14));
+      border-color: rgba(79,140,255,.55);
+    }
+    button.danger{
+      background: rgba(255,92,92,.12);
+      border-color: rgba(255,92,92,.35);
+    }
+    button:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .small{ font-size: 12px; color:var(--muted); margin-top: 8px; }
+
+    .proto pre{
+      white-space: pre-wrap;
+      background: rgba(15,21,32,.85);
+      border:1px solid var(--line);
+      padding: 12px;
+      border-radius: 14px;
+      margin:0;
+      max-height: 52vh;
+      overflow:auto;
+    }
+
+    .protoTop{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+      header{ align-items:flex-start; }
+    }
+
+    @media print {
+      body { background:#fff; color:#000; }
+      header, .btns, .small { display:none !important; }
+      .wrap{ max-width:none; padding:0; }
+      .card{ box-shadow:none; border-color:#ccc !important; background:#fff; }
+      input, textarea, select, button, .item { border-color:#ccc !important; background:#fff !important; color:#000 !important; }
+      .proto pre { max-height:none; overflow:visible; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Hangar Studio – Studiomeister Checkliste</h1>
+        <div class="subtitle">Checkliste ausfüllen → Protokoll erstellen → Download oder Drucken (PDF).</div>
+      </div>
+      <div class="pill" id="statusPill"><span class="dot"></span><span>Status: –</span></div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Checkliste</h2>
+
+        <div class="row">
+          <div>
+            <label>Projekt / Auftrag</label>
+            <input id="project" type="text" placeholder="z. B. Studiomeister – Tagesabschluss" />
+          </div>
+          <div>
+            <label>Datum</label>
+            <input id="date" type="date" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Ort</label>
+            <input id="location" type="text" placeholder="Hangar Studio" />
+          </div>
+          <div>
+            <label>Bearbeiter:in</label>
+            <input id="author" type="text" placeholder="Name" />
+          </div>
+        </div>
+
+        <label>Allgemeine Notizen</label>
+        <textarea id="generalNotes" placeholder="Kurz: Besonderheiten, Defekte, Abweichungen, Maßnahmen..."></textarea>
+
+        <div class="row">
+          <div>
+            <label>Neue Checklisten-Zeile hinzufügen</label>
+            <input id="newItemTitle" type="text" placeholder="z. B. Müll entsorgt / Vorhanglager geschlossen" />
+          </div>
+          <div style="flex:0.7;">
+            <label>Status (Optional)</label>
+            <select id="newItemStatus">
+              <option value="auto">Automatisch (Checkbox)</option>
+              <option value="ok">OK</option>
+              <option value="issue">Issue</option>
+            </select>
+          </div>
+          <div style="flex:0.6;">
+            <label>&nbsp;</label>
+            <button id="addItemBtn" class="primary">Hinzufügen</button>
+          </div>
+        </div>
+
+        <div class="items" id="items"></div>
+
+        <div class="btns">
+          <button id="makeProtoBtn" class="primary">Protokoll erstellen</button>
+          <button id="saveStateBtn">Zwischenstand speichern</button>
+          <button id="loadStateBtn">Zwischenstand laden</button>
+          <button id="resetBtn" class="danger">Alles zurücksetzen</button>
+        </div>
+
+        <div class="small">Hinweis: Zwischenstand wird lokal im Browser gespeichert (localStorage).</div>
+      </div>
+
+      <div class="card proto">
+        <div class="protoTop">
+          <div>
+            <h2 style="margin:0 0 4px;">Protokoll</h2>
+            <div class="muted">Download als HTML/TXT oder Drucken → PDF.</div>
+          </div>
+        </div>
+
+        <div class="btns" style="margin-top:0;">
+          <button id="downloadHtmlBtn" disabled>Protokoll (.html)</button>
+          <button id="downloadTxtBtn" disabled>Protokoll (.txt)</button>
+          <button id="printBtn" disabled>Drucken / PDF</button>
+        </div>
+
+        <div style="margin-top:12px;">
+          <pre id="protoText">Noch kein Protokoll erstellt.</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ---------- Default checklist items (Hangar Studio – Studiomeister) ----------
+  const DEFAULT_ITEMS = [
+    { title: "Strom aus", checked: false, note: "", status: "auto" },
+    { title: "Studiotechnik ausgeschaltet", checked: false, note: "", status: "auto" },
+    { title: "Akku aus Fernbedienung", checked: false, note: "", status: "auto" },
+    { title: "Böcke an Standardposition", checked: false, note: "", status: "auto" },
+    { title: "Traversen geprüft", checked: false, note: "", status: "auto" },
+    { title: "Alarm scharf", checked: false, note: "", status: "auto" },
+    { title: "Einfahrt verriegelt", checked: false, note: "", status: "auto" },
+    { title: "Licht aus", checked: false, note: "", status: "auto" },
+  ];
+
+  let items = structuredClone(DEFAULT_ITEMS);
+  let lastProtocol = null;
+
+  const $ = (id) => document.getElementById(id);
+
+  function todayISO() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  }
+
+  function sanitizeName(s) {
+    return (s || "")
+      .replaceAll(/[^a-z0-9\-_ ]/gi,"")
+      .trim()
+      .replaceAll(/\s+/g,"_")
+      .slice(0, 80) || "protokoll";
+  }
+
+  function updateStatusPill() {
+    const total = items.length;
+    const okCount = items.filter(it => ((it.status==="auto") ? it.checked : it.status==="ok")).length;
+    const issueCount = total - okCount;
+    $("statusPill").innerHTML = `<span class="dot"></span><span>Status: ${okCount}/${total} OK, ${issueCount} Issues</span>`;
+  }
+
+  function updateBadges(wrapper, it) {
+    const badge = wrapper.querySelector(".tag");
+    badge.classList.remove("badge-ok", "badge-bad");
+
+    const effective = (it.status === "auto")
+      ? (it.checked ? "ok" : "issue")
+      : it.status;
+
+    badge.textContent = effective === "ok" ? "OK" : "Issue";
+    badge.classList.add(effective === "ok" ? "badge-ok" : "badge-bad");
+  }
+
+  function renderItems() {
+    const container = $("items");
+    container.innerHTML = "";
+
+    items.forEach((it, idx) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "item";
+
+      const top = document.createElement("div");
+      top.className = "item-top";
+
+      const left = document.createElement("div");
+      left.className = "item-title";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!it.checked;
+      cb.addEventListener("change", () => {
+        it.checked = cb.checked;
+        updateBadges(wrapper, it);
+        updateStatusPill();
+      });
+
+      const titleWrap = document.createElement("div");
+      titleWrap.style.minWidth = "0";
+
+      const h = document.createElement("h3");
+      h.textContent = it.title;
+
+      const badge = document.createElement("span");
+      badge.className = "tag";
+
+      titleWrap.appendChild(h);
+      titleWrap.appendChild(badge);
+
+      left.appendChild(cb);
+      left.appendChild(titleWrap);
+
+      const right = document.createElement("div");
+      right.className = "item-actions";
+
+      const status = document.createElement("select");
+      status.innerHTML = `
+        <option value="auto">Auto</option>
+        <option value="ok">OK</option>
+        <option value="issue">Issue</option>
+      `;
+      status.value = it.status || "auto";
+      status.addEventListener("change", () => {
+        it.status = status.value;
+        updateBadges(wrapper, it);
+        updateStatusPill();
+      });
+
+      const del = document.createElement("button");
+      del.textContent = "Löschen";
+      del.className = "danger";
+      del.addEventListener("click", () => {
+        items.splice(idx, 1);
+        renderItems();
+        updateStatusPill();
+      });
+
+      right.appendChild(status);
+      right.appendChild(del);
+
+      top.appendChild(left);
+      top.appendChild(right);
+
+      const noteLabel = document.createElement("label");
+      noteLabel.textContent = "Notiz (optional)";
+      noteLabel.style.marginTop = "10px";
+
+      const ta = document.createElement("textarea");
+      ta.value = it.note || "";
+      ta.placeholder = "z. B. Abweichung, Defekt, Maßnahme, Verantwortliche...";
+      ta.addEventListener("input", () => it.note = ta.value);
+
+      wrapper.appendChild(top);
+      wrapper.appendChild(noteLabel);
+      wrapper.appendChild(ta);
+
+      container.appendChild(wrapper);
+      updateBadges(wrapper, it);
+    });
+  }
+
+  function buildProtocol() {
+    const meta = {
+      project: $("project").value.trim(),
+      date: $("date").value || "",
+      location: $("location").value.trim(),
+      author: $("author").value.trim(),
+      generalNotes: $("generalNotes").value.trim(),
+    };
+
+    const total = items.length;
+    const okCount = items.filter(it => ((it.status==="auto") ? it.checked : it.status==="ok")).length;
+    const issueCount = total - okCount;
+
+    const lines = [];
+    lines.push("PROTOKOLL – Hangar Studio (Studiomeister)");
+    lines.push("========================================");
+    lines.push(`Projekt: ${meta.project || "-"}`);
+    lines.push(`Datum: ${meta.date || "-"}`);
+    lines.push(`Ort: ${meta.location || "-"}`);
+    lines.push(`Bearbeiter:in: ${meta.author || "-"}`);
+    lines.push("");
+    lines.push(`Status: ${okCount}/${total} OK, ${issueCount} Issues`);
+    lines.push("");
+
+    if (meta.generalNotes) {
+      lines.push("Allgemeine Notizen:");
+      lines.push(meta.generalNotes);
+      lines.push("");
+    }
+
+    lines.push("Checkliste:");
+    items.forEach((it, i) => {
+      const effective = (it.status === "auto")
+        ? (it.checked ? "OK" : "ISSUE")
+        : (it.status === "ok" ? "OK" : "ISSUE");
+      lines.push(`${String(i+1).padStart(2,"0")}. [${effective}] ${it.title}`);
+      if (it.note && it.note.trim().length) {
+        lines.push(`    Notiz: ${it.note.trim()}`);
+      }
+    });
+
+    return { meta, okCount, issueCount, total, text: lines.join("\n") };
+  }
+
+  function download(filename, mime, content) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function protocolAsHtml(protocol) {
+    const esc = (s) => (s || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+    const baseName = `${protocol.meta.date || todayISO()}_${sanitizeName(protocol.meta.project || "Hangar_Studiomeister")}`;
+
+    const rows = items.map((it, i) => {
+      const effective = (it.status === "auto")
+        ? (it.checked ? "OK" : "ISSUE")
+        : (it.status === "ok" ? "OK" : "ISSUE");
+      const badge = effective === "OK"
+        ? `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#eaf7ee;color:#1a7f37;font-weight:700;font-size:12px;">OK</span>`
+        : `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#fdecec;color:#b42318;font-weight:700;font-size:12px;">ISSUE</span>`;
+      const note = it.note && it.note.trim()
+        ? `<div style="margin-top:4px;color:#333;"><b>Notiz:</b> ${esc(it.note.trim())}</div>`
+        : `<div style="margin-top:4px;color:#777;">–</div>`;
+      return `
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${String(i+1).padStart(2,"0")}</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${esc(it.title)}</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:90px;text-align:right;">${badge}</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${note}</td>
+        </tr>
+      `;
+    }).join("");
+
+    return `<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>${esc(baseName)}</title>
+<style>
+  body{font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; padding:26px; color:#111; background:#fff;}
+  .page{max-width: 900px; margin:0 auto;}
+  .hdr{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding-bottom:12px; border-bottom:2px solid #111;}
+  h1{margin:0; font-size:20px;}
+  .sub{color:#555; font-size:12px; margin-top:4px;}
+  .meta{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:14px;}
+  .box{border:1px solid #ddd; border-radius:12px; padding:12px; background:#fafafa;}
+  .k{color:#555; font-size:12px;}
+  .v{font-weight:650; margin-top:3px;}
+  .summary{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;}
+  .pill{border:1px solid #ddd; border-radius:999px; padding:6px 10px; font-size:12px; background:#fafafa;}
+  table{width:100%; border-collapse:collapse; margin-top:14px; font-size:13px;}
+  th{background:#f3f4f6; text-align:left; padding:10px; border-bottom:1px solid #ddd; font-size:12px; color:#444;}
+  @media print{
+    body{padding:0;}
+    .page{max-width:none;}
+    .box, .pill{background:#fff;}
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="hdr">
+      <div>
+        <h1>Protokoll – Hangar Studio (Studiomeister)</h1>
+        <div class="sub">Erstellt am: ${esc(protocol.meta.date || "-")} · Ort: ${esc(protocol.meta.location || "-")}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="sub">Dokument-ID</div>
+        <div style="font-weight:700;">${esc(baseName)}</div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <div class="box">
+        <div class="k">Projekt / Auftrag</div>
+        <div class="v">${esc(protocol.meta.project) || "-"}</div>
+      </div>
+      <div class="box">
+        <div class="k">Bearbeiter:in</div>
+        <div class="v">${esc(protocol.meta.author) || "-"}</div>
+      </div>
+      <div class="box">
+        <div class="k">Datum</div>
+        <div class="v">${esc(protocol.meta.date) || "-"}</div>
+      </div>
+      <div class="box">
+        <div class="k">Ort</div>
+        <div class="v">${esc(protocol.meta.location) || "-"}</div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="pill"><b>Status:</b> ${protocol.okCount}/${protocol.total} OK</div>
+      <div class="pill"><b>Issues:</b> ${protocol.issueCount}</div>
+    </div>
+
+    ${protocol.meta.generalNotes ? `
+      <div style="margin-top:14px;" class="box">
+        <div class="k">Allgemeine Notizen</div>
+        <div style="margin-top:6px; white-space:pre-wrap;">${esc(protocol.meta.generalNotes)}</div>
+      </div>
+    ` : ""}
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:48px;">#</th>
+          <th>Punkt</th>
+          <th style="width:90px; text-align:right;">Status</th>
+          <th>Notiz</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>`;
+  }
+
+  function enableProtoButtons(enabled) {
+    $("downloadHtmlBtn").disabled = !enabled;
+    $("downloadTxtBtn").disabled = !enabled;
+    $("printBtn").disabled = !enabled;
+  }
+
+  // Actions
+  $("addItemBtn").addEventListener("click", () => {
+    const title = $("newItemTitle").value.trim();
+    if (!title) return;
+    const st = $("newItemStatus").value;
+    items.push({ title, checked: false, note: "", status: st });
+    $("newItemTitle").value = "";
+    $("newItemStatus").value = "auto";
+    renderItems();
+    updateStatusPill();
+  });
+
+  $("makeProtoBtn").addEventListener("click", () => {
+    lastProtocol = buildProtocol();
+    $("protoText").textContent = lastProtocol.text;
+    enableProtoButtons(true);
+  });
+
+  $("downloadTxtBtn").addEventListener("click", () => {
+    if (!lastProtocol) return;
+    const date = lastProtocol.meta.date || todayISO();
+    const name = sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister");
+    download(`${date}_${name}.txt`, "text/plain;charset=utf-8", lastProtocol.text);
+  });
+
+  $("downloadHtmlBtn").addEventListener("click", () => {
+    if (!lastProtocol) return;
+    const date = lastProtocol.meta.date || todayISO();
+    const name = sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister");
+    const html = protocolAsHtml(lastProtocol);
+    download(`${date}_${name}.html`, "text/html;charset=utf-8", html);
+  });
+
+  $("printBtn").addEventListener("click", () => {
+    if (!lastProtocol) return;
+    const html = protocolAsHtml(lastProtocol);
+    const w = window.open("", "_blank");
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    w.print();
+  });
+
+  $("saveStateBtn").addEventListener("click", () => {
+    const state = {
+      meta: {
+        project: $("project").value,
+        date: $("date").value,
+        location: $("location").value,
+        author: $("author").value,
+        generalNotes: $("generalNotes").value,
+      },
+      items
+    };
+    localStorage.setItem("hangar_studiomeister_state_v3", JSON.stringify(state));
+    alert("Zwischenstand gespeichert.");
+  });
+
+  $("loadStateBtn").addEventListener("click", () => {
+    const raw = localStorage.getItem("hangar_studiomeister_state_v3");
+    if (!raw) return alert("Kein gespeicherter Zwischenstand gefunden.");
+    const state = JSON.parse(raw);
+    $("project").value = state.meta.project || "";
+    $("date").value = state.meta.date || todayISO();
+    $("location").value = state.meta.location || "Hangar Studio";
+    $("author").value = state.meta.author || "";
+    $("generalNotes").value = state.meta.generalNotes || "";
+    items = state.items || structuredClone(DEFAULT_ITEMS);
+    renderItems();
+    updateStatusPill();
+    alert("Zwischenstand geladen.");
+  });
+
+  $("resetBtn").addEventListener("click", () => {
+    if (!confirm("Wirklich alles zurücksetzen?")) return;
+    items = structuredClone(DEFAULT_ITEMS);
+    $("project").value = "";
+    $("date").value = todayISO();
+    $("location").value = "Hangar Studio";
+    $("author").value = "";
+    $("generalNotes").value = "";
+    $("protoText").textContent = "Noch kein Protokoll erstellt.";
+    enableProtoButtons(false);
+    lastProtocol = null;
+    renderItems();
+    updateStatusPill();
+  });
+
+  // Init
+  $("date").value = todayISO();
+  if (!$("location").value) $("location").value = "Hangar Studio";
+  renderItems();
+  updateStatusPill();
+</script>
+</body>
+</html>
