@@ -15,7 +15,9 @@
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      letter-spacing: .1px;
+      font-variant-ligatures: none;
       color:var(--text);
       background:
         radial-gradient(900px 500px at 15% 0%, rgba(79,140,255,.18), transparent 55%),
@@ -28,8 +30,8 @@
       display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
       margin: 4px 0 14px;
     }
-    h1{ font-size: 20px; margin:0; letter-spacing:.2px; }
-    .subtitle{ color:var(--muted); font-size: 13px; margin-top:6px; }
+    h1{ font-size: 18px; margin:0; letter-spacing:.2px; }
+    .subtitle{ color:var(--muted); font-size: 12.5px; margin-top:6px; }
     .pill{
       display:inline-flex; align-items:center; gap:8px;
       padding: 8px 10px;
@@ -56,8 +58,8 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(6px);
     }
-    h2{ margin:0 0 10px; font-size: 15px; letter-spacing:.2px; }
-    .muted{ color:var(--muted); font-size: 13px; }
+    h2{ margin:0 0 10px; font-size: 14px; letter-spacing:.2px; }
+    .muted{ color:var(--muted); font-size: 12.5px; }
 
     label{ display:block; font-size: 12.5px; margin: 10px 0 6px; color: var(--muted); }
     input[type="text"], input[type="date"], input[type="time"], textarea, select{
@@ -73,6 +75,38 @@
     .row{ display:flex; gap:10px; }
     .row > *{ flex:1; }
 
+    .section{
+      margin-top: 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(15,21,32,.70);
+    }
+    .sectionHead{
+      display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+      margin-bottom: 8px;
+    }
+    .sectionTitle{ font-weight: 700; font-size: 13px; }
+    .sectionHint{ color:var(--muted); font-size:12px; }
+
+    .checkgrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+    }
+    @media (max-width: 720px){
+      .checkgrid{ grid-template-columns: 1fr; }
+    }
+    .cbrow{
+      display:flex; gap:10px; align-items:flex-start;
+      padding: 8px 10px;
+      border:1px solid rgba(35,48,68,.75);
+      border-radius: 12px;
+      background: rgba(15,21,32,.55);
+    }
+    .cbrow input{ width:18px; height:18px; margin-top:2px; accent-color: var(--accent); }
+    .cbrow span{ font-size: 13px; line-height: 1.25; }
+
     .items{ display:flex; flex-direction:column; gap: 10px; margin-top: 10px; }
     .item{
       border:1px solid var(--line);
@@ -84,7 +118,7 @@
     .item-top{ display:flex; align-items:flex-start; justify-content:space-between; gap: 10px; }
     .item-title{ display:flex; gap:10px; align-items:flex-start; min-width: 0; }
     .item-title input[type="checkbox"]{ width:18px; height:18px; margin-top: 3px; accent-color: var(--accent); }
-    .item h3{ margin:0; font-size: 14px; font-weight: 650; line-height: 1.25; word-break: break-word; }
+    .item h3{ margin:0; font-size: 13.5px; font-weight: 700; line-height: 1.25; word-break: break-word; }
     .tag{
       font-size: 12px;
       padding: 2px 8px;
@@ -107,7 +141,8 @@
       padding: 10px 12px;
       border-radius: 12px;
       cursor:pointer;
-      font-weight: 650;
+      font-weight: 700;
+      font-size: 13px;
     }
     button.primary{
       background: linear-gradient(180deg, rgba(79,140,255,.28), rgba(79,140,255,.14));
@@ -126,16 +161,10 @@
       margin:0;
       max-height: 52vh;
       overflow:auto;
+      font-size: 12.5px;
+      line-height: 1.35;
     }
 
-    .workbox{
-      margin-top: 10px;
-      border:1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px;
-      background: rgba(15,21,32,.70);
-    }
-    .workbox .muted{ font-size:12px; }
     .worksum{
       margin-top: 8px;
       font-size: 12.5px;
@@ -149,8 +178,8 @@
       body { background:#fff; color:#000; }
       header, .btns, .small { display:none !important; }
       .wrap{ max-width:none; padding:0; }
-      .card{ box-shadow:none; border-color:#ccc !important; background:#fff; }
-      input, textarea, select, button, .item, .workbox { border-color:#ccc !important; background:#fff !important; color:#000 !important; }
+      .card, .section { box-shadow:none; border-color:#ccc !important; background:#fff; }
+      input, textarea, select, button, .item, .cbrow { border-color:#ccc !important; background:#fff !important; color:#000 !important; }
       .proto pre { max-height:none; overflow:visible; }
     }
   </style>
@@ -191,12 +220,12 @@
           </div>
         </div>
 
-        <div class="workbox">
-          <div style="display:flex; align-items:baseline; justify-content:space-between; gap:10px;">
-            <div style="font-weight:650;">Arbeitszeit (Studiomeister)</div>
-            <div class="muted">optional</div>
+        <div class="section">
+          <div class="sectionHead">
+            <div class="sectionTitle">Arbeitszeit (Studiomeister)</div>
+            <div class="sectionHint">optional</div>
           </div>
-          <div class="row" style="margin-top:8px;">
+          <div class="row">
             <div>
               <label>Start</label>
               <input id="workStart" type="time" />
@@ -211,6 +240,22 @@
             </div>
           </div>
           <div class="worksum" id="workSummary">Gesamt: <b>–</b></div>
+        </div>
+
+        <div class="section">
+          <div class="sectionHead">
+            <div class="sectionTitle">Studiotechnik genutzt</div>
+            <div class="sectionHint">ankreuzen, was genutzt wurde</div>
+          </div>
+          <div class="checkgrid" id="techUsed"></div>
+        </div>
+
+        <div class="section">
+          <div class="sectionHead">
+            <div class="sectionTitle">Räume genutzt</div>
+            <div class="sectionHint">ankreuzen, was genutzt wurde</div>
+          </div>
+          <div class="checkgrid" id="roomsUsed"></div>
         </div>
 
         <label>Allgemeine Notizen</label>
@@ -265,7 +310,7 @@
   </div>
 
 <script>
-  const STORAGE_KEY = "hangar_studiomeister_state_worktime_v1";
+  const STORAGE_KEY = "hangar_studiomeister_state_mono_v1";
 
   const DEFAULT_ITEMS = [
     { title: "Strom ausgeschaltet", checked: false, note: "", status: "auto" },
@@ -279,8 +324,34 @@
     { title: "Licht aus", checked: false, note: "", status: "auto" },
   ];
 
+  const TECH_OPTIONS = [
+    "Schwerlast Nord",
+    "Schwerlast Süd",
+    "Schwerlasttraverse (Hardtraverse Nord)",
+    "Schwerlasttraverse (Hardtraverse Süd)",
+    "Lichtsegel",
+    "Kreistraverse",
+    "Drehteller",
+    "Vorhang"
+  ];
+
+  const ROOM_OPTIONS = [
+    "Cafeteria",
+    "Maske 1",
+    "Maske 2",
+    "Schwarzer Raum",
+    "Werkstatt",
+    "Kameralader",
+    "Facility-Raum",
+    "Produktionsbüro"
+  ];
+
   let items = structuredClone(DEFAULT_ITEMS);
   let lastProtocol = null;
+
+  // used options state
+  let techUsed = Object.fromEntries(TECH_OPTIONS.map(x => [x, false]));
+  let roomsUsed = Object.fromEntries(ROOM_OPTIONS.map(x => [x, false]));
 
   const $ = (id) => document.getElementById(id);
 
@@ -430,14 +501,16 @@
     let startMin = sh*60 + sm;
     let endMin = eh*60 + em;
 
-    // if end is "next day" (e.g., 23:00 -> 02:00)
     if (endMin < startMin) endMin += 24*60;
 
     let totalMin = Math.max(0, endMin - startMin - br);
     const h = Math.floor(totalMin / 60);
     const m = totalMin % 60;
 
-    return { totalMin, h, m, breakMin: br, start, end };
+    // decimal hours (e.g. 7.50)
+    const dec = Math.round((totalMin / 60) * 100) / 100;
+
+    return { totalMin, h, m, dec, breakMin: br, start, end };
   }
 
   function updateWorkSummary(){
@@ -446,7 +519,35 @@
       $("workSummary").innerHTML = `Gesamt: <b>–</b>`;
       return;
     }
-    $("workSummary").innerHTML = `Gesamt: <b>${res.h}h ${String(res.m).padStart(2,"0")}m</b> (Pause: ${res.breakMin} min)`;
+    $("workSummary").innerHTML =
+      `Gesamt: <b>${res.h}h ${String(res.m).padStart(2,"0")}m</b> (Pause: ${res.breakMin} min) · Dezimal: <b>${res.dec} h</b>`;
+  }
+
+  function renderOptionGroup(containerId, options, stateObj){
+    const container = $(containerId);
+    container.innerHTML = "";
+    options.forEach(name => {
+      const row = document.createElement("label");
+      row.className = "cbrow";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!stateObj[name];
+      cb.addEventListener("change", () => {
+        stateObj[name] = cb.checked;
+      });
+
+      const txt = document.createElement("span");
+      txt.textContent = name;
+
+      row.appendChild(cb);
+      row.appendChild(txt);
+      container.appendChild(row);
+    });
+  }
+
+  function selectedKeys(stateObj){
+    return Object.keys(stateObj).filter(k => !!stateObj[k]);
   }
 
   function buildProtocol() {
@@ -460,6 +561,9 @@
 
     const wt = calcWorkTime();
 
+    const usedTech = selectedKeys(techUsed);
+    const usedRooms = selectedKeys(roomsUsed);
+
     const total = items.length;
     const okCount = items.filter(it => effectiveStatus(it)==="ok").length;
     const issueCount = total - okCount;
@@ -471,11 +575,21 @@
     lines.push(`Datum: ${meta.date || "-"}`);
     lines.push(`Ort: ${meta.location || "-"}`);
     lines.push(`Bearbeiter:in: ${meta.author || "-"}`);
+
     if (wt){
-      lines.push(`Arbeitszeit: ${wt.start}–${wt.end} (Pause ${wt.breakMin} min) = ${wt.h}h ${String(wt.m).padStart(2,"0")}m`);
+      lines.push(`Arbeitszeit: ${wt.start}–${wt.end} (Pause ${wt.breakMin} min) = ${wt.h}h ${String(wt.m).padStart(2,"0")}m (${wt.dec} h)`);
     } else {
       lines.push(`Arbeitszeit: -`);
     }
+
+    lines.push("");
+
+    lines.push("Nutzung (Studiotechnik):");
+    lines.push(usedTech.length ? `- ${usedTech.join(", ")}` : "- keine Angabe");
+
+    lines.push("Nutzung (Räume):");
+    lines.push(usedRooms.length ? `- ${usedRooms.join(", ")}` : "- keine Angabe");
+
     lines.push("");
     lines.push(`Status: ${okCount}/${total} OK, ${issueCount} Issues`);
     lines.push("");
@@ -493,7 +607,7 @@
       if (it.note && it.note.trim().length) lines.push(`    Notiz: ${it.note.trim()}`);
     });
 
-    return { meta, okCount, issueCount, total, wt, text: lines.join("\n") };
+    return { meta, okCount, issueCount, total, wt, usedTech, usedRooms, text: lines.join("\n") };
   }
 
   function download(filename, mime, content) {
@@ -517,8 +631,11 @@
     const baseName = `${protocol.meta.date || todayISO()}_${sanitizeName(protocol.meta.project || "Hangar_Studiomeister")}`;
 
     const workLine = protocol.wt
-      ? `${esc(protocol.wt.start)}–${esc(protocol.wt.end)} (Pause ${protocol.wt.breakMin} min) = <b>${protocol.wt.h}h ${String(protocol.wt.m).padStart(2,"0")}m</b>`
+      ? `${esc(protocol.wt.start)}–${esc(protocol.wt.end)} (Pause ${protocol.wt.breakMin} min) = <b>${protocol.wt.h}h ${String(protocol.wt.m).padStart(2,"0")}m</b> (<b>${protocol.wt.dec} h</b>)`
       : `–`;
+
+    const techLine = protocol.usedTech.length ? esc(protocol.usedTech.join(", ")) : "–";
+    const roomLine = protocol.usedRooms.length ? esc(protocol.usedRooms.join(", ")) : "–";
 
     const rows = items.map((it, i) => {
       const eff = effectiveStatus(it)==="ok" ? "OK" : "ISSUE";
@@ -545,15 +662,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>${esc(baseName)}</title>
 <style>
-  body{font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; padding:26px; color:#111; background:#fff;}
+  body{font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; padding:26px; color:#111; background:#fff;}
   .page{max-width: 900px; margin:0 auto;}
   .hdr{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding-bottom:12px; border-bottom:2px solid #111;}
-  h1{margin:0; font-size:20px;}
+  h1{margin:0; font-size:18px;}
   .sub{color:#555; font-size:12px; margin-top:4px;}
   .meta{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:14px;}
   .box{border:1px solid #ddd; border-radius:12px; padding:12px; background:#fafafa;}
   .k{color:#555; font-size:12px;}
-  .v{font-weight:650; margin-top:3px;}
+  .v{font-weight:700; margin-top:3px;}
   .summary{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;}
   .pill{border:1px solid #ddd; border-radius:999px; padding:6px 10px; font-size:12px; background:#fafafa;}
   table{width:100%; border-collapse:collapse; margin-top:14px; font-size:13px;}
@@ -579,7 +696,21 @@
       <div class="box"><div class="k">Bearbeiter:in</div><div class="v">${esc(protocol.meta.author) || "-"}</div></div>
       <div class="box"><div class="k">Datum</div><div class="v">${esc(protocol.meta.date) || "-"}</div></div>
       <div class="box"><div class="k">Ort</div><div class="v">${esc(protocol.meta.location) || "-"}</div></div>
-      <div class="box" style="grid-column:1 / -1;"><div class="k">Arbeitszeit (Studiomeister)</div><div class="v">${workLine}</div></div>
+
+      <div class="box" style="grid-column:1 / -1;">
+        <div class="k">Arbeitszeit (Studiomeister)</div>
+        <div class="v">${workLine}</div>
+      </div>
+
+      <div class="box" style="grid-column:1 / -1;">
+        <div class="k">Studiotechnik genutzt</div>
+        <div class="v">${techLine}</div>
+      </div>
+
+      <div class="box" style="grid-column:1 / -1;">
+        <div class="k">Räume genutzt</div>
+        <div class="v">${roomLine}</div>
+      </div>
     </div>
 
     <div class="summary">
@@ -680,6 +811,10 @@
         end: $("workEnd").value,
         breakMin: $("workBreak").value,
       },
+      used: {
+        tech: techUsed,
+        rooms: roomsUsed
+      },
       items
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -701,6 +836,11 @@
     $("workEnd").value = state.work?.end || "";
     $("workBreak").value = state.work?.breakMin || "";
 
+    techUsed = state.used?.tech || Object.fromEntries(TECH_OPTIONS.map(x => [x, false]));
+    roomsUsed = state.used?.rooms || Object.fromEntries(ROOM_OPTIONS.map(x => [x, false]));
+    renderOptionGroup("techUsed", TECH_OPTIONS, techUsed);
+    renderOptionGroup("roomsUsed", ROOM_OPTIONS, roomsUsed);
+
     items = ensureItemsValid(state.items);
     renderItems();
     updateStatusPill();
@@ -711,6 +851,12 @@
   $("resetBtn").addEventListener("click", () => {
     if (!confirm("Wirklich alles zurücksetzen?")) return;
     items = structuredClone(DEFAULT_ITEMS);
+
+    techUsed = Object.fromEntries(TECH_OPTIONS.map(x => [x, false]));
+    roomsUsed = Object.fromEntries(ROOM_OPTIONS.map(x => [x, false]));
+    renderOptionGroup("techUsed", TECH_OPTIONS, techUsed);
+    renderOptionGroup("roomsUsed", ROOM_OPTIONS, roomsUsed);
+
     $("project").value = "";
     $("date").value = todayISO();
     $("location").value = "Hangar Studio";
@@ -722,6 +868,7 @@
     $("protoText").textContent = "Noch kein Protokoll erstellt.";
     enableProtoButtons(false);
     lastProtocol = null;
+
     renderItems();
     updateStatusPill();
     updateWorkSummary();
@@ -730,6 +877,10 @@
   // Init
   $("date").value = todayISO();
   if (!$("location").value) $("location").value = "Hangar Studio";
+
+  renderOptionGroup("techUsed", TECH_OPTIONS, techUsed);
+  renderOptionGroup("roomsUsed", ROOM_OPTIONS, roomsUsed);
+
   items = ensureItemsValid(items);
   renderItems();
   updateStatusPill();
