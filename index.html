@@ -15,7 +15,7 @@
     *{ box-sizing:border-box; }
     body{
       margin:0;
-     font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; /* <- UI Schrift */
       color:var(--text);
       background:
         radial-gradient(900px 500px at 15% 0%, rgba(79,140,255,.18), transparent 55%),
@@ -28,8 +28,8 @@
       display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
       margin: 4px 0 14px;
     }
-    h1{ font-size: 18px; margin:0; letter-spacing:.2px; }
-    .subtitle{ color:var(--muted); font-size: 12.5px; margin-top:6px; }
+    h1{ font-size: 20px; margin:0; letter-spacing:.2px; }
+    .subtitle{ color:var(--muted); font-size: 13px; margin-top:6px; }
     .pill{
       display:inline-flex; align-items:center; gap:8px;
       padding: 8px 10px;
@@ -53,11 +53,11 @@
       border:1px solid var(--line);
       border-radius: var(--radius);
       padding: 16px;
-      box-shadow: 0 12px 34px rgba(0,0,0,.35);
+      box-shadow: var(--shadow);
       backdrop-filter: blur(6px);
     }
-    h2{ margin:0 0 10px; font-size: 14px; letter-spacing:.2px; }
-    .muted{ color:var(--muted); font-size: 12.5px; }
+    h2{ margin:0 0 10px; font-size: 15px; letter-spacing:.2px; }
+    .muted{ color:var(--muted); font-size: 13px; }
 
     label{ display:block; font-size: 12.5px; margin: 10px 0 6px; color: var(--muted); }
     input[type="text"], input[type="date"], input[type="time"], textarea, select{
@@ -84,7 +84,7 @@
       display:flex; align-items:baseline; justify-content:space-between; gap:10px;
       margin-bottom: 8px;
     }
-    .sectionTitle{ font-weight: 700; font-size: 13px; }
+    .sectionTitle{ font-weight: 650; font-size: 13px; }
     .sectionHint{ color:var(--muted); font-size:12px; }
 
     .checkgrid{
@@ -111,12 +111,12 @@
       border-radius: 14px;
       padding: 12px;
       background: rgba(15,21,32,.85);
-      box-shadow: 0 8px 20px rgba(0,0,0,.25);
+      box-shadow: var(--shadow2);
     }
     .item-top{ display:flex; align-items:flex-start; justify-content:space-between; gap: 10px; }
     .item-title{ display:flex; gap:10px; align-items:flex-start; min-width: 0; }
     .item-title input[type="checkbox"]{ width:18px; height:18px; margin-top: 3px; accent-color: var(--accent); }
-    .item h3{ margin:0; font-size: 13.5px; font-weight: 700; line-height: 1.25; word-break: break-word; }
+    .item h3{ margin:0; font-size: 14px; font-weight: 650; line-height: 1.25; word-break: break-word; }
     .tag{
       font-size: 12px;
       padding: 2px 8px;
@@ -139,7 +139,7 @@
       padding: 10px 12px;
       border-radius: 12px;
       cursor:pointer;
-      font-weight: 700;
+      font-weight: 650;
       font-size: 13px;
     }
     button.primary{
@@ -308,7 +308,7 @@
   </div>
 
 <script>
-  const STORAGE_KEY = "hangar_studiomeister_state_mono_v1";
+  const STORAGE_KEY = "hangar_studiomeister_state_ui_v1";
 
   const DEFAULT_ITEMS = [
     { title: "Strom ausgeschaltet", checked: false, note: "", status: "auto" },
@@ -322,7 +322,6 @@
     { title: "Licht aus", checked: false, note: "", status: "auto" },
   ];
 
-  // UPDATED TECH LIST (Schwerlast Nord/Süd + H-Traverse)
   const TECH_OPTIONS = [
     "Schwerlast Nord",
     "Schwerlast Süd",
@@ -333,7 +332,6 @@
     "Vorhang"
   ];
 
-  // UPDATED ROOMS LIST (Kameralager)
   const ROOM_OPTIONS = [
     "Cafeteria",
     "Maske 1",
@@ -498,7 +496,6 @@
 
     let startMin = sh*60 + sm;
     let endMin = eh*60 + em;
-
     if (endMin < startMin) endMin += 24*60;
 
     let totalMin = Math.max(0, endMin - startMin - br);
@@ -529,9 +526,7 @@
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = !!stateObj[name];
-      cb.addEventListener("change", () => {
-        stateObj[name] = cb.checked;
-      });
+      cb.addEventListener("change", () => { stateObj[name] = cb.checked; });
 
       const txt = document.createElement("span");
       txt.textContent = name;
@@ -580,7 +575,6 @@
     lines.push("");
     lines.push("Nutzung (Studiotechnik):");
     lines.push(usedTech.length ? `- ${usedTech.join(", ")}` : "- keine Angabe");
-
     lines.push("Nutzung (Räume):");
     lines.push(usedRooms.length ? `- ${usedRooms.join(", ")}` : "- keine Angabe");
 
@@ -649,6 +643,7 @@
       `;
     }).join("");
 
+    /* IMPORTANT: Export HTML (PDF) Schrift ebenfalls system-ui */
     return `<!doctype html>
 <html lang="de">
 <head>
@@ -656,15 +651,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>${esc(baseName)}</title>
 <style>
-  body{font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; padding:26px; color:#111; background:#fff;}
+  body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; padding:26px; color:#111; background:#fff;}
   .page{max-width: 900px; margin:0 auto;}
   .hdr{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding-bottom:12px; border-bottom:2px solid #111;}
-  h1{margin:0; font-size:18px;}
+  h1{margin:0; font-size:20px;}
   .sub{color:#555; font-size:12px; margin-top:4px;}
   .meta{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:14px;}
   .box{border:1px solid #ddd; border-radius:12px; padding:12px; background:#fafafa;}
   .k{color:#555; font-size:12px;}
-  .v{font-weight:700; margin-top:3px;}
+  .v{font-weight:650; margin-top:3px;}
   .summary{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;}
   .pill{border:1px solid #ddd; border-radius:999px; padding:6px 10px; font-size:12px; background:#fafafa;}
   table{width:100%; border-collapse:collapse; margin-top:14px; font-size:13px;}
@@ -755,9 +750,7 @@
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = !!stateObj[name];
-      cb.addEventListener("change", () => {
-        stateObj[name] = cb.checked;
-      });
+      cb.addEventListener("change", () => { stateObj[name] = cb.checked; });
 
       const txt = document.createElement("span");
       txt.textContent = name;
@@ -766,10 +759,6 @@
       row.appendChild(txt);
       container.appendChild(row);
     });
-  }
-
-  function selectedKeys(stateObj){
-    return Object.keys(stateObj).filter(k => !!stateObj[k]);
   }
 
   $("addItemBtn").addEventListener("click", () => {
@@ -830,10 +819,7 @@
         end: $("workEnd").value,
         breakMin: $("workBreak").value,
       },
-      used: {
-        tech: techUsed,
-        rooms: roomsUsed
-      },
+      used: { tech: techUsed, rooms: roomsUsed },
       items
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
