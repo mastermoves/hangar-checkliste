@@ -154,8 +154,19 @@
     }
     .inspect-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
     .inspect-name{ font-weight:650; font-size: 13px; line-height:1.25; }
-    .inspect-controls{ display:flex; gap:8px; align-items:center; }
+    .inspect-controls{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
     .inspect-controls select{ width:120px; }
+    .inspect-used{
+      display:flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border:1px solid rgba(35,48,68,.75);
+      border-radius: 12px;
+      background: rgba(15,21,32,.55);
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .inspect-used input{ width:18px; height:18px; accent-color: var(--accent); }
+
     .inspect-note{ margin-top:8px; display:block; }
     .inspect-note textarea{ min-height: 70px; }
 
@@ -183,7 +194,7 @@
     <div class="grid">
       <div class="card">
         <h2>Protokolltyp</h2>
-        <div class="muted">Tagesprotokoll: Arbeitszeit + Closing + Nutzung · Abnahmeprotokoll: OK/Mängel + Notiz pro Punkt + „Besenrein“.</div>
+        <div class="muted">Tagesprotokoll: Arbeitszeit + Closing + Nutzung · Abnahmeprotokoll: Genutzt + OK/Mängel + Notiz pro Punkt + „Besenrein“.</div>
         <div class="seg">
           <button id="modeDailyBtn" class="primary">Tagesprotokoll</button>
           <button id="modeAcceptanceBtn">Abnahmeprotokoll</button>
@@ -283,7 +294,7 @@
           <div class="sectionHead">
             <div>
               <div class="sectionTitle">Abnahme – Allgemein</div>
-              <div class="sectionHint">OK/Mängel + Notiz pro Punkt (optional)</div>
+              <div class="sectionHint">OK/Mängel + Notiz pro Punkt</div>
             </div>
             <div class="sectionActions">
               <button id="acceptGeneralAllOkBtn">Alle OK</button>
@@ -297,7 +308,7 @@
           <div class="sectionHead">
             <div>
               <div class="sectionTitle">Abnahme – Studiotechnik</div>
-              <div class="sectionHint">OK/Mängel + Notiz pro Punkt (optional)</div>
+              <div class="sectionHint">Genutzt + OK/Mängel + Notiz pro Punkt</div>
             </div>
             <div class="sectionActions">
               <button id="acceptTechAllOkBtn">Alle OK</button>
@@ -311,7 +322,7 @@
           <div class="sectionHead">
             <div>
               <div class="sectionTitle">Abnahme – Räume</div>
-              <div class="sectionHint">OK/Mängel + Notiz pro Punkt (optional)</div>
+              <div class="sectionHint">Genutzt + OK/Mängel + Notiz pro Punkt</div>
             </div>
             <div class="sectionActions">
               <button id="acceptRoomsAllOkBtn">Alle OK</button>
@@ -351,7 +362,7 @@
 
 <script>
   const EMAIL_TO = "master@mastermoves.de";
-  const STORAGE_KEY = "hangar_studiomeister_state_cleanpdf_v1";
+  const STORAGE_KEY = "hangar_studiomeister_state_final_v1";
 
   let mode = "daily"; // "daily" | "acceptance"
 
@@ -372,16 +383,18 @@
 
   const $ = (id) => document.getElementById(id);
 
+  // Daily
   let dailyChecks = DAILY_CHECK_ITEMS.map(t => ({ title: t, checked:false, note:"", status:"auto" }));
   let techUsed = Object.fromEntries(TECH_OPTIONS.map(x => [x, false]));
   let roomsUsed = Object.fromEntries(ROOM_OPTIONS.map(x => [x, false]));
 
-  function initInspectState(list){
-    return Object.fromEntries(list.map(name => [name, { status:"ok", note:"" }]));
+  // Acceptance
+  function initInspectState(list, withUsed){
+    return Object.fromEntries(list.map(name => [name, withUsed ? { used:false, status:"ok", note:"" } : { status:"ok", note:"" }]));
   }
-  let acceptGeneral = initInspectState(ACCEPT_GENERAL);
-  let acceptTech = initInspectState(TECH_OPTIONS);
-  let acceptRooms = initInspectState(ROOM_OPTIONS);
+  let acceptGeneral = initInspectState(ACCEPT_GENERAL, false);
+  let acceptTech = initInspectState(TECH_OPTIONS, true);
+  let acceptRooms = initInspectState(ROOM_OPTIONS, true);
 
   let lastProtocol = null;
 
@@ -419,7 +432,7 @@
 
     $("modeHint").textContent = (mode==="daily")
       ? "Tagesprotokoll aktiv: Arbeitszeit (Pause nicht abgezogen, Überstunden >10h) + Closing-Checkliste + Nutzung (Studiotechnik/Räume)."
-      : "Abnahmeprotokoll aktiv: Zustandsabnahme (OK/Mängel) + Notiz pro Punkt + Besenrein. (Keine Arbeitszeit, keine Closing-Checkliste).";
+      : "Abnahmeprotokoll aktiv: Genutzt + OK/Mängel + Notiz pro Punkt + Besenrein. (Keine Arbeitszeit, keine Closing-Checkliste).";
 
     lastProtocol = null;
     $("protoText").textContent = "Noch kein Protokoll erstellt.";
@@ -602,8 +615,8 @@
 
   ["workStart","workEnd","workBreak"].forEach(id => $(id).addEventListener("input", updateWorkSummary));
 
-  // ---------- Acceptance inspect (note always visible) ----------
-  function renderInspect(containerId, stateObj){
+  // ---------- Acceptance inspect (used + status + note) ----------
+  function renderInspect(containerId, stateObj, withUsed){
     const container = $(containerId);
     container.innerHTML = "";
     Object.keys(stateObj).forEach(name => {
@@ -622,12 +635,26 @@
       const controls = document.createElement("div");
       controls.className = "inspect-controls";
 
+      if (withUsed){
+        const usedWrap = document.createElement("label");
+        usedWrap.className = "inspect-used";
+        const usedCb = document.createElement("input");
+        usedCb.type = "checkbox";
+        usedCb.checked = !!st.used;
+        usedCb.addEventListener("change", () => st.used = usedCb.checked);
+        const usedTxt = document.createElement("span");
+        usedTxt.textContent = "Genutzt";
+        usedWrap.appendChild(usedCb);
+        usedWrap.appendChild(usedTxt);
+        controls.appendChild(usedWrap);
+      }
+
       const sel = document.createElement("select");
       sel.innerHTML = `<option value="ok">OK</option><option value="maengel">Mängel</option>`;
       sel.value = st.status || "ok";
       sel.addEventListener("change", () => st.status = sel.value);
-
       controls.appendChild(sel);
+
       top.appendChild(nm);
       top.appendChild(controls);
 
@@ -639,7 +666,6 @@
       ta.value = st.note || "";
       ta.placeholder = "z. B. Zustand, Besonderheiten, Maßnahmen, ToDo...";
       ta.addEventListener("input", ()=> st.note = ta.value);
-
       noteWrap.appendChild(noteLabel);
       noteWrap.appendChild(ta);
 
@@ -650,12 +676,12 @@
   }
 
   function setAllOk(stateObj){
-    Object.keys(stateObj).forEach(k => { stateObj[k].status = "ok"; /* Notiz bleibt */ });
+    Object.keys(stateObj).forEach(k => { stateObj[k].status = "ok"; });
   }
 
-  $("acceptGeneralAllOkBtn").addEventListener("click", () => { setAllOk(acceptGeneral); renderInspect("acceptGeneral", acceptGeneral); });
-  $("acceptTechAllOkBtn").addEventListener("click", () => { setAllOk(acceptTech); renderInspect("acceptTech", acceptTech); });
-  $("acceptRoomsAllOkBtn").addEventListener("click", () => { setAllOk(acceptRooms); renderInspect("acceptRooms", acceptRooms); });
+  $("acceptGeneralAllOkBtn").addEventListener("click", () => { setAllOk(acceptGeneral); renderInspect("acceptGeneral", acceptGeneral, false); });
+  $("acceptTechAllOkBtn").addEventListener("click", () => { setAllOk(acceptTech); renderInspect("acceptTech", acceptTech, true); });
+  $("acceptRoomsAllOkBtn").addEventListener("click", () => { setAllOk(acceptRooms); renderInspect("acceptRooms", acceptRooms, true); });
 
   // ---------- Protocol build ----------
   function getMeta(){
@@ -708,25 +734,24 @@
     lines.push("Closing-Checkliste:");
     dailyChecks.forEach((it, i) => {
       const eff = effectiveStatus(it)==="ok" ? "OK" : "ISSUE";
-      lines.push(`${String(i+1).padStart(2,"0")}. [${eff}] ${it.title}`);
-      if (it.note && it.note.trim()) lines.push(`    Notiz: ${it.note.trim()}`);
+      lines.push(`${String(i+1).padStart(2,"0")}. [${eff}] ${it.title}${it.note && it.note.trim() ? " — " + it.note.trim() : ""}`);
     });
 
     return { mode:"daily", meta, text: lines.join("\n"), wt, usedTech, usedRooms };
   }
 
-  function inspectRows(stateObj){
+  function inspectRows(stateObj, withUsed){
     return Object.keys(stateObj).map(name => {
       const st = stateObj[name];
-      return { name, status: st.status, note: (st.note||"").trim() };
+      return { name, used: withUsed ? !!st.used : null, status: st.status, note: (st.note||"").trim() };
     });
   }
 
   function buildAcceptanceProtocol(){
     const meta = getMeta();
-    const g = inspectRows(acceptGeneral);
-    const t = inspectRows(acceptTech);
-    const r = inspectRows(acceptRooms);
+    const g = inspectRows(acceptGeneral, false);
+    const t = inspectRows(acceptTech, true);
+    const r = inspectRows(acceptRooms, true);
 
     const lines = [];
     lines.push("ABNAHMEPROTOKOLL – Hangar Studio (Studiomeister)");
@@ -742,23 +767,25 @@
       lines.push("");
     }
 
-    function block(title, rows){
+    function block(title, rows, withUsed){
       lines.push(title + ":");
       rows.forEach((x, i) => {
         const st = (x.status === "maengel") ? "MÄNGEL" : "OK";
-        lines.push(`${String(i+1).padStart(2,"0")}. [${st}] ${x.name}${x.note ? " — " + x.note : ""}`);
+        const used = withUsed ? (x.used ? "GENUTZT" : "NICHT GENUTZT") : null;
+        const mid = withUsed ? ` [${used}]` : "";
+        lines.push(`${String(i+1).padStart(2,"0")}. [${st}]${mid} ${x.name}${x.note ? " — " + x.note : ""}`);
       });
       lines.push("");
     }
 
-    block("Abnahme – Allgemein", g);
-    block("Abnahme – Studiotechnik", t);
-    block("Abnahme – Räume", r);
+    block("Abnahme – Allgemein", g, false);
+    block("Abnahme – Studiotechnik", t, true);
+    block("Abnahme – Räume", r, true);
 
     return { mode:"acceptance", meta, text: lines.join("\n"), g, t, r };
   }
 
-  // ---------- Clean PDF/HTML export (structured like before) ----------
+  // ---------- Clean PDF/HTML export ----------
   function escapeHtml(s){
     return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
   }
@@ -770,10 +797,66 @@
       : `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#fdecec;color:#b42318;font-weight:700;font-size:12px;">MÄNGEL</span>`;
   }
 
+  function yesNo(v){
+    return v ? "Ja" : "Nein";
+  }
+
+  function renderAcceptanceTableHtml(title, rows, withUsed){
+    const esc = escapeHtml;
+
+    const thead = withUsed ? `
+      <tr>
+        <th style="width:48px;">#</th>
+        <th>Punkt</th>
+        <th style="width:90px;">Genutzt</th>
+        <th style="width:110px; text-align:right;">Status</th>
+        <th>Notiz</th>
+      </tr>
+    ` : `
+      <tr>
+        <th style="width:48px;">#</th>
+        <th>Punkt</th>
+        <th style="width:110px; text-align:right;">Status</th>
+        <th>Notiz</th>
+      </tr>
+    `;
+
+    const body = rows.map((x, i) => {
+      const statusCell = `<td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:110px;text-align:right;">${badgeHtml(x.status==="ok" ? "ok" : "maengel")}</td>`;
+      if (withUsed){
+        return `
+          <tr>
+            <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${String(i+1).padStart(2,"0")}</td>
+            <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${esc(x.name)}</td>
+            <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:90px;">${esc(yesNo(x.used))}</td>
+            ${statusCell}
+            <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${x.note ? esc(x.note) : "–"}</td>
+          </tr>
+        `;
+      }
+      return `
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${String(i+1).padStart(2,"0")}</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${esc(x.name)}</td>
+          ${statusCell}
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${x.note ? esc(x.note) : "–"}</td>
+        </tr>
+      `;
+    }).join("");
+
+    return `
+      <div style="margin-top:14px; font-weight:700;">${esc(title)}</div>
+      <table style="table-layout:fixed;">
+        <thead>${thead}</thead>
+        <tbody>${body}</tbody>
+      </table>
+    `;
+  }
+
   function protocolAsHtml(protocol){
     const esc = escapeHtml;
-    const typeShort = (protocol.mode==="daily") ? "tage" : "abnahme";
-    const baseName = `${protocol.meta.date || todayISO()}_${typeShort}_${sanitizeName(protocol.meta.project || "Hangar_Studiomeister")}`;
+    const typeLabel = (protocol.mode==="daily") ? "TAGESPROTOKOLL" : "ABNAHME";
+    const baseName = `${protocol.meta.date || todayISO()}_${typeLabel}_${sanitizeName(protocol.meta.project || "Hangar_Studiomeister")}`;
 
     const meta = protocol.meta;
     const isDaily = protocol.mode==="daily";
@@ -808,7 +891,8 @@
     ` : "";
 
     const dailyTable = isDaily ? `
-      <table>
+      <div style="margin-top:14px; font-weight:700;">Closing-Checkliste</div>
+      <table style="table-layout:fixed;">
         <thead>
           <tr>
             <th style="width:48px;">#</th>
@@ -836,9 +920,9 @@
     ` : "";
 
     const acceptanceTables = !isDaily ? `
-      ${renderAcceptanceTableHtml("Abnahme – Allgemein", acceptGeneral)}
-      ${renderAcceptanceTableHtml("Abnahme – Studiotechnik", acceptTech)}
-      ${renderAcceptanceTableHtml("Abnahme – Räume", acceptRooms)}
+      ${renderAcceptanceTableHtml("Abnahme – Allgemein", protocol.g, false)}
+      ${renderAcceptanceTableHtml("Abnahme – Studiotechnik", protocol.t, true)}
+      ${renderAcceptanceTableHtml("Abnahme – Räume", protocol.r, true)}
     ` : "";
 
     const title = isDaily ? "Tagesprotokoll" : "Abnahmeprotokoll";
@@ -859,7 +943,7 @@
   .box{border:1px solid #ddd; border-radius:12px; padding:12px; background:#fafafa;}
   .k{color:#555; font-size:12px;}
   .v{font-weight:650; margin-top:3px;}
-  table{width:100%; border-collapse:collapse; margin-top:14px; font-size:13px;}
+  table{width:100%; border-collapse:collapse; margin-top:14px; font-size:13px; table-layout:fixed;}
   th{background:#f3f4f6; text-align:left; padding:10px; border-bottom:1px solid #ddd; font-size:12px; color:#444;}
   @media print{ body{padding:0;} .page{max-width:none;} .box{background:#fff;} }
 </style>
@@ -888,10 +972,7 @@
 
     ${generalNotesBlock}
 
-    ${isDaily ? `
-      <div style="margin-top:14px; font-weight:700;">Closing-Checkliste</div>
-      ${dailyTable}
-    ` : `
+    ${isDaily ? dailyTable : `
       <div style="margin-top:14px; font-weight:700;">Abnahme</div>
       ${acceptanceTables}
     `}
@@ -900,38 +981,7 @@
 </html>`;
   }
 
-  function renderAcceptanceTableHtml(title, stateObj){
-    const esc = escapeHtml;
-    const rows = Object.keys(stateObj).map((name, i) => {
-      const st = stateObj[name];
-      const isOk = (st.status === "ok");
-      return `
-        <tr>
-          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${String(i+1).padStart(2,"0")}</td>
-          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${esc(name)}</td>
-          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:110px;text-align:right;">${badgeHtml(isOk ? "ok" : "maengel")}</td>
-          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${st.note && st.note.trim() ? esc(st.note.trim()) : "–"}</td>
-        </tr>
-      `;
-    }).join("");
-
-    return `
-      <div style="margin-top:14px; font-weight:700;">${esc(title)}</div>
-      <table>
-        <thead>
-          <tr>
-            <th style="width:48px;">#</th>
-            <th>Punkt</th>
-            <th style="width:110px; text-align:right;">Status</th>
-            <th>Notiz</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    `;
-  }
-
-  // ---------- Export / mailto ----------
+  // ---------- Download / mailto ----------
   function download(filename, mime, content){
     const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);
@@ -967,19 +1017,19 @@
 
   $("downloadTxtBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
-    const typeShort = (lastProtocol.mode==="daily") ? "tage" : "abnahme";
+    const typeLabel = (lastProtocol.mode==="daily") ? "TAGESPROTOKOLL" : "ABNAHME";
     const date = lastProtocol.meta.date || todayISO();
     const name = sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister");
-    download(`${date}_${typeShort}_${name}.txt`, "text/plain;charset=utf-8", lastProtocol.text);
+    download(`${date}_${typeLabel}_${name}.txt`, "text/plain;charset=utf-8", lastProtocol.text);
   });
 
   $("downloadHtmlBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
-    const typeShort = (lastProtocol.mode==="daily") ? "tage" : "abnahme";
+    const typeLabel = (lastProtocol.mode==="daily") ? "TAGESPROTOKOLL" : "ABNAHME";
     const date = lastProtocol.meta.date || todayISO();
     const name = sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister");
     const html = protocolAsHtml(lastProtocol);
-    download(`${date}_${typeShort}_${name}.html`, "text/html;charset=utf-8", html);
+    download(`${date}_${typeLabel}_${name}.html`, "text/html;charset=utf-8", html);
   });
 
   $("printBtn").addEventListener("click", () => {
@@ -1034,9 +1084,9 @@
     renderUsage("techUsed", TECH_OPTIONS, techUsed);
     renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed);
 
-    renderInspect("acceptGeneral", acceptGeneral);
-    renderInspect("acceptTech", acceptTech);
-    renderInspect("acceptRooms", acceptRooms);
+    renderInspect("acceptGeneral", acceptGeneral, false);
+    renderInspect("acceptTech", acceptTech, true);
+    renderInspect("acceptRooms", acceptRooms, true);
 
     updateWorkSummary();
 
@@ -1053,9 +1103,9 @@
     dailyChecks = DAILY_CHECK_ITEMS.map(t => ({ title: t, checked:false, note:"", status:"auto" }));
     techUsed = Object.fromEntries(TECH_OPTIONS.map(x => [x, false]));
     roomsUsed = Object.fromEntries(ROOM_OPTIONS.map(x => [x, false]));
-    acceptGeneral = initInspectState(ACCEPT_GENERAL);
-    acceptTech = initInspectState(TECH_OPTIONS);
-    acceptRooms = initInspectState(ROOM_OPTIONS);
+    acceptGeneral = initInspectState(ACCEPT_GENERAL, false);
+    acceptTech = initInspectState(TECH_OPTIONS, true);
+    acceptRooms = initInspectState(ROOM_OPTIONS, true);
 
     $("project").value = "";
     $("date").value = todayISO();
@@ -1069,9 +1119,10 @@
     renderDailyChecks();
     renderUsage("techUsed", TECH_OPTIONS, techUsed);
     renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed);
-    renderInspect("acceptGeneral", acceptGeneral);
-    renderInspect("acceptTech", acceptTech);
-    renderInspect("acceptRooms", acceptRooms);
+
+    renderInspect("acceptGeneral", acceptGeneral, false);
+    renderInspect("acceptTech", acceptTech, true);
+    renderInspect("acceptRooms", acceptRooms, true);
 
     updateWorkSummary();
     applyMode("daily");
@@ -1101,9 +1152,9 @@
   renderUsage("techUsed", TECH_OPTIONS, techUsed);
   renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed);
 
-  renderInspect("acceptGeneral", acceptGeneral);
-  renderInspect("acceptTech", acceptTech);
-  renderInspect("acceptRooms", acceptRooms);
+  renderInspect("acceptGeneral", acceptGeneral, false);
+  renderInspect("acceptTech", acceptTech, true);
+  renderInspect("acceptRooms", acceptRooms, true);
 
   updateWorkSummary();
   applyMode("daily");
