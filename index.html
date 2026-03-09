@@ -25,7 +25,11 @@
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
       --sticky-h: 76px;
-      --tap: 44px;
+
+      /* two-tier sizing (fixes “too tall / circle” look) */
+      --tap-input: 44px;    /* inputs / selects */
+      --tap-btn: 34px;      /* small controls (chips, details, seg2 etc.) */
+      --tap-btn-lg: 40px;   /* primary/secondary main actions */
     }
 
     @media (prefers-color-scheme: dark){
@@ -164,7 +168,7 @@
       background: color-mix(in srgb, var(--card) 92%, transparent);
       color: var(--text);
       outline:none;
-      min-height: var(--tap);
+      min-height: var(--tap-input);
     }
     textarea{ min-height: 92px; resize: vertical; }
     .row{ display:flex; gap:10px; }
@@ -178,7 +182,7 @@
     }
     .step{
       display:flex; align-items:center; gap:10px;
-      padding: 10px 12px;
+      padding: 8px 12px;
       border-radius: 999px;
       border:1px solid var(--line);
       background: color-mix(in srgb, var(--card) 92%, transparent);
@@ -187,7 +191,7 @@
       user-select:none;
       font-size: 13px;
       color: var(--muted);
-      min-height: var(--tap);
+      min-height: 38px; /* flatter */
     }
     .step.active{
       color: var(--text);
@@ -208,7 +212,6 @@
       color: var(--accent);
       background: color-mix(in srgb, var(--accent2) 65%, var(--card));
     }
-    /* Mobile stepper compression */
     .stepCompact{
       display:none;
       margin-top:10px;
@@ -219,7 +222,7 @@
       box-shadow: var(--shadow2);
       color: var(--muted);
       font-size: 13px;
-      min-height: var(--tap);
+      min-height: 38px;
       align-items:center;
       justify-content:space-between;
       gap:10px;
@@ -237,16 +240,18 @@
       overflow:hidden;
       background: color-mix(in srgb, var(--card) 92%, transparent);
       box-shadow: var(--shadow2);
+      min-height: 38px;
     }
     .seg button{
       border:0;
       background: transparent;
-      padding: 10px 14px;
+      padding: 8px 14px;
       font-weight: 650;
       color: var(--muted);
       cursor:pointer;
       font-size: 13px;
-      min-height: var(--tap);
+      min-height: 38px;
+      line-height:1;
     }
     .seg button.active{
       background: color-mix(in srgb, var(--accent2) 65%, var(--card));
@@ -259,12 +264,14 @@
       border:1px solid var(--line);
       background: color-mix(in srgb, var(--card) 92%, transparent);
       border-radius: 999px;
-      padding: 8px 10px;
+      padding: 6px 10px;
       font-size: 12px;
       cursor:pointer;
       color: var(--text);
       box-shadow: var(--shadow2);
-      min-height: var(--tap);
+      min-height: var(--tap-btn);
+      line-height:1;
+      min-width: 56px; /* prevents “circle” */
     }
     .pillBtn.primary{
       border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
@@ -322,12 +329,14 @@
       border:1px solid var(--line);
       background: transparent;
       border-radius: 999px;
-      padding: 8px 10px;
+      padding: 6px 10px;
       font-size: 12px;
       color: var(--text);
       cursor:pointer;
       box-shadow: var(--shadow2);
-      min-height: var(--tap);
+      min-height: var(--tap-btn);
+      line-height:1;
+      min-width: 74px; /* prevents “circle” */
     }
     .ghostBtn:active{ transform: translateY(1px); }
 
@@ -361,7 +370,7 @@
       border-radius: 14px;
       background: color-mix(in srgb, var(--card) 92%, transparent);
       box-shadow: var(--shadow2);
-      min-height: var(--tap);
+      min-height: 40px; /* flatter */
     }
     .cbrow input{ width:18px; height:18px; margin-top:2px; accent-color: var(--accent); flex-shrink:0; }
     .cbrow span{ font-size: 13px; line-height: 1.25; }
@@ -391,10 +400,11 @@
       border:1px solid var(--line);
       background: color-mix(in srgb, var(--card) 92%, transparent);
       border-radius: 999px;
-      padding: 8px 10px;
+      padding: 6px 10px;
       font-size: 12px;
       color: var(--muted);
-      min-height: var(--tap);
+      min-height: var(--tap-btn);
+      line-height:1;
     }
     .usedToggle input{ width:18px; height:18px; accent-color: var(--accent); }
 
@@ -404,17 +414,18 @@
       border-radius: 999px;
       overflow:hidden;
       background: color-mix(in srgb, var(--card) 92%, transparent);
-      min-height: var(--tap);
+      min-height: var(--tap-btn);
     }
     .seg2 button{
       border:0;
       background: transparent;
-      padding: 8px 10px;
+      padding: 6px 10px;
       font-weight:650;
       font-size: 12px;
       color: var(--muted);
       cursor:pointer;
-      min-height: var(--tap);
+      min-height: var(--tap-btn);
+      line-height:1;
     }
     .seg2 button.on-ok{
       background: color-mix(in srgb, var(--ok2) 55%, var(--card));
@@ -429,11 +440,13 @@
       border:1px solid var(--line);
       background: transparent;
       border-radius: 999px;
-      padding: 8px 10px;
+      padding: 6px 10px;
       font-size: 12px;
       cursor:pointer;
       color: var(--text);
-      min-height: var(--tap);
+      min-height: var(--tap-btn);
+      line-height:1;
+      min-width: 70px;
     }
 
     .acceptNote{
@@ -506,7 +519,8 @@
       font-weight: 750;
       cursor:pointer;
       box-shadow: var(--shadow2);
-      min-height: var(--tap);
+      min-height: var(--tap-btn-lg);
+      line-height:1;
     }
     .secondaryBtn{
       border:1px solid var(--line);
@@ -517,7 +531,8 @@
       font-weight: 650;
       cursor:pointer;
       box-shadow: var(--shadow2);
-      min-height: var(--tap);
+      min-height: var(--tap-btn-lg);
+      line-height:1;
     }
     .primaryBtn:disabled,.secondaryBtn:disabled{ opacity:.55; cursor:not-allowed; }
 
@@ -630,7 +645,8 @@
       font-weight: 750;
       cursor:pointer;
       box-shadow: var(--shadow2);
-      min-height: var(--tap);
+      min-height: var(--tap-btn-lg);
+      line-height:1;
     }
 
     /* ---------- Print ---------- */
@@ -689,9 +705,7 @@
     </div>
 
     <div class="grid">
-      <!-- LEFT: Wizard -->
       <div class="card">
-        <!-- STEP 1: Type -->
         <div class="stepPanel" id="step1">
           <h2>Protokolltyp</h2>
           <div class="small">Wähle den Modus. Danach führt dich der Wizard durch die relevanten Schritte.</div>
@@ -708,7 +722,6 @@
           </div>
         </div>
 
-        <!-- STEP 2: Meta -->
         <div class="stepPanel" id="step2" style="display:none;">
           <h2>Stammdaten</h2>
 
@@ -738,11 +751,9 @@
           <textarea id="generalNotes" placeholder="Kurz: Besonderheiten, Defekte, Abweichungen, Maßnahmen..."></textarea>
         </div>
 
-        <!-- STEP 3: Content -->
         <div class="stepPanel" id="step3" style="display:none;">
           <h2>Inhalte</h2>
 
-          <!-- DAILY: Worktime -->
           <div id="dailyWorkWrap" class="section">
             <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
               <div>
@@ -779,7 +790,6 @@
             <div class="hint" id="midnightHint" style="display:none;">Hinweis: Ende liegt vor Start – es wird automatisch „über Mitternacht“ angenommen.</div>
           </div>
 
-          <!-- DAILY: Checklist -->
           <div id="dailyChecklistWrap" class="section">
             <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
               <div>
@@ -799,13 +809,10 @@
             <div class="list" id="dailyList"></div>
           </div>
 
-          <!-- DAILY: Usage -->
           <div id="dailyUsageWrap" class="section">
-            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-              <div>
-                <div style="font-weight:750;">Nutzung</div>
-                <div class="small">Checkboxen für „genutzt“. Schnellwahl vorhanden.</div>
-              </div>
+            <div>
+              <div style="font-weight:750;">Nutzung</div>
+              <div class="small">Checkboxen für „genutzt“. Schnellwahl vorhanden.</div>
             </div>
 
             <div style="margin-top:10px;">
@@ -831,7 +838,6 @@
             </div>
           </div>
 
-          <!-- ACCEPTANCE: General -->
           <div id="accGeneralWrap" class="section" style="display:none;">
             <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
               <div>
@@ -845,7 +851,6 @@
             <div id="accGeneralList"></div>
           </div>
 
-          <!-- ACCEPTANCE: Tech -->
           <div id="accTechWrap" class="section" style="display:none;">
             <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
               <div>
@@ -859,7 +864,6 @@
             <div id="accTechList"></div>
           </div>
 
-          <!-- ACCEPTANCE: Rooms -->
           <div id="accRoomsWrap" class="section" style="display:none;">
             <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
               <div>
@@ -874,7 +878,6 @@
           </div>
         </div>
 
-        <!-- STEP 4: Review -->
         <div class="stepPanel" id="step4" style="display:none;">
           <h2>Review & Export</h2>
           <div class="small">Kurzcheck, dann exportieren. (PDF über Drucken → PDF.)</div>
@@ -919,7 +922,6 @@
         </div>
       </div>
 
-      <!-- RIGHT: Live / Settings -->
       <div class="card">
         <h2>Live-Status</h2>
 
@@ -949,7 +951,6 @@
     </div>
   </div>
 
-  <!-- Sticky action bar -->
   <div class="sticky">
     <div class="stickyInner">
       <div class="stickyLeft" id="stickyStatus">Schritt 1/4 · Ungespeichert</div>
@@ -960,10 +961,8 @@
     </div>
   </div>
 
-  <!-- Toasts -->
   <div class="toasts" id="toasts"></div>
 
-  <!-- Done Modal -->
   <div id="doneOverlay" class="overlay">
     <div class="modal">
       <div class="modalHdr">
@@ -989,7 +988,6 @@
     </div>
   </div>
 
-  <!-- Reset Confirm Modal -->
   <div id="resetOverlay" class="overlay">
     <div class="modal">
       <div class="modalHdr">
@@ -1017,10 +1015,9 @@
 <script>
 (() => {
   const EMAIL_TO = "master@mastermoves.de";
-  const STORAGE_KEY = "hangar_studiomeister_ux_v2_autosave";
+  const STORAGE_KEY = "hangar_studiomeister_ux_v2_autosave_flat";
   const AUTOSAVE_MS = 8000;
 
-  // ---- Config ----
   const DAILY_CHECK_ITEMS = [
     "Strom ausgeschaltet",
     "Studiotechnik ausgeschaltet",
@@ -1036,21 +1033,16 @@
   const ROOM_OPTIONS = ["Cafeteria","Maske 1","Maske 2","Schwarzer Raum","Werkstatt","Kameralager","Facility-Raum","Produktionsbüro"];
   const ACCEPT_GENERAL = ["Studio besenrein hinterlassen"];
 
-  // ---- State ----
-  let step = 1;            // 1..4
-  let mode = "daily";      // daily | acceptance
+  let step = 1;
+  let mode = "daily";
   let isDirty = false;
-  let lastProtocol = null; // snapshot object for review/export only
-  let lastSavedAt = null;  // Date
+  let lastProtocol = null;
+  let lastSavedAt = null;
 
-  // daily checklist item: {title, checked, status:'auto'|'ok'|'issue', note, detailsOpen}
   let dailyChecks = DAILY_CHECK_ITEMS.map(t => ({ title: t, checked:false, status:"auto", note:"", detailsOpen:false }));
   let techUsed = Object.fromEntries(TECH_OPTIONS.map(x => [x, false]));
   let roomsUsed = Object.fromEntries(ROOM_OPTIONS.map(x => [x, false]));
 
-  // acceptance item:
-  // general: {status:'ok'|'maengel', note, noteOpen}
-  // tech/rooms: {used:boolean, status:'ok'|'maengel', note, noteOpen}
   const initInspectState = (list, withUsed) => Object.fromEntries(
     list.map(n => [n, withUsed ? {used:false,status:"ok",note:"",noteOpen:false} : {status:"ok",note:"",noteOpen:false}])
   );
@@ -1058,11 +1050,9 @@
   let accTech = initInspectState(TECH_OPTIONS, true);
   let accRooms = initInspectState(ROOM_OPTIONS, true);
 
-  // ---- DOM helpers ----
   const $ = (id) => document.getElementById(id);
   const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
-  // ---- Time helpers ----
   const pad2 = (n) => String(n).padStart(2,"0");
   function todayISO(){
     const d = new Date();
@@ -1086,7 +1076,6 @@
     return `vor ${h}h`;
   }
 
-  // ---- Toasts ----
   function showToast(msg, variant="ok"){
     const host = $("toasts");
     const el = document.createElement("div");
@@ -1101,7 +1090,6 @@
     }, 1800);
   }
 
-  // ---- Theme toggle ----
   function getThemePref(){ return localStorage.getItem("hangar_theme") || "auto"; }
   function applyThemePref(pref){
     if (pref === "auto") document.documentElement.removeAttribute("data-theme");
@@ -1116,7 +1104,6 @@
   });
   applyThemePref(getThemePref());
 
-  // ---- Wizard nav ----
   const STEP_NAMES = {1:"Typ",2:"Stammdaten",3:"Inhalte",4:"Review"};
   function setStep(n){
     step = Math.max(1, Math.min(4, n));
@@ -1143,13 +1130,18 @@
       }
       setStep(step + 1);
     } else {
-      // finished — show completion modal
       showDoneModal();
     }
   });
   $("goReviewBtn").addEventListener("click", () => setStep(4));
 
-  // ---- Mode switch ----
+  function refreshLiveHint(){
+    $("liveHint").innerHTML =
+      mode === "daily"
+        ? "Daily-Flow: abhaken → nur bei Bedarf Details/Notiz. Safety-Punkte (Alarm/Einfahrt/Licht) sind als Critical markiert."
+        : "Abnahme-Flow: pro Punkt Genutzt + OK/Mängel. Notiz optional; bei Mängel klappt sie automatisch auf.";
+  }
+
   function applyMode(newMode){
     mode = newMode;
     $("modeDailyBtn").classList.toggle("active", mode === "daily");
@@ -1174,32 +1166,42 @@
   $("modeDailyBtn").addEventListener("click", () => applyMode("daily"));
   $("modeAcceptanceBtn").addEventListener("click", () => applyMode("acceptance"));
 
-  // ---- Dirty tracking + autosave timestamps ----
+  let autosaveTimer = null;
+  function scheduleAutosave(){
+    if (!isDirty) return;
+    if (autosaveTimer) return;
+    autosaveTimer = setTimeout(() => {
+      autosaveTimer = null;
+      if (isDirty) saveState(true);
+    }, AUTOSAVE_MS);
+  }
+
   function setDirty(v){
     isDirty = v;
     updateSticky();
     updateStatusChip();
     scheduleAutosave();
   }
+
   function updateSticky(){
     const saved = lastSavedAt ? `Gespeichert ${timeAgo(lastSavedAt)}` : "Noch nicht gespeichert";
     $("stickyStatus").textContent = `Schritt ${step}/4 · ${isDirty ? "Ungespeichert" : saved}`;
     $("autosaveHint").textContent = `Letzter Save: ${saved.replace("Gespeichert ","")}`;
   }
+
   function updateStatusChip(text){
     const t = text || (lastProtocol ? `${mode === "daily" ? "Tagesprotokoll" : "Abnahmeprotokoll"} bereit` : (isDirty ? "Ungespeichert" : (lastSavedAt ? `Gespeichert ${timeAgo(lastSavedAt)}` : "–")));
     $("statusChip").innerHTML = `<span class="dot"></span><span>Status: ${t}</span>`;
   }
 
-  // ---- Defaults ----
   $("date").value = todayISO();
   $("location").value = "Hangar Studio";
 
-  // ---- Worktime (pause not subtracted, overtime > 10h) ----
   function parseMinutes(val){
     const n = parseInt(String(val || "").trim(), 10);
     return Number.isFinite(n) && n >= 0 ? n : 0;
   }
+
   function calcWork(){
     const start = $("workStart").value;
     const end = $("workEnd").value;
@@ -1214,7 +1216,7 @@
     const midnight = endMin < startMin;
     if (midnight) endMin += 24*60;
 
-    const totalMin = Math.max(0, endMin - startMin); // pause NOT subtracted
+    const totalMin = Math.max(0, endMin - startMin);
     const h = Math.floor(totalMin/60), m = totalMin%60;
     const dec = Math.round((totalMin/60)*100)/100;
 
@@ -1224,6 +1226,7 @@
 
     return { start, end, breakMin, totalMin, h, m, dec, overtimeMin, oh, om, odec, midnight };
   }
+
   function updateWorkSummary(){
     const wt = calcWork();
     if (!wt){
@@ -1235,6 +1238,7 @@
       `Gesamt: <b>${wt.h}h ${pad2(wt.m)}m</b> (${wt.dec} h) · Pause: ${wt.breakMin} min (nicht abgezogen) · Überstunden (&gt;10h): <b>${wt.oh}h ${pad2(wt.om)}m</b> (${wt.odec} h)`;
     $("midnightHint").style.display = wt.midnight ? "" : "none";
   }
+
   ["workStart","workEnd","workBreak"].forEach(id => $(id).addEventListener("input", () => { updateWorkSummary(); setDirty(true); }));
   $("startNowBtn").addEventListener("click", () => { $("workStart").value = nowHHMM(); updateWorkSummary(); setDirty(true); showToast("Startzeit gesetzt.", "ok"); });
   $("endNowBtn").addEventListener("click", () => { $("workEnd").value = nowHHMM(); updateWorkSummary(); setDirty(true); showToast("Endzeit gesetzt.", "ok"); });
@@ -1244,11 +1248,11 @@
     setDirty(true);
   }));
 
-  // ---- Daily checklist render ----
   function computeDailyEffStatus(it){
     if (it.status === "auto") return it.checked ? "ok" : "issue";
     return it.status;
   }
+
   function renderDaily(){
     const host = $("dailyList");
     host.innerHTML = "";
@@ -1400,7 +1404,6 @@
     showToast("Alle Punkte als OK gesetzt.", "ok");
   });
 
-  // ---- Usage render ----
   function renderUsageGrid(hostId, options, stateObj){
     const host = $(hostId);
     host.innerHTML = "";
@@ -1427,7 +1430,6 @@
   $("roomsAllBtn").addEventListener("click", () => { setAllUsage(roomsUsed, true); renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed); });
   $("roomsNoneBtn").addEventListener("click", () => { setAllUsage(roomsUsed, false); renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed); });
 
-  // ---- Acceptance render ----
   function renderAccList(hostId, stateObj, withUsed){
     const host = $(hostId);
     host.innerHTML = "";
@@ -1455,8 +1457,6 @@
         cb.checked = !!st.used;
         cb.addEventListener("change", () => {
           st.used = cb.checked;
-
-          // UX: if not used, default status OK and close note (optional, feels "less decisions")
           if (!st.used){
             st.status = "ok";
             if (!st.note || !st.note.trim()) st.noteOpen = false;
@@ -1485,19 +1485,8 @@
         badBtn.classList.toggle("on-bad", st.status === "maengel");
       };
 
-      okBtn.addEventListener("click", () => {
-        st.status = "ok";
-        setDirty(true);
-        syncSeg();
-      });
-
-      badBtn.addEventListener("click", () => {
-        st.status = "maengel";
-        st.noteOpen = true;
-        setDirty(true);
-        syncSeg();
-        renderAccList(hostId, stateObj, withUsed);
-      });
+      okBtn.addEventListener("click", () => { st.status = "ok"; setDirty(true); syncSeg(); });
+      badBtn.addEventListener("click", () => { st.status = "maengel"; st.noteOpen = true; setDirty(true); syncSeg(); renderAccList(hostId, stateObj, withUsed); });
 
       seg.appendChild(okBtn);
       seg.appendChild(badBtn);
@@ -1507,11 +1496,7 @@
       noteBtn.type = "button";
       noteBtn.className = "noteToggle";
       noteBtn.textContent = st.noteOpen ? "Notiz zu" : "Notiz";
-      noteBtn.addEventListener("click", () => {
-        st.noteOpen = !st.noteOpen;
-        setDirty(true);
-        renderAccList(hostId, stateObj, withUsed);
-      });
+      noteBtn.addEventListener("click", () => { st.noteOpen = !st.noteOpen; setDirty(true); renderAccList(hostId, stateObj, withUsed); });
       controls.appendChild(noteBtn);
 
       top.appendChild(nm);
@@ -1545,12 +1530,8 @@
   $("accTechAllOkBtn").addEventListener("click", () => { setAllOk(accTech); renderAccList("accTechList", accTech, true); showToast("Studiotechnik: Alle OK.", "ok"); });
   $("accRoomsAllOkBtn").addEventListener("click", () => { setAllOk(accRooms); renderAccList("accRoomsList", accRooms, true); showToast("Räume: Alle OK.", "ok"); });
 
-  // ---- Meta change tracking ----
-  ["project","date","location","author","generalNotes"].forEach(id => {
-    $(id).addEventListener("input", () => setDirty(true));
-  });
+  ["project","date","location","author","generalNotes"].forEach(id => $(id).addEventListener("input", () => setDirty(true)));
 
-  // ---- Build protocol snapshots (review/export) ----
   function getMeta(){
     return {
       project: $("project").value.trim(),
@@ -1567,18 +1548,11 @@
     return `${meta.date || todayISO()}_${typeLabel}_${sanitizeName(meta.project || "Hangar_Studiomeister")}`;
   }
 
-  function dailyIssueTitlesFromSnapshot(items){
-    return items
-      .filter(it => (it.effStatus === "issue"))
-      .map(it => it.title);
-  }
-
   function buildDailySnapshot(meta){
     const wt = calcWork();
     const usedTech = selectedKeys(techUsed);
     const usedRooms = selectedKeys(roomsUsed);
 
-    // snapshot list
     const snapItems = dailyChecks.map(it => ({
       title: it.title,
       checked: !!it.checked,
@@ -1594,7 +1568,7 @@
     const total = snapItems.length;
     const okCount = snapItems.filter(x => x.effStatus === "ok").length;
     const issueCount = total - okCount;
-    const issueTitles = dailyIssueTitlesFromSnapshot(snapItems);
+    const issueTitles = snapItems.filter(x=>x.effStatus==="issue").map(x=>x.title);
 
     const lines = [];
     lines.push("Tagesprotokoll – Hangar Studio (Studiomeister)");
@@ -1657,12 +1631,7 @@
   function inspectRows(stateObj, withUsed){
     return Object.keys(stateObj).map(name => {
       const st = stateObj[name];
-      return {
-        name,
-        used: withUsed ? !!st.used : null,
-        status: st.status,
-        note: (st.note || "").trim()
-      };
+      return { name, used: withUsed ? !!st.used : null, status: st.status, note: (st.note || "").trim() };
     });
   }
 
@@ -1718,7 +1687,6 @@
     };
   }
 
-  // ---- Export (HTML/PDF) uses snapshot only ----
   function escapeHtml(s){
     return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
   }
@@ -1783,9 +1751,7 @@
 
   function protocolAsHtml(snapshot){
     const esc = escapeHtml;
-    const typeLabel = (snapshot.mode === "daily") ? "Tagesprotokoll" : "Abnahme";
     const baseName = snapshot.docId;
-
     const meta = snapshot.meta;
     const isDaily = snapshot.mode === "daily";
 
@@ -1908,7 +1874,6 @@
 </html>`;
   }
 
-  // ---- Export helpers ----
   function download(filename, mime, content){
     const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);
@@ -1927,7 +1892,6 @@
     return `mailto:${encodeURIComponent(EMAIL_TO)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
   }
 
-  // ---- Review render (snapshot + counts) ----
   function setExportButtonsEnabled(on){
     ["reviewEmailBtn","reviewTxtBtn","reviewHtmlBtn","reviewPrintBtn"].forEach(id => $(id).disabled = !on);
   }
@@ -1939,25 +1903,19 @@
       $("sumType").textContent = "Tagesprotokoll";
       $("sumSafety").textContent = lastProtocol.safetyOk ? "OK" : "NICHT VOLLSTÄNDIG";
       $("sumOvertime").textContent = lastProtocol.wt ? `${lastProtocol.wt.oh}h ${pad2(lastProtocol.wt.om)}m` : "–";
-
       $("sumCounts").innerHTML = `<b>${lastProtocol.issueCount}</b> Issues · <b>${lastProtocol.okCount}</b> OK · <b>${lastProtocol.total}</b> gesamt`;
-      if (lastProtocol.issueTitles.length){
-        $("sumList").innerHTML = `<b>Issues:</b><br>${lastProtocol.issueTitles.map(t => `• ${t}`).join("<br>")}`;
-      } else {
-        $("sumList").innerHTML = `<b>Issues:</b> –`;
-      }
+      $("sumList").innerHTML = lastProtocol.issueTitles.length
+        ? `<b>Issues:</b><br>${lastProtocol.issueTitles.map(t => `• ${t}`).join("<br>")}`
+        : `<b>Issues:</b> –`;
     } else {
       lastProtocol = buildAcceptanceSnapshot(meta);
       $("sumType").textContent = "Abnahmeprotokoll";
       $("sumSafety").textContent = "–";
       $("sumOvertime").textContent = "–";
-
       $("sumCounts").innerHTML = `<b>${lastProtocol.maengelCount}</b> Mängel`;
-      if (lastProtocol.maengelTitles.length){
-        $("sumList").innerHTML = `<b>Mängel:</b><br>${lastProtocol.maengelTitles.map(t => `• ${t}`).join("<br>")}`;
-      } else {
-        $("sumList").innerHTML = `<b>Mängel:</b> –`;
-      }
+      $("sumList").innerHTML = lastProtocol.maengelTitles.length
+        ? `<b>Mängel:</b><br>${lastProtocol.maengelTitles.map(t => `• ${t}`).join("<br>")}`
+        : `<b>Mängel:</b> –`;
     }
 
     $("sumId").textContent = lastProtocol.docId;
@@ -1968,7 +1926,6 @@
     updateDailySafetyHint();
   }
 
-  // Review buttons
   $("reviewEmailBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
     window.location.href = makeMailto(lastProtocol.text);
@@ -1989,11 +1946,8 @@
     w.focus(); w.print();
   });
 
-  // ---- Done modal ----
   function showDoneModal(){
-    // ensure current snapshot is available
     buildAndRenderReview();
-
     $("doneMsg").textContent = "Protokoll erstellt. Vielen Dank! Du kannst jetzt PDF/E-Mail/Downloads nutzen.";
     $("doneDocId").textContent = `Dokument-ID: ${$("sumId").textContent || "–"}`;
     $("doneOverlay").style.display = "flex";
@@ -2002,17 +1956,9 @@
   $("doneOverlay").addEventListener("click", (e) => { if (e.target.id === "doneOverlay") hideDoneModal(); });
   $("doneCloseBtn").addEventListener("click", hideDoneModal);
   $("doneOkBtn").addEventListener("click", hideDoneModal);
+  $("donePdfBtn").addEventListener("click", () => { hideDoneModal(); $("reviewPrintBtn").click(); });
+  $("doneMailBtn").addEventListener("click", () => { hideDoneModal(); $("reviewEmailBtn").click(); });
 
-  $("donePdfBtn").addEventListener("click", () => {
-    hideDoneModal();
-    $("reviewPrintBtn").click();
-  });
-  $("doneMailBtn").addEventListener("click", () => {
-    hideDoneModal();
-    $("reviewEmailBtn").click();
-  });
-
-  // ---- Reset confirm modal ----
   function openResetModal(){
     $("resetTypeInput").value = "";
     $("resetConfirmBtn").disabled = true;
@@ -2026,9 +1972,6 @@
   $("resetTypeInput").addEventListener("input", () => {
     $("resetConfirmBtn").disabled = ($("resetTypeInput").value.trim().toUpperCase() !== "RESET");
   });
-
-  // ---- Save / Load / Autosave ----
-  let autosaveTimer = null;
 
   function serializeState(){
     const meta = getMeta();
@@ -2054,15 +1997,6 @@
     if (!silent) showToast("Gespeichert.", "ok");
   }
 
-  function scheduleAutosave(){
-    if (!isDirty) return;
-    if (autosaveTimer) return;
-    autosaveTimer = setTimeout(() => {
-      autosaveTimer = null;
-      if (isDirty) saveState(true);
-    }, AUTOSAVE_MS);
-  }
-
   function loadState(){
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw){
@@ -2071,19 +2005,14 @@
     }
     const state = JSON.parse(raw);
 
-    // mode first
     mode = state.mode || "daily";
-    $("modeDailyBtn").classList.toggle("active", mode === "daily");
-    $("modeAcceptanceBtn").classList.toggle("active", mode === "acceptance");
 
-    // meta
     $("project").value = state.meta?.project || "";
     $("date").value = state.meta?.date || todayISO();
     $("location").value = state.meta?.location || "Hangar Studio";
     $("author").value = state.meta?.author || "";
     $("generalNotes").value = state.meta?.generalNotes || "";
 
-    // work
     $("workStart").value = state.work?.start || "";
     $("workEnd").value = state.work?.end || "";
     $("workBreak").value = state.work?.breakMin || "";
@@ -2098,9 +2027,7 @@
 
     lastSavedAt = state.lastSavedAt ? new Date(state.lastSavedAt) : null;
 
-    // apply mode toggles and render
     applyMode(mode);
-
     renderDaily();
     renderUsageGrid("techGrid", TECH_OPTIONS, techUsed);
     renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed);
@@ -2163,45 +2090,27 @@
   $("resetBtn").addEventListener("click", openResetModal);
   $("resetConfirmBtn").addEventListener("click", () => { closeResetModal(); resetAll(); });
 
-  // ---- Live hint tuning ----
-  function refreshLiveHint(){
-    $("liveHint").innerHTML =
-      mode === "daily"
-        ? "Daily-Flow: abhaken → nur bei Bedarf Details/Notiz. Safety-Punkte (Alarm/Einfahrt/Licht) sind als Critical markiert."
-        : "Abnahme-Flow: pro Punkt Genutzt + OK/Mängel. Notiz optional; bei Mängel klappt sie automatisch auf.";
-  }
+  setInterval(() => { if (!isDirty && lastSavedAt) updateSticky(); }, 1000);
 
-  // ---- Export buttons default state ----
   function setExportButtonsEnabled(on){
     ["reviewEmailBtn","reviewTxtBtn","reviewHtmlBtn","reviewPrintBtn"].forEach(id => $(id).disabled = !on);
   }
   setExportButtonsEnabled(false);
 
-  // ---- Initial render + mode ----
   renderDaily();
   renderUsageGrid("techGrid", TECH_OPTIONS, techUsed);
   renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed);
   renderAccList("accGeneralList", accGeneral, false);
   renderAccList("accTechList", accTech, true);
   renderAccList("accRoomsList", accRooms, true);
+
   updateWorkSummary();
   applyMode("daily");
   refreshLiveHint();
   updateSticky();
   updateStatusChip();
 
-  // Step init
   setStep(1);
-
-  // mark dirty on any meta changes
-  ["project","date","location","author","generalNotes"].forEach(id => {
-    $(id).addEventListener("input", () => setDirty(true));
-  });
-
-  // autosave status refresh ticker (updates "vor Xs")
-  setInterval(() => {
-    if (!isDirty && lastSavedAt) updateSticky();
-  }, 1000);
 
 })();
 </script>
