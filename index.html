@@ -83,6 +83,10 @@
     }
 
     *{ box-sizing:border-box; }
+
+    /* NEW: prevent any accidental horizontal overflow on mobile */
+    html, body { overflow-x: hidden; }
+
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -116,6 +120,7 @@
       color: var(--muted);
       box-shadow: var(--shadow2);
       white-space: nowrap;
+      max-width: 100%;
     }
     .dot{ width:8px; height:8px; border-radius:999px; background: var(--accent); display:inline-block; }
 
@@ -128,6 +133,7 @@
       box-shadow: var(--shadow2);
       cursor:pointer;
       color: var(--text);
+      flex-shrink:0;
     }
     .iconBtn:active{ transform: translateY(1px); }
     .iconBtn svg{ width:18px; height:18px; }
@@ -138,6 +144,7 @@
       grid-template-columns: 1.1fr 0.9fr;
       gap: 14px;
       align-items:start;
+      min-width:0;
     }
     @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
 
@@ -148,6 +155,7 @@
       padding: 16px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px);
+      min-width:0;
     }
 
     .section{
@@ -169,16 +177,18 @@
       color: var(--text);
       outline:none;
       min-height: var(--tap-input);
+      max-width: 100%;
     }
     textarea{ min-height: 92px; resize: vertical; }
-    .row{ display:flex; gap:10px; }
-    .row > *{ flex:1; }
+    .row{ display:flex; gap:10px; min-width:0; }
+    .row > *{ flex:1; min-width:0; }
     @media (max-width: 720px){ .row{ flex-direction: column; } }
 
     /* ---------- Stepper ---------- */
     .stepper{
       display:flex; gap:10px; flex-wrap:wrap;
       margin: 10px 0 0;
+      min-width:0;
     }
     .step{
       display:flex; align-items:center; gap:10px;
@@ -191,7 +201,9 @@
       user-select:none;
       font-size: 13px;
       color: var(--muted);
-      min-height: 38px; /* flatter */
+      min-height: 38px;
+      max-width: 100%;
+      min-width:0;
     }
     .step.active{
       color: var(--text);
@@ -212,6 +224,8 @@
       color: var(--accent);
       background: color-mix(in srgb, var(--accent2) 65%, var(--card));
     }
+
+    /* Mobile compact step header */
     .stepCompact{
       display:none;
       margin-top:10px;
@@ -226,6 +240,19 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+    #stepCompactLeft, #stepCompactRight{
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #stepCompactRight{
+      text-align: right;
+      max-width: 55%;
     }
     @media (max-width: 600px){
       .stepper{ display:none; }
@@ -241,6 +268,7 @@
       background: color-mix(in srgb, var(--card) 92%, transparent);
       box-shadow: var(--shadow2);
       min-height: 38px;
+      max-width: 100%;
     }
     .seg button{
       border:0;
@@ -252,6 +280,7 @@
       font-size: 13px;
       min-height: 38px;
       line-height:1;
+      white-space: nowrap;
     }
     .seg button.active{
       background: color-mix(in srgb, var(--accent2) 65%, var(--card));
@@ -259,7 +288,7 @@
     }
 
     /* ---------- Chips (presets) ---------- */
-    .chipRow{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 8px; }
+    .chipRow{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 8px; min-width:0; }
     .pillBtn{
       border:1px solid var(--line);
       background: color-mix(in srgb, var(--card) 92%, transparent);
@@ -271,7 +300,9 @@
       box-shadow: var(--shadow2);
       min-height: var(--tap-btn);
       line-height:1;
-      min-width: 56px; /* prevents “circle” */
+      min-width: 56px;
+      max-width: 100%;
+      white-space: nowrap;
     }
     .pillBtn.primary{
       border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
@@ -284,6 +315,7 @@
       flex-direction:column;
       gap:10px;
       margin-top: 10px;
+      min-width:0;
     }
     .rowCard{
       border:1px solid var(--line);
@@ -291,12 +323,15 @@
       border-radius: 14px;
       padding: 12px;
       box-shadow: var(--shadow2);
+      min-width:0;
     }
     .rowTop{
       display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+      min-width:0;
     }
     .rowLeft{
       display:flex; gap:10px; align-items:flex-start; min-width:0;
+      flex: 1;
     }
     .rowLeft input[type="checkbox"]{
       width:18px; height:18px; margin-top: 2px; accent-color: var(--accent);
@@ -313,12 +348,14 @@
       display:flex; gap:8px; align-items:center; flex-wrap:wrap;
       color: var(--muted);
       font-size: 12px;
+      min-width:0;
     }
     .miniTag{
       border:1px solid var(--line);
       border-radius: 999px;
       padding: 4px 8px;
       background: color-mix(in srgb, var(--card) 92%, transparent);
+      white-space: nowrap;
     }
     .miniTag.ok{ border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); background: color-mix(in srgb, var(--ok2) 55%, var(--card)); color: var(--text); }
     .miniTag.bad{ border-color: color-mix(in srgb, var(--danger) 45%, var(--line)); background: color-mix(in srgb, var(--danger2) 55%, var(--card)); color: var(--text); }
@@ -336,7 +373,8 @@
       box-shadow: var(--shadow2);
       min-height: var(--tap-btn);
       line-height:1;
-      min-width: 74px; /* prevents “circle” */
+      min-width: 74px;
+      white-space: nowrap;
     }
     .ghostBtn:active{ transform: translateY(1px); }
 
@@ -345,6 +383,7 @@
       border-top:1px solid var(--line);
       padding-top: 10px;
       display:none;
+      min-width:0;
     }
     .details.open{ display:block; }
     .detailsGrid{
@@ -352,6 +391,7 @@
       grid-template-columns: 180px 1fr;
       gap: 10px;
       align-items:start;
+      min-width:0;
     }
     @media (max-width: 720px){ .detailsGrid{ grid-template-columns: 1fr; } }
 
@@ -361,6 +401,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 8px 10px;
       margin-top: 10px;
+      min-width:0;
     }
     @media (max-width: 720px){ .checkgrid{ grid-template-columns: 1fr; } }
     .cbrow{
@@ -370,7 +411,8 @@
       border-radius: 14px;
       background: color-mix(in srgb, var(--card) 92%, transparent);
       box-shadow: var(--shadow2);
-      min-height: 40px; /* flatter */
+      min-height: 40px;
+      min-width:0;
     }
     .cbrow input{ width:18px; height:18px; margin-top:2px; accent-color: var(--accent); flex-shrink:0; }
     .cbrow span{ font-size: 13px; line-height: 1.25; }
@@ -383,17 +425,22 @@
       padding: 12px;
       box-shadow: var(--shadow2);
       margin-top: 10px;
+      min-width:0;
     }
     .acceptTop{
       display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+      min-width:0;
     }
     .acceptName{
       font-weight:650; font-size: 13.5px; line-height:1.25;
       word-break: break-word;
+      min-width:0;
+      flex:1;
     }
     .acceptControls{
       display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;
       flex-shrink:0;
+      max-width: 100%;
     }
     .usedToggle{
       display:flex; align-items:center; gap:8px;
@@ -405,6 +452,7 @@
       color: var(--muted);
       min-height: var(--tap-btn);
       line-height:1;
+      white-space: nowrap;
     }
     .usedToggle input{ width:18px; height:18px; accent-color: var(--accent); }
 
@@ -415,6 +463,7 @@
       overflow:hidden;
       background: color-mix(in srgb, var(--card) 92%, transparent);
       min-height: var(--tap-btn);
+      max-width: 100%;
     }
     .seg2 button{
       border:0;
@@ -426,6 +475,7 @@
       cursor:pointer;
       min-height: var(--tap-btn);
       line-height:1;
+      white-space: nowrap;
     }
     .seg2 button.on-ok{
       background: color-mix(in srgb, var(--ok2) 55%, var(--card));
@@ -447,6 +497,7 @@
       min-height: var(--tap-btn);
       line-height:1;
       min-width: 70px;
+      white-space: nowrap;
     }
 
     .acceptNote{
@@ -454,6 +505,7 @@
       border-top: 1px solid var(--line);
       padding-top: 10px;
       display:none;
+      min-width:0;
     }
     .acceptNote.open{ display:block; }
     .acceptNote textarea{ min-height: 72px; }
@@ -466,11 +518,13 @@
       background: color-mix(in srgb, var(--card) 92%, transparent);
       box-shadow: var(--shadow2);
       margin-top: 10px;
+      min-width:0;
     }
     .summaryGrid{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:10px;
+      min-width:0;
     }
     @media (max-width:720px){ .summaryGrid{ grid-template-columns: 1fr; } }
     .sumItem{
@@ -478,6 +532,7 @@
       border-radius: 14px;
       padding: 12px;
       background: color-mix(in srgb, var(--card) 92%, transparent);
+      min-width:0;
     }
     .sumK{ color:var(--muted); font-size:12px; }
     .sumV{ font-weight:650; margin-top:4px; }
@@ -498,17 +553,36 @@
       align-items:center;
       justify-content:center;
       z-index: 50;
+      max-width: 100%;
     }
     .stickyInner{
       width: min(1080px, 100%);
+      max-width: 100%;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
       padding: 0 6px;
+      min-width:0;
     }
-    .stickyLeft{ color:var(--muted); font-size: 12.5px; }
-    .stickyRight{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .stickyLeft{
+      color:var(--muted);
+      font-size: 12.5px;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 55%;
+    }
+    .stickyRight{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap: nowrap;
+      justify-content:flex-end;
+      flex-shrink:0;
+      min-width:0;
+    }
 
     .primaryBtn{
       border:1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
@@ -521,6 +595,8 @@
       box-shadow: var(--shadow2);
       min-height: var(--tap-btn-lg);
       line-height:1;
+      white-space: nowrap;
+      max-width: 100%;
     }
     .secondaryBtn{
       border:1px solid var(--line);
@@ -533,8 +609,23 @@
       box-shadow: var(--shadow2);
       min-height: var(--tap-btn-lg);
       line-height:1;
+      white-space: nowrap;
+      max-width: 100%;
     }
     .primaryBtn:disabled,.secondaryBtn:disabled{ opacity:.55; cursor:not-allowed; }
+
+    /* NEW: mobile fixes for sticky overflow */
+    @media (max-width: 600px){
+      .sticky{ padding: 10px 10px; }
+      .stickyLeft{ max-width: 48%; font-size: 12px; }
+      .stickyRight{ gap: 6px; }
+      .stickyRight .secondaryBtn,
+      .stickyRight .primaryBtn{
+        padding: 10px 10px;
+        min-height: 38px;
+        font-size: 13px;
+      }
+    }
 
     /* ---------- Toasts ---------- */
     .toasts{
@@ -547,6 +638,7 @@
       gap:10px;
       z-index: 60;
       pointer-events:none;
+      max-width: calc(100vw - 24px);
     }
     .toast{
       pointer-events:none;
@@ -583,6 +675,7 @@
       font-size: 12.5px;
       box-shadow: var(--shadow2);
       margin-top: 10px;
+      min-width:0;
     }
 
     /* ---------- Inline warnings ---------- */
@@ -611,9 +704,11 @@
       border-radius: 18px;
       box-shadow: var(--shadow);
       padding: 16px;
+      max-width: 100%;
     }
     .modalHdr{
       display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      min-width:0;
     }
     .modalTitle{ font-weight:800; font-size:14px; }
     .modalBody{
@@ -635,6 +730,7 @@
     }
     .modalActions{
       display:flex; justify-content:flex-end; gap:10px; margin-top:14px; flex-wrap:wrap;
+      min-width:0;
     }
     .dangerBtn{
       border:1px solid color-mix(in srgb, var(--danger) 45%, var(--line));
@@ -647,6 +743,8 @@
       box-shadow: var(--shadow2);
       min-height: var(--tap-btn-lg);
       line-height:1;
+      white-space: nowrap;
+      max-width: 100%;
     }
 
     /* ---------- Print ---------- */
@@ -1015,7 +1113,7 @@
 <script>
 (() => {
   const EMAIL_TO = "master@mastermoves.de";
-  const STORAGE_KEY = "hangar_studiomeister_ux_v2_autosave_flat";
+  const STORAGE_KEY = "hangar_studiomeister_ux_v2_autosave_flat_mobilefix";
   const AUTOSAVE_MS = 8000;
 
   const DAILY_CHECK_ITEMS = [
