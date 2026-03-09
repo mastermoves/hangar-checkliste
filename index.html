@@ -25,6 +25,7 @@
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
       --sticky-h: 76px;
+      --tap: 44px;
     }
 
     @media (prefers-color-scheme: dark){
@@ -84,7 +85,12 @@
       background: var(--bg);
       color: var(--text);
     }
-    .wrap{ max-width: 1080px; margin:0 auto; padding: 20px; padding-bottom: calc(var(--sticky-h) + 18px); }
+    .wrap{
+      max-width: 1080px;
+      margin:0 auto;
+      padding: 20px;
+      padding-bottom: calc(var(--sticky-h) + 18px);
+    }
 
     /* ---------- Top bar ---------- */
     .topbar{
@@ -158,6 +164,7 @@
       background: color-mix(in srgb, var(--card) 92%, transparent);
       color: var(--text);
       outline:none;
+      min-height: var(--tap);
     }
     textarea{ min-height: 92px; resize: vertical; }
     .row{ display:flex; gap:10px; }
@@ -180,6 +187,7 @@
       user-select:none;
       font-size: 13px;
       color: var(--muted);
+      min-height: var(--tap);
     }
     .step.active{
       color: var(--text);
@@ -193,11 +201,32 @@
       font-size: 12px;
       color: var(--muted);
       background: color-mix(in srgb, var(--card) 92%, transparent);
+      flex-shrink:0;
     }
     .step.active .stepNum{
       border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
       color: var(--accent);
       background: color-mix(in srgb, var(--accent2) 65%, var(--card));
+    }
+    /* Mobile stepper compression */
+    .stepCompact{
+      display:none;
+      margin-top:10px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 12px;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      box-shadow: var(--shadow2);
+      color: var(--muted);
+      font-size: 13px;
+      min-height: var(--tap);
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    @media (max-width: 600px){
+      .stepper{ display:none; }
+      .stepCompact{ display:flex; }
     }
 
     /* ---------- Mode segmented control ---------- */
@@ -217,6 +246,7 @@
       color: var(--muted);
       cursor:pointer;
       font-size: 13px;
+      min-height: var(--tap);
     }
     .seg button.active{
       background: color-mix(in srgb, var(--accent2) 65%, var(--card));
@@ -234,6 +264,7 @@
       cursor:pointer;
       color: var(--text);
       box-shadow: var(--shadow2);
+      min-height: var(--tap);
     }
     .pillBtn.primary{
       border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
@@ -262,6 +293,7 @@
     }
     .rowLeft input[type="checkbox"]{
       width:18px; height:18px; margin-top: 2px; accent-color: var(--accent);
+      flex-shrink:0;
     }
     .rowTitle{
       font-weight: 650;
@@ -283,6 +315,7 @@
     }
     .miniTag.ok{ border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); background: color-mix(in srgb, var(--ok2) 55%, var(--card)); color: var(--text); }
     .miniTag.bad{ border-color: color-mix(in srgb, var(--danger) 45%, var(--line)); background: color-mix(in srgb, var(--danger2) 55%, var(--card)); color: var(--text); }
+    .miniTag.crit{ border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: color-mix(in srgb, var(--accent2) 70%, var(--card)); color: var(--text); font-weight:700; }
 
     .rowRight{ display:flex; gap:8px; align-items:center; flex-shrink:0; }
     .ghostBtn{
@@ -294,6 +327,7 @@
       color: var(--text);
       cursor:pointer;
       box-shadow: var(--shadow2);
+      min-height: var(--tap);
     }
     .ghostBtn:active{ transform: translateY(1px); }
 
@@ -327,8 +361,9 @@
       border-radius: 14px;
       background: color-mix(in srgb, var(--card) 92%, transparent);
       box-shadow: var(--shadow2);
+      min-height: var(--tap);
     }
-    .cbrow input{ width:18px; height:18px; margin-top:2px; accent-color: var(--accent); }
+    .cbrow input{ width:18px; height:18px; margin-top:2px; accent-color: var(--accent); flex-shrink:0; }
     .cbrow span{ font-size: 13px; line-height: 1.25; }
 
     /* ---------- Acceptance compact row ---------- */
@@ -359,6 +394,7 @@
       padding: 8px 10px;
       font-size: 12px;
       color: var(--muted);
+      min-height: var(--tap);
     }
     .usedToggle input{ width:18px; height:18px; accent-color: var(--accent); }
 
@@ -368,6 +404,7 @@
       border-radius: 999px;
       overflow:hidden;
       background: color-mix(in srgb, var(--card) 92%, transparent);
+      min-height: var(--tap);
     }
     .seg2 button{
       border:0;
@@ -377,6 +414,7 @@
       font-size: 12px;
       color: var(--muted);
       cursor:pointer;
+      min-height: var(--tap);
     }
     .seg2 button.on-ok{
       background: color-mix(in srgb, var(--ok2) 55%, var(--card));
@@ -395,6 +433,7 @@
       font-size: 12px;
       cursor:pointer;
       color: var(--text);
+      min-height: var(--tap);
     }
 
     .acceptNote{
@@ -429,6 +468,9 @@
     }
     .sumK{ color:var(--muted); font-size:12px; }
     .sumV{ font-weight:650; margin-top:4px; }
+    .sumV.mono{ font-family: var(--mono); font-size: 12px; word-break: break-all; }
+    .listTiny{ margin-top: 8px; color: var(--muted); font-size: 12.5px; line-height:1.35; }
+    .listTiny b{ color: var(--text); }
 
     /* ---------- Sticky action bar ---------- */
     .sticky{
@@ -464,6 +506,7 @@
       font-weight: 750;
       cursor:pointer;
       box-shadow: var(--shadow2);
+      min-height: var(--tap);
     }
     .secondaryBtn{
       border:1px solid var(--line);
@@ -474,6 +517,7 @@
       font-weight: 650;
       cursor:pointer;
       box-shadow: var(--shadow2);
+      min-height: var(--tap);
     }
     .primaryBtn:disabled,.secondaryBtn:disabled{ opacity:.55; cursor:not-allowed; }
 
@@ -533,7 +577,7 @@
       color: var(--text);
     }
 
-    /* ---------- Done Modal ---------- */
+    /* ---------- Modals ---------- */
     .overlay{
       position:fixed;
       inset:0;
@@ -545,7 +589,7 @@
       padding: 16px;
     }
     .modal{
-      width: min(520px, 100%);
+      width: min(560px, 100%);
       border: 1px solid var(--line);
       background: var(--card);
       color: var(--text);
@@ -556,9 +600,7 @@
     .modalHdr{
       display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
     }
-    .modalTitle{
-      font-weight:800; font-size:14px;
-    }
+    .modalTitle{ font-weight:800; font-size:14px; }
     .modalBody{
       margin-top: 10px;
       color: var(--muted);
@@ -577,12 +619,23 @@
       word-break: break-all;
     }
     .modalActions{
-      display:flex; justify-content:flex-end; gap:10px; margin-top:14px;
+      display:flex; justify-content:flex-end; gap:10px; margin-top:14px; flex-wrap:wrap;
+    }
+    .dangerBtn{
+      border:1px solid color-mix(in srgb, var(--danger) 45%, var(--line));
+      background: color-mix(in srgb, var(--danger2) 65%, var(--card));
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-weight: 750;
+      cursor:pointer;
+      box-shadow: var(--shadow2);
+      min-height: var(--tap);
     }
 
     /* ---------- Print ---------- */
     @media print {
-      .sticky, .toasts, .topActions, .stepper, .hint, .overlay { display:none !important; }
+      .sticky, .toasts, .topActions, .stepper, .stepCompact, .hint, .overlay { display:none !important; }
       body{ background:#fff; color:#000; }
       .card{ box-shadow:none; }
       .wrap{ padding:0; }
@@ -594,13 +647,18 @@
     <div class="topbar">
       <div class="titleWrap">
         <h1>Hangar Studio – Studiomeister Protokolle</h1>
-        <div class="subtitle">Schrittweise ausfüllen → Review → Export.</div>
+        <div class="subtitle">Wizard: Schrittweise ausfüllen → Review → Export.</div>
 
         <div class="stepper" id="stepper">
           <div class="step" data-step="1"><span class="stepNum">1</span><span>Typ</span></div>
           <div class="step" data-step="2"><span class="stepNum">2</span><span>Stammdaten</span></div>
           <div class="step" data-step="3"><span class="stepNum">3</span><span>Inhalte</span></div>
           <div class="step" data-step="4"><span class="stepNum">4</span><span>Review</span></div>
+        </div>
+
+        <div class="stepCompact" id="stepCompact">
+          <span id="stepCompactLeft">Schritt 1/4</span>
+          <span id="stepCompactRight">Typ</span>
         </div>
       </div>
 
@@ -614,14 +672,14 @@
           </svg>
         </button>
 
-        <button class="iconBtn" id="saveBtnTop" title="Zwischenstand speichern">
+        <button class="iconBtn" id="saveBtnTop" title="Manuell speichern">
           <svg viewBox="0 0 24 24" fill="none">
             <path d="M4 7a3 3 0 0 1 3-3h9l4 4v13a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7Z" stroke="currentColor" stroke-width="2"/>
             <path d="M8 4v6h8V4" stroke="currentColor" stroke-width="2"/>
           </svg>
         </button>
 
-        <button class="iconBtn" id="loadBtnTop" title="Zwischenstand laden">
+        <button class="iconBtn" id="loadBtnTop" title="Laden">
           <svg viewBox="0 0 24 24" fill="none">
             <path d="M12 3v10m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -716,7 +774,9 @@
                 </div>
               </div>
             </div>
+
             <div class="hint" id="workSummary">Gesamt: –</div>
+            <div class="hint" id="midnightHint" style="display:none;">Hinweis: Ende liegt vor Start – es wird automatisch „über Mitternacht“ angenommen.</div>
           </div>
 
           <!-- DAILY: Checklist -->
@@ -733,7 +793,7 @@
             </div>
 
             <div class="hint warn" id="dailySafetyWarn" style="display:none;">
-              Hinweis: Alarm/Einfahrt/Licht sind nicht vollständig bestätigt. Export ist trotzdem möglich, wird aber markiert.
+              Hinweis: Safety-Punkte (Alarm/Einfahrt/Licht) sind nicht vollständig bestätigt. Export ist möglich, aber wird markiert.
             </div>
 
             <div class="list" id="dailyList"></div>
@@ -823,10 +883,12 @@
             <div class="sumItem">
               <div class="sumK">Typ</div>
               <div class="sumV" id="sumType">–</div>
+              <div class="listTiny" id="sumCounts"></div>
             </div>
             <div class="sumItem">
               <div class="sumK">Dokument-ID</div>
-              <div class="sumV" id="sumId">–</div>
+              <div class="sumV mono" id="sumId">–</div>
+              <div class="listTiny" id="sumList"></div>
             </div>
             <div class="sumItem">
               <div class="sumK">Safety-Check (Tagesprotokoll)</div>
@@ -845,19 +907,19 @@
           </div>
 
           <div class="hint" style="margin-top:12px;">
-            Export: <b>PDF</b> = Drucken/PDF · <b>E-Mail</b> = mailto (öffnet dein Standard-Mailprogramm) · <b>HTML</b> = druckbares Layout.
+            Export: <b>PDF</b> = Drucken/PDF · <b>E-Mail</b> = mailto · <b>HTML</b> = druckbares Layout.
           </div>
 
-          <div class="btns" style="margin-top:12px;">
-            <button class="secondaryBtn" id="reviewEmailBtn" type="button" disabled>E-Mail vorbereiten</button>
-            <button class="secondaryBtn" id="reviewTxtBtn" type="button" disabled>TXT speichern</button>
-            <button class="secondaryBtn" id="reviewHtmlBtn" type="button" disabled>HTML speichern</button>
-            <button class="primaryBtn" id="reviewPrintBtn" type="button" disabled>PDF drucken</button>
+          <div class="chipRow" style="margin-top:12px;">
+            <button class="secondaryBtn" id="reviewEmailBtn" type="button" disabled>E-Mail</button>
+            <button class="secondaryBtn" id="reviewTxtBtn" type="button" disabled>TXT</button>
+            <button class="secondaryBtn" id="reviewHtmlBtn" type="button" disabled>HTML</button>
+            <button class="primaryBtn" id="reviewPrintBtn" type="button" disabled>PDF</button>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT: Live preview / helper -->
+      <!-- RIGHT: Live / Settings -->
       <div class="card">
         <h2>Live-Status</h2>
 
@@ -866,10 +928,11 @@
         </div>
 
         <div class="section">
-          <div style="font-weight:750;">Zwischenstand</div>
-          <div class="small">Lokale Speicherung im Browser (localStorage).</div>
-          <div class="btns" style="margin-top:10px;">
-            <button class="secondaryBtn" id="saveBtn" type="button">Speichern</button>
+          <div style="font-weight:750;">Autosave</div>
+          <div class="small">Speichert automatisch lokal alle ~8 Sekunden bei Änderungen.</div>
+          <div class="hint" id="autosaveHint">Letzter Save: –</div>
+          <div class="chipRow" style="margin-top:10px;">
+            <button class="secondaryBtn" id="saveBtn" type="button">Manuell speichern</button>
             <button class="secondaryBtn" id="loadBtn" type="button">Laden</button>
             <button class="secondaryBtn" id="resetBtn" type="button" style="border-color: color-mix(in srgb, var(--danger) 45%, var(--line)); background: var(--danger2);">Reset</button>
           </div>
@@ -877,8 +940,8 @@
 
         <div class="section">
           <div style="font-weight:750;">Quick-Actions</div>
-          <div class="small">Review-Step erstellt automatisch das Protokoll.</div>
-          <div class="btns" style="margin-top:10px;">
+          <div class="small">Review erstellt automatisch das Protokoll.</div>
+          <div class="chipRow" style="margin-top:10px;">
             <button class="secondaryBtn" id="goReviewBtn" type="button">Zu Review</button>
           </div>
         </div>
@@ -889,7 +952,7 @@
   <!-- Sticky action bar -->
   <div class="sticky">
     <div class="stickyInner">
-      <div class="stickyLeft" id="stickyStatus">Schritt 1/4 · Nicht gespeichert</div>
+      <div class="stickyLeft" id="stickyStatus">Schritt 1/4 · Ungespeichert</div>
       <div class="stickyRight">
         <button class="secondaryBtn" id="backBtn" type="button">Zurück</button>
         <button class="primaryBtn" id="nextBtn" type="button">Weiter</button>
@@ -900,7 +963,7 @@
   <!-- Toasts -->
   <div class="toasts" id="toasts"></div>
 
-  <!-- Done Modal (NEW) -->
+  <!-- Done Modal -->
   <div id="doneOverlay" class="overlay">
     <div class="modal">
       <div class="modalHdr">
@@ -913,13 +976,40 @@
       </div>
 
       <div id="doneMsg" class="modalBody">
-        Vielen Dank! Du kannst jetzt PDF/E-Mail/Downloads im Review nutzen.
+        Vielen Dank! Du kannst jetzt PDF/E-Mail/Downloads nutzen.
       </div>
 
       <div class="modalId" id="doneDocId">Dokument-ID: –</div>
 
       <div class="modalActions">
-        <button id="doneOkBtn" type="button" class="primaryBtn">OK</button>
+        <button id="donePdfBtn" type="button" class="primaryBtn">PDF</button>
+        <button id="doneMailBtn" type="button" class="secondaryBtn">E-Mail</button>
+        <button id="doneOkBtn" type="button" class="secondaryBtn">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Confirm Modal -->
+  <div id="resetOverlay" class="overlay">
+    <div class="modal">
+      <div class="modalHdr">
+        <div class="modalTitle">Reset bestätigen</div>
+        <button id="resetCloseBtn" type="button" class="iconBtn" title="Schließen">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modalBody">
+        Das löscht alle Eingaben im aktuellen Browser. Zum Bestätigen bitte <b>RESET</b> eintippen.
+      </div>
+
+      <input id="resetTypeInput" type="text" placeholder="RESET" style="margin-top:12px;" />
+
+      <div class="modalActions">
+        <button id="resetCancelBtn" type="button" class="secondaryBtn">Abbrechen</button>
+        <button id="resetConfirmBtn" type="button" class="dangerBtn" disabled>Reset</button>
       </div>
     </div>
   </div>
@@ -927,7 +1017,8 @@
 <script>
 (() => {
   const EMAIL_TO = "master@mastermoves.de";
-  const STORAGE_KEY = "hangar_studiomeister_ux_v1";
+  const STORAGE_KEY = "hangar_studiomeister_ux_v2_autosave";
+  const AUTOSAVE_MS = 8000;
 
   // ---- Config ----
   const DAILY_CHECK_ITEMS = [
@@ -940,15 +1031,17 @@
     "Einfahrt verriegelt",
     "Licht aus"
   ];
+  const CRITICAL_ITEMS = new Set(["Alarm scharf","Einfahrt verriegelt","Licht aus"]);
   const TECH_OPTIONS = ["Schwerlast Nord","Schwerlast Süd","H-Traverse","Lichtsegel","Kreistraverse","Drehteller","Vorhang"];
   const ROOM_OPTIONS = ["Cafeteria","Maske 1","Maske 2","Schwarzer Raum","Werkstatt","Kameralager","Facility-Raum","Produktionsbüro"];
   const ACCEPT_GENERAL = ["Studio besenrein hinterlassen"];
 
   // ---- State ----
-  let step = 1; // 1..4
-  let mode = "daily"; // daily | acceptance
+  let step = 1;            // 1..4
+  let mode = "daily";      // daily | acceptance
   let isDirty = false;
-  let lastProtocol = null; // { mode, meta, text, ... }
+  let lastProtocol = null; // snapshot object for review/export only
+  let lastSavedAt = null;  // Date
 
   // daily checklist item: {title, checked, status:'auto'|'ok'|'issue', note, detailsOpen}
   let dailyChecks = DAILY_CHECK_ITEMS.map(t => ({ title: t, checked:false, status:"auto", note:"", detailsOpen:false }));
@@ -956,9 +1049,11 @@
   let roomsUsed = Object.fromEntries(ROOM_OPTIONS.map(x => [x, false]));
 
   // acceptance item:
-  // general: {status:'ok'|'maengel', note}
+  // general: {status:'ok'|'maengel', note, noteOpen}
   // tech/rooms: {used:boolean, status:'ok'|'maengel', note, noteOpen}
-  const initInspectState = (list, withUsed) => Object.fromEntries(list.map(n => [n, withUsed ? {used:false,status:"ok",note:"",noteOpen:false} : {status:"ok",note:"",noteOpen:false}]));
+  const initInspectState = (list, withUsed) => Object.fromEntries(
+    list.map(n => [n, withUsed ? {used:false,status:"ok",note:"",noteOpen:false} : {status:"ok",note:"",noteOpen:false}])
+  );
   let accGeneral = initInspectState(ACCEPT_GENERAL, false);
   let accTech = initInspectState(TECH_OPTIONS, true);
   let accRooms = initInspectState(ROOM_OPTIONS, true);
@@ -980,6 +1075,16 @@
   function sanitizeName(s){
     return (s || "").replaceAll(/[^a-z0-9\-_ ]/gi,"").trim().replaceAll(/\s+/g,"_").slice(0, 80) || "protokoll";
   }
+  function timeAgo(d){
+    if (!d) return "–";
+    const sec = Math.max(0, Math.floor((Date.now() - d.getTime()) / 1000));
+    if (sec < 10) return "gerade eben";
+    if (sec < 60) return `vor ${sec}s`;
+    const min = Math.floor(sec/60);
+    if (min < 60) return `vor ${min}m`;
+    const h = Math.floor(min/60);
+    return `vor ${h}h`;
+  }
 
   // ---- Toasts ----
   function showToast(msg, variant="ok"){
@@ -996,45 +1101,11 @@
     }, 1800);
   }
 
-  // ---- Done modal (NEW) ----
-  function showDoneModal(){
-    // Ensure we have latest protocol + sumId
-    buildAndRenderReview();
-
-    const overlay = $("doneOverlay");
-    const msg = $("doneMsg");
-    const idEl = $("doneDocId");
-
-    const id = $("sumId").textContent || "–";
-    msg.textContent = "Protokoll erstellt. Vielen Dank! Du kannst jetzt PDF/E-Mail/Downloads im Review nutzen.";
-    idEl.textContent = `Dokument-ID: ${id}`;
-
-    overlay.style.display = "flex";
-
-  // clearTimeout(showDoneModal._t);
-// showDoneModal._t = setTimeout(hideDoneModal, 2200);
-  }
-
-  function hideDoneModal(){
-    $("doneOverlay").style.display = "none";
-  }
-
-  $("doneOverlay").addEventListener("click", (e) => {
-    if (e.target.id === "doneOverlay") hideDoneModal();
-  });
-  $("doneCloseBtn").addEventListener("click", hideDoneModal);
-  $("doneOkBtn").addEventListener("click", hideDoneModal);
-
   // ---- Theme toggle ----
-  function getThemePref(){
-    return localStorage.getItem("hangar_theme") || "auto";
-  }
+  function getThemePref(){ return localStorage.getItem("hangar_theme") || "auto"; }
   function applyThemePref(pref){
-    if (pref === "auto"){
-      document.documentElement.removeAttribute("data-theme");
-    } else {
-      document.documentElement.setAttribute("data-theme", pref);
-    }
+    if (pref === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", pref);
     localStorage.setItem("hangar_theme", pref);
     showToast(`Theme: ${pref === "auto" ? "System" : pref}`, "ok");
   }
@@ -1046,20 +1117,20 @@
   applyThemePref(getThemePref());
 
   // ---- Wizard nav ----
+  const STEP_NAMES = {1:"Typ",2:"Stammdaten",3:"Inhalte",4:"Review"};
   function setStep(n){
     step = Math.max(1, Math.min(4, n));
     ["step1","step2","step3","step4"].forEach((id, idx) => {
       $(id).style.display = (idx+1 === step) ? "" : "none";
     });
-
     $$("#stepper .step").forEach(s => s.classList.toggle("active", Number(s.dataset.step) === step));
     $("backBtn").disabled = (step === 1);
     $("nextBtn").textContent = (step === 4) ? "Fertig" : "Weiter";
 
-    if (step === 4){
-      buildAndRenderReview();
-    }
+    $("stepCompactLeft").textContent = `Schritt ${step}/4`;
+    $("stepCompactRight").textContent = STEP_NAMES[step];
 
+    if (step === 4) buildAndRenderReview();
     updateSticky();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -1067,14 +1138,12 @@
   $("backBtn").addEventListener("click", () => setStep(step - 1));
   $("nextBtn").addEventListener("click", () => {
     if (step < 4){
-      if (step === 2){
-        if (!$("project").value.trim()){
-          showToast("Hinweis: Projekt/Auftrag ist leer (optional).", "ok");
-        }
+      if (step === 2 && !$("project").value.trim()){
+        showToast("Hinweis: Projekt/Auftrag ist leer (optional).", "ok");
       }
       setStep(step + 1);
     } else {
-      // finished — show completion modal (NEW)
+      // finished — show completion modal
       showDoneModal();
     }
   });
@@ -1083,7 +1152,6 @@
   // ---- Mode switch ----
   function applyMode(newMode){
     mode = newMode;
-
     $("modeDailyBtn").classList.toggle("active", mode === "daily");
     $("modeAcceptanceBtn").classList.toggle("active", mode === "acceptance");
 
@@ -1100,22 +1168,26 @@
       ? "Tagesprotokoll: Arbeitszeit (Pause nicht abgezogen, Überstunden >10h) + Closing-Checkliste + Nutzung."
       : "Abnahmeprotokoll: Genutzt + OK/Mängel + Notiz pro Punkt + Besenrein.";
 
+    refreshLiveHint();
     setDirty(true);
   }
   $("modeDailyBtn").addEventListener("click", () => applyMode("daily"));
   $("modeAcceptanceBtn").addEventListener("click", () => applyMode("acceptance"));
 
-  // ---- Dirty tracking ----
+  // ---- Dirty tracking + autosave timestamps ----
   function setDirty(v){
     isDirty = v;
     updateSticky();
     updateStatusChip();
+    scheduleAutosave();
   }
   function updateSticky(){
-    $("stickyStatus").textContent = `Schritt ${step}/4 · ${isDirty ? "Ungespeichert" : "Gespeichert"}`;
+    const saved = lastSavedAt ? `Gespeichert ${timeAgo(lastSavedAt)}` : "Noch nicht gespeichert";
+    $("stickyStatus").textContent = `Schritt ${step}/4 · ${isDirty ? "Ungespeichert" : saved}`;
+    $("autosaveHint").textContent = `Letzter Save: ${saved.replace("Gespeichert ","")}`;
   }
   function updateStatusChip(text){
-    const t = text || (lastProtocol ? `${mode === "daily" ? "Tagesprotokoll" : "Abnahmeprotokoll"} bereit` : (isDirty ? "Ungespeichert" : "–"));
+    const t = text || (lastProtocol ? `${mode === "daily" ? "Tagesprotokoll" : "Abnahmeprotokoll"} bereit` : (isDirty ? "Ungespeichert" : (lastSavedAt ? `Gespeichert ${timeAgo(lastSavedAt)}` : "–")));
     $("statusChip").innerHTML = `<span class="dot"></span><span>Status: ${t}</span>`;
   }
 
@@ -1132,15 +1204,15 @@
     const start = $("workStart").value;
     const end = $("workEnd").value;
     const breakMin = parseMinutes($("workBreak").value);
-
     if (!start || !end) return null;
 
     const [sh, sm] = start.split(":").map(Number);
     const [eh, em] = end.split(":").map(Number);
-
     let startMin = sh*60 + sm;
     let endMin = eh*60 + em;
-    if (endMin < startMin) endMin += 24*60;
+
+    const midnight = endMin < startMin;
+    if (midnight) endMin += 24*60;
 
     const totalMin = Math.max(0, endMin - startMin); // pause NOT subtracted
     const h = Math.floor(totalMin/60), m = totalMin%60;
@@ -1150,19 +1222,20 @@
     const oh = Math.floor(overtimeMin/60), om = overtimeMin%60;
     const odec = Math.round((overtimeMin/60)*100)/100;
 
-    return { start, end, breakMin, totalMin, h, m, dec, overtimeMin, oh, om, odec };
+    return { start, end, breakMin, totalMin, h, m, dec, overtimeMin, oh, om, odec, midnight };
   }
   function updateWorkSummary(){
     const wt = calcWork();
     if (!wt){
       $("workSummary").textContent = "Gesamt: –";
+      $("midnightHint").style.display = "none";
       return;
     }
     $("workSummary").innerHTML =
       `Gesamt: <b>${wt.h}h ${pad2(wt.m)}m</b> (${wt.dec} h) · Pause: ${wt.breakMin} min (nicht abgezogen) · Überstunden (&gt;10h): <b>${wt.oh}h ${pad2(wt.om)}m</b> (${wt.odec} h)`;
+    $("midnightHint").style.display = wt.midnight ? "" : "none";
   }
   ["workStart","workEnd","workBreak"].forEach(id => $(id).addEventListener("input", () => { updateWorkSummary(); setDirty(true); }));
-
   $("startNowBtn").addEventListener("click", () => { $("workStart").value = nowHHMM(); updateWorkSummary(); setDirty(true); showToast("Startzeit gesetzt.", "ok"); });
   $("endNowBtn").addEventListener("click", () => { $("workEnd").value = nowHHMM(); updateWorkSummary(); setDirty(true); showToast("Endzeit gesetzt.", "ok"); });
   $$("#dailyWorkWrap [data-break]").forEach(btn => btn.addEventListener("click", () => {
@@ -1182,6 +1255,7 @@
 
     dailyChecks.forEach((it) => {
       const eff = computeDailyEffStatus(it);
+      const isCritical = CRITICAL_ITEMS.has(it.title);
 
       const card = document.createElement("div");
       card.className = "rowCard";
@@ -1211,6 +1285,14 @@
 
       const meta = document.createElement("div");
       meta.className = "rowMeta";
+
+      if (isCritical){
+        const crit = document.createElement("span");
+        crit.className = "miniTag crit";
+        crit.textContent = "Critical";
+        meta.appendChild(crit);
+      }
+
       const tag = document.createElement("span");
       tag.className = `miniTag ${eff === "ok" ? "ok" : "bad"}`;
       tag.textContent = eff === "ok" ? "OK" : "Issue";
@@ -1345,7 +1427,7 @@
   $("roomsAllBtn").addEventListener("click", () => { setAllUsage(roomsUsed, true); renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed); });
   $("roomsNoneBtn").addEventListener("click", () => { setAllUsage(roomsUsed, false); renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed); });
 
-  // ---- Acceptance render (compact rows) ----
+  // ---- Acceptance render ----
   function renderAccList(hostId, stateObj, withUsed){
     const host = $(hostId);
     host.innerHTML = "";
@@ -1371,7 +1453,17 @@
         const cb = document.createElement("input");
         cb.type = "checkbox";
         cb.checked = !!st.used;
-        cb.addEventListener("change", () => { st.used = cb.checked; setDirty(true); });
+        cb.addEventListener("change", () => {
+          st.used = cb.checked;
+
+          // UX: if not used, default status OK and close note (optional, feels "less decisions")
+          if (!st.used){
+            st.status = "ok";
+            if (!st.note || !st.note.trim()) st.noteOpen = false;
+          }
+          setDirty(true);
+          renderAccList(hostId, stateObj, withUsed);
+        });
         const txt = document.createElement("span");
         txt.textContent = "Genutzt";
         used.appendChild(cb);
@@ -1392,8 +1484,20 @@
         okBtn.classList.toggle("on-ok", st.status === "ok");
         badBtn.classList.toggle("on-bad", st.status === "maengel");
       };
-      okBtn.addEventListener("click", () => { st.status = "ok"; setDirty(true); syncSeg(); });
-      badBtn.addEventListener("click", () => { st.status = "maengel"; st.noteOpen = true; setDirty(true); syncSeg(); renderAccList(hostId, stateObj, withUsed); });
+
+      okBtn.addEventListener("click", () => {
+        st.status = "ok";
+        setDirty(true);
+        syncSeg();
+      });
+
+      badBtn.addEventListener("click", () => {
+        st.status = "maengel";
+        st.noteOpen = true;
+        setDirty(true);
+        syncSeg();
+        renderAccList(hostId, stateObj, withUsed);
+      });
 
       seg.appendChild(okBtn);
       seg.appendChild(badBtn);
@@ -1403,7 +1507,11 @@
       noteBtn.type = "button";
       noteBtn.className = "noteToggle";
       noteBtn.textContent = st.noteOpen ? "Notiz zu" : "Notiz";
-      noteBtn.addEventListener("click", () => { st.noteOpen = !st.noteOpen; setDirty(true); renderAccList(hostId, stateObj, withUsed); });
+      noteBtn.addEventListener("click", () => {
+        st.noteOpen = !st.noteOpen;
+        setDirty(true);
+        renderAccList(hostId, stateObj, withUsed);
+      });
       controls.appendChild(noteBtn);
 
       top.appendChild(nm);
@@ -1442,7 +1550,7 @@
     $(id).addEventListener("input", () => setDirty(true));
   });
 
-  // ---- Build protocols (text) ----
+  // ---- Build protocol snapshots (review/export) ----
   function getMeta(){
     return {
       project: $("project").value.trim(),
@@ -1454,18 +1562,39 @@
   }
   function selectedKeys(obj){ return Object.keys(obj).filter(k => !!obj[k]); }
 
-  function buildDailyText(meta){
+  function buildDocId(meta, protoMode){
+    const typeLabel = (protoMode === "daily") ? "Tagesprotokoll" : "Abnahme";
+    return `${meta.date || todayISO()}_${typeLabel}_${sanitizeName(meta.project || "Hangar_Studiomeister")}`;
+  }
+
+  function dailyIssueTitlesFromSnapshot(items){
+    return items
+      .filter(it => (it.effStatus === "issue"))
+      .map(it => it.title);
+  }
+
+  function buildDailySnapshot(meta){
     const wt = calcWork();
     const usedTech = selectedKeys(techUsed);
     const usedRooms = selectedKeys(roomsUsed);
 
-    const must = ["Alarm scharf","Einfahrt verriegelt","Licht aus"];
-    const map = new Map(dailyChecks.map(x => [x.title, x]));
-    const safetyOk = must.every(k => computeDailyEffStatus(map.get(k) || {status:"issue",checked:false}) === "ok");
+    // snapshot list
+    const snapItems = dailyChecks.map(it => ({
+      title: it.title,
+      checked: !!it.checked,
+      status: it.status,
+      note: (it.note || "").trim(),
+      effStatus: (it.status === "auto") ? (it.checked ? "ok" : "issue") : it.status
+    }));
 
-    const total = dailyChecks.length;
-    const okCount = dailyChecks.filter(it => computeDailyEffStatus(it) === "ok").length;
+    const must = ["Alarm scharf","Einfahrt verriegelt","Licht aus"];
+    const map = new Map(snapItems.map(x => [x.title, x]));
+    const safetyOk = must.every(k => (map.get(k)?.effStatus || "issue") === "ok");
+
+    const total = snapItems.length;
+    const okCount = snapItems.filter(x => x.effStatus === "ok").length;
     const issueCount = total - okCount;
+    const issueTitles = dailyIssueTitlesFromSnapshot(snapItems);
 
     const lines = [];
     lines.push("Tagesprotokoll – Hangar Studio (Studiomeister)");
@@ -1480,6 +1609,7 @@
       lines.push(`Arbeitszeit: ${wt.start}–${wt.end} = ${wt.h}h ${pad2(wt.m)}m (${wt.dec} h)`);
       lines.push(`Pause: ${wt.breakMin} min (nicht abgezogen)`);
       lines.push(`Überstunden (>10h): ${wt.oh}h ${pad2(wt.om)}m (${wt.odec} h)`);
+      if (wt.midnight) lines.push("Hinweis: Ende vor Start → über Mitternacht angenommen.");
     } else {
       lines.push("Arbeitszeit: -");
     }
@@ -1501,13 +1631,27 @@
     }
 
     lines.push("Closing-Checkliste:");
-    dailyChecks.forEach((it, i) => {
-      const eff = computeDailyEffStatus(it) === "ok" ? "OK" : "ISSUE";
-      const note = (it.note && it.note.trim()) ? ` — ${it.note.trim()}` : "";
+    snapItems.forEach((it, i) => {
+      const eff = it.effStatus === "ok" ? "OK" : "ISSUE";
+      const note = it.note ? ` — ${it.note}` : "";
       lines.push(`${pad2(i+1)}. [${eff}] ${it.title}${note}`);
     });
 
-    return { text: lines.join("\n"), wt, usedTech, usedRooms, safetyOk };
+    return {
+      mode: "daily",
+      meta,
+      docId: buildDocId(meta, "daily"),
+      text: lines.join("\n"),
+      wt,
+      usedTech,
+      usedRooms,
+      safetyOk,
+      okCount,
+      issueCount,
+      total,
+      issueTitles,
+      items: snapItems
+    };
   }
 
   function inspectRows(stateObj, withUsed){
@@ -1522,10 +1666,15 @@
     });
   }
 
-  function buildAcceptanceText(meta){
+  function buildAcceptanceSnapshot(meta){
     const g = inspectRows(accGeneral, false);
     const t = inspectRows(accTech, true);
     const r = inspectRows(accRooms, true);
+
+    const all = [...g.map(x=>({...x, group:"Allgemein"})), ...t.map(x=>({...x, group:"Studiotechnik"})), ...r.map(x=>({...x, group:"Räume"}))];
+    const maengel = all.filter(x => x.status === "maengel");
+    const maengelCount = maengel.length;
+    const maengelTitles = maengel.map(x => `${x.group}: ${x.name}`);
 
     const lines = [];
     lines.push("Abnahmeprotokoll – Hangar Studio (Studiomeister)");
@@ -1558,10 +1707,18 @@
     block("Abnahme – Studiotechnik", t, true);
     block("Abnahme – Räume", r, true);
 
-    return { text: lines.join("\n"), g, t, r };
+    return {
+      mode: "acceptance",
+      meta,
+      docId: buildDocId(meta, "acceptance"),
+      text: lines.join("\n"),
+      g, t, r,
+      maengelCount,
+      maengelTitles
+    };
   }
 
-  // ---- Clean HTML export (structured PDF) ----
+  // ---- Export (HTML/PDF) uses snapshot only ----
   function escapeHtml(s){
     return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
   }
@@ -1575,7 +1732,6 @@
 
   function renderAcceptanceTableHtml(title, rows, withUsed){
     const esc = escapeHtml;
-
     const thead = withUsed ? `
       <tr>
         <th style="width:48px;">#</th>
@@ -1625,33 +1781,34 @@
     `;
   }
 
-  function protocolAsHtml(protocol){
+  function protocolAsHtml(snapshot){
     const esc = escapeHtml;
-    const typeLabel = (protocol.mode === "daily") ? "Tagesprotokoll" : "Abnahme";
-    const baseName = `${protocol.meta.date || todayISO()}_${typeLabel}_${sanitizeName(protocol.meta.project || "Hangar_Studiomeister")}`;
+    const typeLabel = (snapshot.mode === "daily") ? "Tagesprotokoll" : "Abnahme";
+    const baseName = snapshot.docId;
 
-    const meta = protocol.meta;
-    const isDaily = protocol.mode === "daily";
+    const meta = snapshot.meta;
+    const isDaily = snapshot.mode === "daily";
 
     const workBlock = isDaily ? `
       <div class="box" style="grid-column:1 / -1;">
         <div class="k">Arbeitszeit (Studiomeister)</div>
-        <div class="v">${protocol.wt ? esc(`${protocol.wt.start}–${protocol.wt.end} = ${protocol.wt.h}h ${pad2(protocol.wt.m)}m (${protocol.wt.dec} h)`) : "–"}</div>
+        <div class="v">${snapshot.wt ? esc(`${snapshot.wt.start}–${snapshot.wt.end} = ${snapshot.wt.h}h ${pad2(snapshot.wt.m)}m (${snapshot.wt.dec} h)`) : "–"}</div>
         <div class="k" style="margin-top:6px;">Pause</div>
-        <div class="v">${protocol.wt ? esc(`${protocol.wt.breakMin} min (nicht abgezogen)`) : "–"}</div>
+        <div class="v">${snapshot.wt ? esc(`${snapshot.wt.breakMin} min (nicht abgezogen)`) : "–"}</div>
         <div class="k" style="margin-top:6px;">Überstunden (&gt;10h)</div>
-        <div class="v">${protocol.wt ? esc(`${protocol.wt.oh}h ${pad2(protocol.wt.om)}m (${protocol.wt.odec} h)`) : "–"}</div>
+        <div class="v">${snapshot.wt ? esc(`${snapshot.wt.oh}h ${pad2(snapshot.wt.om)}m (${snapshot.wt.odec} h)`) : "–"}</div>
+        ${snapshot.wt && snapshot.wt.midnight ? `<div class="k" style="margin-top:6px;">Hinweis</div><div class="v">Ende vor Start → über Mitternacht angenommen.</div>` : ``}
       </div>
     ` : "";
 
     const usageBlocks = isDaily ? `
       <div class="box" style="grid-column:1 / -1;">
         <div class="k">Studiotechnik genutzt</div>
-        <div class="v">${protocol.usedTech && protocol.usedTech.length ? esc(protocol.usedTech.join(", ")) : "–"}</div>
+        <div class="v">${snapshot.usedTech && snapshot.usedTech.length ? esc(snapshot.usedTech.join(", ")) : "–"}</div>
       </div>
       <div class="box" style="grid-column:1 / -1;">
         <div class="k">Räume genutzt</div>
-        <div class="v">${protocol.usedRooms && protocol.usedRooms.length ? esc(protocol.usedRooms.join(", ")) : "–"}</div>
+        <div class="v">${snapshot.usedRooms && snapshot.usedRooms.length ? esc(snapshot.usedRooms.join(", ")) : "–"}</div>
       </div>
     ` : "";
 
@@ -1674,16 +1831,18 @@
           </tr>
         </thead>
         <tbody>
-          ${dailyChecks.map((it, i) => {
-            const eff = computeDailyEffStatus(it);
+          ${snapshot.items.map((it, i) => {
+            const eff = it.effStatus;
             return `
               <tr>
                 <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${pad2(i+1)}</td>
-                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${esc(it.title)}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">
+                  ${esc(it.title)}${CRITICAL_ITEMS.has(it.title) ? ' <span style="font-size:11px;color:#0a84ff;font-weight:700;">(Critical)</span>' : ''}
+                </td>
                 <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:110px;text-align:right;">
                   ${badgeHtml(eff==="ok" ? "ok" : "maengel")}
                 </td>
-                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${it.note && it.note.trim() ? esc(it.note.trim()) : "–"}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${it.note ? esc(it.note) : "–"}</td>
               </tr>
             `;
           }).join("")}
@@ -1692,9 +1851,9 @@
     ` : "";
 
     const acceptanceTables = !isDaily ? `
-      ${renderAcceptanceTableHtml("Abnahme – Allgemein", protocol.g, false)}
-      ${renderAcceptanceTableHtml("Abnahme – Studiotechnik", protocol.t, true)}
-      ${renderAcceptanceTableHtml("Abnahme – Räume", protocol.r, true)}
+      ${renderAcceptanceTableHtml("Abnahme – Allgemein", snapshot.g, false)}
+      ${renderAcceptanceTableHtml("Abnahme – Studiotechnik", snapshot.t, true)}
+      ${renderAcceptanceTableHtml("Abnahme – Räume", snapshot.r, true)}
     ` : "";
 
     const title = isDaily ? "Tagesprotokoll" : "Abnahmeprotokoll";
@@ -1737,6 +1896,7 @@
       <div class="box"><div class="k">Bearbeiter:in</div><div class="v">${esc(meta.author || "-")}</div></div>
       <div class="box"><div class="k">Datum</div><div class="v">${esc(meta.date || "-")}</div></div>
       <div class="box"><div class="k">Ort</div><div class="v">${esc(meta.location || "-")}</div></div>
+      ${isDaily ? `<div class="box" style="grid-column:1 / -1;"><div class="k">Safety (Alarm/Einfahrt/Licht)</div><div class="v">${snapshot.safetyOk ? "OK" : "NICHT VOLLSTÄNDIG"}</div></div>` : ``}
       ${workBlock}
       ${usageBlocks}
     </div>
@@ -1748,7 +1908,7 @@
 </html>`;
   }
 
-  // ---- Review actions ----
+  // ---- Export helpers ----
   function download(filename, mime, content){
     const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);
@@ -1767,56 +1927,59 @@
     return `mailto:${encodeURIComponent(EMAIL_TO)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
   }
 
+  // ---- Review render (snapshot + counts) ----
+  function setExportButtonsEnabled(on){
+    ["reviewEmailBtn","reviewTxtBtn","reviewHtmlBtn","reviewPrintBtn"].forEach(id => $(id).disabled = !on);
+  }
+
   function buildAndRenderReview(){
     const meta = getMeta();
     if (mode === "daily"){
-      const out = buildDailyText(meta);
-      lastProtocol = { mode:"daily", meta, text: out.text, wt: out.wt, usedTech: out.usedTech, usedRooms: out.usedRooms, safetyOk: out.safetyOk };
+      lastProtocol = buildDailySnapshot(meta);
       $("sumType").textContent = "Tagesprotokoll";
-      $("sumSafety").textContent = out.safetyOk ? "OK" : "NICHT VOLLSTÄNDIG";
-      $("sumOvertime").textContent = out.wt ? `${out.wt.oh}h ${pad2(out.wt.om)}m` : "–";
+      $("sumSafety").textContent = lastProtocol.safetyOk ? "OK" : "NICHT VOLLSTÄNDIG";
+      $("sumOvertime").textContent = lastProtocol.wt ? `${lastProtocol.wt.oh}h ${pad2(lastProtocol.wt.om)}m` : "–";
+
+      $("sumCounts").innerHTML = `<b>${lastProtocol.issueCount}</b> Issues · <b>${lastProtocol.okCount}</b> OK · <b>${lastProtocol.total}</b> gesamt`;
+      if (lastProtocol.issueTitles.length){
+        $("sumList").innerHTML = `<b>Issues:</b><br>${lastProtocol.issueTitles.map(t => `• ${t}`).join("<br>")}`;
+      } else {
+        $("sumList").innerHTML = `<b>Issues:</b> –`;
+      }
     } else {
-      const out = buildAcceptanceText(meta);
-      lastProtocol = { mode:"acceptance", meta, text: out.text, g: out.g, t: out.t, r: out.r };
+      lastProtocol = buildAcceptanceSnapshot(meta);
       $("sumType").textContent = "Abnahmeprotokoll";
       $("sumSafety").textContent = "–";
       $("sumOvertime").textContent = "–";
+
+      $("sumCounts").innerHTML = `<b>${lastProtocol.maengelCount}</b> Mängel`;
+      if (lastProtocol.maengelTitles.length){
+        $("sumList").innerHTML = `<b>Mängel:</b><br>${lastProtocol.maengelTitles.map(t => `• ${t}`).join("<br>")}`;
+      } else {
+        $("sumList").innerHTML = `<b>Mängel:</b> –`;
+      }
     }
 
-    const typeLabel = (lastProtocol.mode === "daily") ? "Tagesprotokoll" : "Abnahme";
-    const docId = `${lastProtocol.meta.date || todayISO()}_${typeLabel}_${sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister")}`;
-    $("sumId").textContent = docId;
-
+    $("sumId").textContent = lastProtocol.docId;
     $("previewText").textContent = lastProtocol.text;
 
     updateStatusChip("Review bereit");
     setExportButtonsEnabled(true);
-
     updateDailySafetyHint();
   }
 
-  function setExportButtonsEnabled(on){
-    ["reviewEmailBtn","reviewTxtBtn","reviewHtmlBtn","reviewPrintBtn"].forEach(id => $(id).disabled = !on);
-  }
-  setExportButtonsEnabled(false);
-
+  // Review buttons
   $("reviewEmailBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
     window.location.href = makeMailto(lastProtocol.text);
   });
   $("reviewTxtBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
-    const typeLabel = (lastProtocol.mode === "daily") ? "Tagesprotokoll" : "Abnahme";
-    const date = lastProtocol.meta.date || todayISO();
-    const name = sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister");
-    download(`${date}_${typeLabel}_${name}.txt`, "text/plain;charset=utf-8", lastProtocol.text);
+    download(`${lastProtocol.docId}.txt`, "text/plain;charset=utf-8", lastProtocol.text);
   });
   $("reviewHtmlBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
-    const typeLabel = (lastProtocol.mode === "daily") ? "Tagesprotokoll" : "Abnahme";
-    const date = lastProtocol.meta.date || todayISO();
-    const name = sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister");
-    download(`${date}_${typeLabel}_${name}.html`, "text/html;charset=utf-8", protocolAsHtml(lastProtocol));
+    download(`${lastProtocol.docId}.html`, "text/html;charset=utf-8", protocolAsHtml(lastProtocol));
   });
   $("reviewPrintBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
@@ -1826,10 +1989,50 @@
     w.focus(); w.print();
   });
 
-  // ---- Save / Load / Reset ----
-  function saveState(){
+  // ---- Done modal ----
+  function showDoneModal(){
+    // ensure current snapshot is available
+    buildAndRenderReview();
+
+    $("doneMsg").textContent = "Protokoll erstellt. Vielen Dank! Du kannst jetzt PDF/E-Mail/Downloads nutzen.";
+    $("doneDocId").textContent = `Dokument-ID: ${$("sumId").textContent || "–"}`;
+    $("doneOverlay").style.display = "flex";
+  }
+  function hideDoneModal(){ $("doneOverlay").style.display = "none"; }
+  $("doneOverlay").addEventListener("click", (e) => { if (e.target.id === "doneOverlay") hideDoneModal(); });
+  $("doneCloseBtn").addEventListener("click", hideDoneModal);
+  $("doneOkBtn").addEventListener("click", hideDoneModal);
+
+  $("donePdfBtn").addEventListener("click", () => {
+    hideDoneModal();
+    $("reviewPrintBtn").click();
+  });
+  $("doneMailBtn").addEventListener("click", () => {
+    hideDoneModal();
+    $("reviewEmailBtn").click();
+  });
+
+  // ---- Reset confirm modal ----
+  function openResetModal(){
+    $("resetTypeInput").value = "";
+    $("resetConfirmBtn").disabled = true;
+    $("resetOverlay").style.display = "flex";
+    $("resetTypeInput").focus();
+  }
+  function closeResetModal(){ $("resetOverlay").style.display = "none"; }
+  $("resetOverlay").addEventListener("click", (e) => { if (e.target.id === "resetOverlay") closeResetModal(); });
+  $("resetCloseBtn").addEventListener("click", closeResetModal);
+  $("resetCancelBtn").addEventListener("click", closeResetModal);
+  $("resetTypeInput").addEventListener("input", () => {
+    $("resetConfirmBtn").disabled = ($("resetTypeInput").value.trim().toUpperCase() !== "RESET");
+  });
+
+  // ---- Save / Load / Autosave ----
+  let autosaveTimer = null;
+
+  function serializeState(){
     const meta = getMeta();
-    const state = {
+    return {
       step,
       mode,
       meta,
@@ -1837,13 +2040,27 @@
       work: { start: $("workStart").value, end: $("workEnd").value, breakMin: $("workBreak").value },
       used: { techUsed, roomsUsed },
       accGeneral, accTech, accRooms,
+      lastSavedAt: lastSavedAt ? lastSavedAt.toISOString() : null,
       theme: getThemePref()
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function saveState(silent=false){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(serializeState()));
+    lastSavedAt = new Date();
     isDirty = false;
     updateSticky();
-    updateStatusChip("Gespeichert");
-    showToast("Zwischenstand gespeichert.", "ok");
+    updateStatusChip(silent ? undefined : "Gespeichert");
+    if (!silent) showToast("Gespeichert.", "ok");
+  }
+
+  function scheduleAutosave(){
+    if (!isDirty) return;
+    if (autosaveTimer) return;
+    autosaveTimer = setTimeout(() => {
+      autosaveTimer = null;
+      if (isDirty) saveState(true);
+    }, AUTOSAVE_MS);
   }
 
   function loadState(){
@@ -1854,14 +2071,19 @@
     }
     const state = JSON.parse(raw);
 
-    applyMode(state.mode || "daily");
+    // mode first
+    mode = state.mode || "daily";
+    $("modeDailyBtn").classList.toggle("active", mode === "daily");
+    $("modeAcceptanceBtn").classList.toggle("active", mode === "acceptance");
 
+    // meta
     $("project").value = state.meta?.project || "";
     $("date").value = state.meta?.date || todayISO();
     $("location").value = state.meta?.location || "Hangar Studio";
     $("author").value = state.meta?.author || "";
     $("generalNotes").value = state.meta?.generalNotes || "";
 
+    // work
     $("workStart").value = state.work?.start || "";
     $("workEnd").value = state.work?.end || "";
     $("workBreak").value = state.work?.breakMin || "";
@@ -1874,27 +2096,29 @@
     accTech = state.accTech || accTech;
     accRooms = state.accRooms || accRooms;
 
+    lastSavedAt = state.lastSavedAt ? new Date(state.lastSavedAt) : null;
+
+    // apply mode toggles and render
+    applyMode(mode);
+
     renderDaily();
     renderUsageGrid("techGrid", TECH_OPTIONS, techUsed);
     renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed);
     renderAccList("accGeneralList", accGeneral, false);
     renderAccList("accTechList", accTech, true);
     renderAccList("accRoomsList", accRooms, true);
-
     updateWorkSummary();
 
     isDirty = false;
     lastProtocol = null;
     updateSticky();
     updateStatusChip("Geladen");
-    showToast("Zwischenstand geladen.", "ok");
+    showToast("Geladen.", "ok");
 
     setStep(state.step || 1);
   }
 
   function resetAll(){
-    if (!confirm("Wirklich alles zurücksetzen?")) return;
-
     mode = "daily";
     dailyChecks = DAILY_CHECK_ITEMS.map(t => ({ title: t, checked:false, status:"auto", note:"", detailsOpen:false }));
     techUsed = Object.fromEntries(TECH_OPTIONS.map(x => [x, false]));
@@ -1920,31 +2144,40 @@
     renderAccList("accGeneralList", accGeneral, false);
     renderAccList("accTechList", accTech, true);
     renderAccList("accRoomsList", accRooms, true);
-
     updateWorkSummary();
+
     lastProtocol = null;
     setExportButtonsEnabled(false);
-    setDirty(false);
-
+    isDirty = false;
+    updateSticky();
+    updateStatusChip("–");
     showToast("Zurückgesetzt.", "ok");
     setStep(1);
   }
 
-  $("saveBtn").addEventListener("click", saveState);
-  $("saveBtnTop").addEventListener("click", saveState);
+  $("saveBtn").addEventListener("click", () => saveState(false));
+  $("saveBtnTop").addEventListener("click", () => saveState(false));
   $("loadBtn").addEventListener("click", loadState);
   $("loadBtnTop").addEventListener("click", loadState);
-  $("resetBtn").addEventListener("click", resetAll);
+
+  $("resetBtn").addEventListener("click", openResetModal);
+  $("resetConfirmBtn").addEventListener("click", () => { closeResetModal(); resetAll(); });
 
   // ---- Live hint tuning ----
   function refreshLiveHint(){
     $("liveHint").innerHTML =
       mode === "daily"
-        ? "Daily-Flow: abhaken → nur bei Bedarf Details/Notiz. Safety-Punkte (Alarm/Einfahrt/Licht) bitte bewusst bestätigen."
+        ? "Daily-Flow: abhaken → nur bei Bedarf Details/Notiz. Safety-Punkte (Alarm/Einfahrt/Licht) sind als Critical markiert."
         : "Abnahme-Flow: pro Punkt Genutzt + OK/Mängel. Notiz optional; bei Mängel klappt sie automatisch auf.";
   }
 
-  // ---- Initialize render ----
+  // ---- Export buttons default state ----
+  function setExportButtonsEnabled(on){
+    ["reviewEmailBtn","reviewTxtBtn","reviewHtmlBtn","reviewPrintBtn"].forEach(id => $(id).disabled = !on);
+  }
+  setExportButtonsEnabled(false);
+
+  // ---- Initial render + mode ----
   renderDaily();
   renderUsageGrid("techGrid", TECH_OPTIONS, techUsed);
   renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed);
@@ -1959,6 +2192,16 @@
 
   // Step init
   setStep(1);
+
+  // mark dirty on any meta changes
+  ["project","date","location","author","generalNotes"].forEach(id => {
+    $(id).addEventListener("input", () => setDirty(true));
+  });
+
+  // autosave status refresh ticker (updates "vor Xs")
+  setInterval(() => {
+    if (!isDirty && lastSavedAt) updateSticky();
+  }, 1000);
 
 })();
 </script>
