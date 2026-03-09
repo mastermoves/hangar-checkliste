@@ -122,7 +122,9 @@
     .inspect-name{ font-weight:650; font-size: 13px; line-height:1.25; }
     .inspect-controls{ display:flex; gap:8px; align-items:center; }
     .inspect-controls select{ width:120px; }
-    .inspect-note{ margin-top:8px; display:none; }
+
+    /* Notiz ist jetzt IMMER sichtbar */
+    .inspect-note{ margin-top:8px; display:block; }
     .inspect-note textarea{ min-height: 70px; }
 
     @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
@@ -149,7 +151,7 @@
     <div class="grid">
       <div class="card">
         <h2>Protokolltyp</h2>
-        <div class="muted">Tagesprotokoll: Closing + Arbeitszeit + Nutzung · Abnahmeprotokoll: Zustandsabnahme (OK/Mängel) + „Besenrein“.</div>
+        <div class="muted">Tagesprotokoll: Closing + Arbeitszeit + Nutzung · Abnahmeprotokoll: Zustandsabnahme (OK/Mängel) + „Besenrein“ (Notiz pro Punkt).</div>
         <div class="seg">
           <button id="modeDailyBtn" class="primary">Tagesprotokoll</button>
           <button id="modeAcceptanceBtn">Abnahmeprotokoll</button>
@@ -249,7 +251,7 @@
           <div class="sectionHead">
             <div>
               <div class="sectionTitle">Abnahme – Allgemein</div>
-              <div class="sectionHint">OK/Mängel + Notiz bei Mängeln</div>
+              <div class="sectionHint">OK/Mängel + Notiz pro Punkt (optional)</div>
             </div>
             <div class="sectionActions">
               <button id="acceptGeneralAllOkBtn">Alle OK</button>
@@ -263,7 +265,7 @@
           <div class="sectionHead">
             <div>
               <div class="sectionTitle">Abnahme – Studiotechnik</div>
-              <div class="sectionHint">OK/Mängel + Notiz bei Mängeln</div>
+              <div class="sectionHint">OK/Mängel + Notiz pro Punkt (optional)</div>
             </div>
             <div class="sectionActions">
               <button id="acceptTechAllOkBtn">Alle OK</button>
@@ -277,7 +279,7 @@
           <div class="sectionHead">
             <div>
               <div class="sectionTitle">Abnahme – Räume</div>
-              <div class="sectionHint">OK/Mängel + Notiz bei Mängeln</div>
+              <div class="sectionHint">OK/Mängel + Notiz pro Punkt (optional)</div>
             </div>
             <div class="sectionActions">
               <button id="acceptRoomsAllOkBtn">Alle OK</button>
@@ -317,7 +319,7 @@
 
 <script>
   const EMAIL_TO = "master@mastermoves.de";
-  const STORAGE_KEY = "hangar_studiomeister_state_v4";
+  const STORAGE_KEY = "hangar_studiomeister_state_v5";
 
   let mode = "daily"; // "daily" | "acceptance"
 
@@ -385,7 +387,7 @@
 
     $("modeHint").textContent = (mode==="daily")
       ? "Tagesprotokoll aktiv: Arbeitszeit (Pause nicht abgezogen, Überstunden >10h) + Closing-Checkliste + Nutzung (Studiotechnik/Räume)."
-      : "Abnahmeprotokoll aktiv: Zustandsabnahme (OK/Mängel) + Besenrein. (Keine Arbeitszeit, keine Closing-Checkliste).";
+      : "Abnahmeprotokoll aktiv: Zustandsabnahme (OK/Mängel) + Notiz pro Punkt + Besenrein. (Keine Arbeitszeit, keine Closing-Checkliste).";
 
     lastProtocol = null;
     $("protoText").textContent = "Noch kein Protokoll erstellt.";
@@ -396,7 +398,7 @@
   $("modeDailyBtn").addEventListener("click", ()=>applyMode("daily"));
   $("modeAcceptanceBtn").addEventListener("click", ()=>applyMode("acceptance"));
 
-  // ---------- Daily checklist UI ----------
+  // ---------- Daily checklist ----------
   function effectiveStatus(it){
     return (it.status==="auto") ? (it.checked ? "ok" : "issue") : it.status;
   }
@@ -491,7 +493,7 @@
     badge.classList.add((eff==="ok") ? "badge-ok" : "badge-bad");
   }
 
-  // ---------- Usage UI ----------
+  // ---------- Usage ----------
   function renderUsage(containerId, options, stateObj){
     const container = $(containerId);
     container.innerHTML = "";
@@ -519,11 +521,10 @@
 
   $("techAllBtn").addEventListener("click", () => { setAllUsage(techUsed, true); renderUsage("techUsed", TECH_OPTIONS, techUsed); });
   $("techNoneBtn").addEventListener("click", () => { setAllUsage(techUsed, false); renderUsage("techUsed", TECH_OPTIONS, techUsed); });
-
   $("roomsAllBtn").addEventListener("click", () => { setAllUsage(roomsUsed, true); renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed); });
   $("roomsNoneBtn").addEventListener("click", () => { setAllUsage(roomsUsed, false); renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed); });
 
-  // ---------- Worktime: pause not subtracted, overtime >10h ----------
+  // ---------- Worktime ----------
   function parseMinutes(value){
     const n = parseInt(String(value||"").trim(), 10);
     return Number.isFinite(n) && n>=0 ? n : 0;
@@ -569,7 +570,7 @@
 
   ["workStart","workEnd","workBreak"].forEach(id => $(id).addEventListener("input", updateWorkSummary));
 
-  // ---------- Acceptance inspection UI ----------
+  // ---------- Acceptance inspect: ALWAYS note ----------
   function renderInspect(containerId, stateObj){
     const container = $(containerId);
     container.innerHTML = "";
@@ -592,39 +593,32 @@
       const sel = document.createElement("select");
       sel.innerHTML = `<option value="ok">OK</option><option value="maengel">Mängel</option>`;
       sel.value = st.status || "ok";
-
-      const noteWrap = document.createElement("div");
-      noteWrap.className = "inspect-note";
-
-      const noteLabel = document.createElement("label");
-      noteLabel.textContent = "Notiz (nur bei Mängeln)";
-      const ta = document.createElement("textarea");
-      ta.value = st.note || "";
-      ta.placeholder = "z. B. Art des Mangels, Position, ToDo...";
-      ta.addEventListener("input", ()=> st.note = ta.value);
-
-      noteWrap.appendChild(noteLabel);
-      noteWrap.appendChild(ta);
-
-      function sync(){
-        st.status = sel.value;
-        noteWrap.style.display = (st.status === "maengel") ? "" : "none";
-      }
-      sel.addEventListener("change", sync);
+      sel.addEventListener("change", () => st.status = sel.value);
 
       controls.appendChild(sel);
       top.appendChild(nm);
       top.appendChild(controls);
 
+      const noteWrap = document.createElement("div");
+      noteWrap.className = "inspect-note";
+      const noteLabel = document.createElement("label");
+      noteLabel.textContent = "Notiz (optional)";
+      const ta = document.createElement("textarea");
+      ta.value = st.note || "";
+      ta.placeholder = "z. B. Zustand, Besonderheiten, Maßnahmen, ToDo...";
+      ta.addEventListener("input", ()=> st.note = ta.value);
+
+      noteWrap.appendChild(noteLabel);
+      noteWrap.appendChild(ta);
+
       box.appendChild(top);
       box.appendChild(noteWrap);
       container.appendChild(box);
-      sync();
     });
   }
 
   function setAllOk(stateObj){
-    Object.keys(stateObj).forEach(k => { stateObj[k].status = "ok"; stateObj[k].note = ""; });
+    Object.keys(stateObj).forEach(k => { stateObj[k].status = "ok"; /* Notiz bleibt absichtlich */ });
   }
 
   $("acceptGeneralAllOkBtn").addEventListener("click", () => { setAllOk(acceptGeneral); renderInspect("acceptGeneral", acceptGeneral); });
@@ -689,20 +683,19 @@
     return { mode:"daily", meta, text: lines.join("\n") };
   }
 
-  function inspectSummary(stateObj){
-    const ma = [];
-    Object.keys(stateObj).forEach(name => {
+  function inspectSummaryFull(stateObj){
+    const rows = Object.keys(stateObj).map(name => {
       const st = stateObj[name];
-      if (st.status === "maengel") ma.push({name, note: (st.note||"").trim()});
+      return { name, status: st.status, note: (st.note||"").trim() };
     });
-    return { ma };
+    return rows;
   }
 
   function buildAcceptanceProtocol(){
     const meta = getMeta();
-    const g = inspectSummary(acceptGeneral);
-    const t = inspectSummary(acceptTech);
-    const r = inspectSummary(acceptRooms);
+    const g = inspectSummaryFull(acceptGeneral);
+    const t = inspectSummaryFull(acceptTech);
+    const r = inspectSummaryFull(acceptRooms);
 
     const lines = [];
     lines.push("ABNAHMEPROTOKOLL – Hangar Studio (Studiomeister)");
@@ -718,16 +711,13 @@
       lines.push("");
     }
 
-    function block(title, sum){
+    function block(title, rows){
       lines.push(title + ":");
-      if (sum.ma.length === 0){
-        lines.push("- OK (keine Mängel)");
-      } else {
-        lines.push(`- Mängel: ${sum.ma.length}`);
-        sum.ma.forEach((m, i) => {
-          lines.push(`  ${String(i+1).padStart(2,"0")}. ${m.name}${m.note ? " — " + m.note : ""}`);
-        });
-      }
+      rows.forEach((x, i) => {
+        const st = (x.status === "maengel") ? "MÄNGEL" : "OK";
+        const line = `${String(i+1).padStart(2,"0")}. [${st}] ${x.name}${x.note ? " — " + x.note : ""}`;
+        lines.push(line);
+      });
       lines.push("");
     }
 
@@ -929,16 +919,18 @@
     $("statusPill").innerHTML = `<span class="dot"></span><span>Status: –</span>`;
   });
 
-  // Init
+  // Init UI
   $("date").value = todayISO();
   if (!$("location").value) $("location").value = "Hangar Studio";
 
   renderDailyChecks();
   renderUsage("techUsed", TECH_OPTIONS, techUsed);
   renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed);
+
   renderInspect("acceptGeneral", acceptGeneral);
   renderInspect("acceptTech", acceptTech);
   renderInspect("acceptRooms", acceptRooms);
+
   updateWorkSummary();
   applyMode("daily");
   setExportEnabled(false);
