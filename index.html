@@ -5,360 +5,864 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hangar Studio – Studiomeister Protokolle</title>
   <style>
+    /* ---------- Apple-ish tokens (light-first, auto dark) ---------- */
     :root{
-      --bg:#0b0f14; --muted:#9aa4b2; --text:#e6edf3; --line:#233044; --accent:#4f8cff;
-      --shadow: 0 12px 34px rgba(0,0,0,.35);
-      --shadow2: 0 8px 20px rgba(0,0,0,.25);
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #111111;
+      --muted: #6e6e73;
+      --line: #e5e5ea;
+      --shadow: 0 10px 28px rgba(0,0,0,.08);
+      --shadow2: 0 6px 18px rgba(0,0,0,.06);
+      --accent: #0a84ff;
+      --accent2: rgba(10,132,255,.12);
+      --danger: #ff3b30;
+      --danger2: rgba(255,59,48,.12);
+      --ok: #34c759;
+      --ok2: rgba(52,199,89,.12);
       --radius: 16px;
-      --ok:#2ecc71; --bad:#ff5c5c;
+      --radius2: 12px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+      --sticky-h: 76px;
     }
+
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg: #0b0f14;
+        --card: rgba(17,24,38,.88);
+        --text: #e6edf3;
+        --muted: #9aa4b2;
+        --line: #233044;
+        --shadow: 0 12px 34px rgba(0,0,0,.40);
+        --shadow2: 0 8px 20px rgba(0,0,0,.30);
+        --accent: #4f8cff;
+        --accent2: rgba(79,140,255,.18);
+        --danger: #ff5c5c;
+        --danger2: rgba(255,92,92,.14);
+        --ok: #2ecc71;
+        --ok2: rgba(46,204,113,.14);
+      }
+    }
+
+    /* manual theme override */
+    html[data-theme="light"]{
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #111111;
+      --muted: #6e6e73;
+      --line: #e5e5ea;
+      --shadow: 0 10px 28px rgba(0,0,0,.08);
+      --shadow2: 0 6px 18px rgba(0,0,0,.06);
+      --accent: #0a84ff;
+      --accent2: rgba(10,132,255,.12);
+      --danger: #ff3b30;
+      --danger2: rgba(255,59,48,.12);
+      --ok: #34c759;
+      --ok2: rgba(52,199,89,.12);
+    }
+    html[data-theme="dark"]{
+      --bg: #0b0f14;
+      --card: rgba(17,24,38,.88);
+      --text: #e6edf3;
+      --muted: #9aa4b2;
+      --line: #233044;
+      --shadow: 0 12px 34px rgba(0,0,0,.40);
+      --shadow2: 0 8px 20px rgba(0,0,0,.30);
+      --accent: #4f8cff;
+      --accent2: rgba(79,140,255,.18);
+      --danger: #ff5c5c;
+      --danger2: rgba(255,92,92,.14);
+      --ok: #2ecc71;
+      --ok2: rgba(46,204,113,.14);
+    }
+
     *{ box-sizing:border-box; }
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(900px 500px at 15% 0%, rgba(79,140,255,.18), transparent 55%),
-        radial-gradient(900px 520px at 80% 10%, rgba(46,204,113,.12), transparent 55%),
-        radial-gradient(600px 400px at 40% 100%, rgba(255,92,92,.08), transparent 60%),
-        var(--bg);
+      background: var(--bg);
+      color: var(--text);
     }
-    .wrap{ max-width: 1080px; margin:0 auto; padding: 22px; }
-    header{ display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin: 4px 0 14px; }
-    h1{ font-size: 20px; margin:0; letter-spacing:.2px; }
+    .wrap{ max-width: 1080px; margin:0 auto; padding: 20px; padding-bottom: calc(var(--sticky-h) + 18px); }
+
+    /* ---------- Top bar ---------- */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      margin-bottom: 14px;
+    }
+    .titleWrap{ min-width:0; }
+    h1{ margin:0; font-size: 20px; letter-spacing:.2px; }
     .subtitle{ color:var(--muted); font-size: 13px; margin-top:6px; }
-    .pill{
+
+    .topActions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .chip{
       display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
       border:1px solid var(--line);
-      background: rgba(15,21,32,.75);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      border-radius: 999px;
+      padding: 8px 10px;
       font-size: 12px;
       color: var(--muted);
-      white-space:nowrap;
+      box-shadow: var(--shadow2);
+      white-space: nowrap;
     }
-    .dot{ width:8px; height:8px; border-radius:99px; background: var(--accent); display:inline-block; }
+    .dot{ width:8px; height:8px; border-radius:999px; background: var(--accent); display:inline-block; }
 
-    .grid{ display:grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px; align-items:start; }
+    .iconBtn{
+      display:inline-flex; align-items:center; justify-content:center;
+      width: 36px; height: 36px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      box-shadow: var(--shadow2);
+      cursor:pointer;
+      color: var(--text);
+    }
+    .iconBtn:active{ transform: translateY(1px); }
+    .iconBtn svg{ width:18px; height:18px; }
+
+    /* ---------- Cards / layout ---------- */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+      background: var(--card);
       border:1px solid var(--line);
       border-radius: var(--radius);
       padding: 16px;
       box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
     }
-    h2{ margin:0 0 10px; font-size: 15px; letter-spacing:.2px; }
-    .muted{ color:var(--muted); font-size: 13px; }
+
+    .section{
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    h2{ margin:0 0 10px; font-size: 14px; color: var(--muted); letter-spacing: .2px; }
+    .small{ color: var(--muted); font-size: 12.5px; }
 
     label{ display:block; font-size: 12.5px; margin: 10px 0 6px; color: var(--muted); }
     input[type="text"], input[type="date"], input[type="time"], textarea, select{
       width:100%;
       padding: 10px 12px;
-      border-radius: 12px;
+      border-radius: var(--radius2);
       border:1px solid var(--line);
-      background: rgba(15,21,32,.9);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
       color: var(--text);
       outline:none;
     }
     textarea{ min-height: 92px; resize: vertical; }
     .row{ display:flex; gap:10px; }
     .row > *{ flex:1; }
+    @media (max-width: 720px){ .row{ flex-direction: column; } }
 
-    .seg{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
-    .seg button{ border-radius: 999px; padding: 10px 14px; }
-
-    .btns{ display:flex; flex-wrap:wrap; gap: 10px; margin-top: 12px; }
-    button{
-      border:1px solid var(--line);
-      background: rgba(15,21,32,.9);
-      color:var(--text);
+    /* ---------- Stepper ---------- */
+    .stepper{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin: 10px 0 0;
+    }
+    .step{
+      display:flex; align-items:center; gap:10px;
       padding: 10px 12px;
-      border-radius: 12px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      box-shadow: var(--shadow2);
       cursor:pointer;
+      user-select:none;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .step.active{
+      color: var(--text);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+      background: color-mix(in srgb, var(--accent2) 55%, var(--card));
+    }
+    .stepNum{
+      width:22px; height:22px; border-radius:999px;
+      border:1px solid var(--line);
+      display:flex; align-items:center; justify-content:center;
+      font-size: 12px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+    }
+    .step.active .stepNum{
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent2) 65%, var(--card));
+    }
+
+    /* ---------- Mode segmented control ---------- */
+    .seg{
+      display:inline-flex;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      overflow:hidden;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      box-shadow: var(--shadow2);
+    }
+    .seg button{
+      border:0;
+      background: transparent;
+      padding: 10px 14px;
       font-weight: 650;
+      color: var(--muted);
+      cursor:pointer;
       font-size: 13px;
     }
-    button.primary{
-      background: linear-gradient(180deg, rgba(79,140,255,.28), rgba(79,140,255,.14));
-      border-color: rgba(79,140,255,.55);
+    .seg button.active{
+      background: color-mix(in srgb, var(--accent2) 65%, var(--card));
+      color: var(--text);
     }
-    button.danger{ background: rgba(255,92,92,.12); border-color: rgba(255,92,92,.35); }
-    button:disabled{ opacity:.55; cursor:not-allowed; }
-    .seg button.active{ background: rgba(79,140,255,.22); border-color: rgba(79,140,255,.55); }
 
-    .section{
-      margin-top: 12px;
+    /* ---------- Chips (presets) ---------- */
+    .chipRow{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 8px; }
+    .pillBtn{
       border:1px solid var(--line);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 12px;
+      cursor:pointer;
+      color: var(--text);
+      box-shadow: var(--shadow2);
+    }
+    .pillBtn.primary{
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+      background: color-mix(in srgb, var(--accent2) 55%, var(--card));
+    }
+
+    /* ---------- List rows (daily) ---------- */
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top: 10px;
+    }
+    .rowCard{
+      border:1px solid var(--line);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
       border-radius: 14px;
       padding: 12px;
-      background: rgba(15,21,32,.70);
+      box-shadow: var(--shadow2);
     }
-    .sectionHead{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom: 8px; }
-    .sectionTitle{ font-weight: 650; font-size: 13px; }
-    .sectionHint{ color:var(--muted); font-size:12px; }
-    .sectionActions{ display:flex; gap:8px; flex-wrap:wrap; }
+    .rowTop{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    }
+    .rowLeft{
+      display:flex; gap:10px; align-items:flex-start; min-width:0;
+    }
+    .rowLeft input[type="checkbox"]{
+      width:18px; height:18px; margin-top: 2px; accent-color: var(--accent);
+    }
+    .rowTitle{
+      font-weight: 650;
+      font-size: 13.5px;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+    .rowMeta{
+      margin-top:6px;
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .miniTag{
+      border:1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+    }
+    .miniTag.ok{ border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); background: color-mix(in srgb, var(--ok2) 55%, var(--card)); color: var(--text); }
+    .miniTag.bad{ border-color: color-mix(in srgb, var(--danger) 45%, var(--line)); background: color-mix(in srgb, var(--danger2) 55%, var(--card)); color: var(--text); }
 
-    .checkgrid{ display:grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+    .rowRight{ display:flex; gap:8px; align-items:center; flex-shrink:0; }
+    .ghostBtn{
+      border:1px solid var(--line);
+      background: transparent;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--text);
+      cursor:pointer;
+      box-shadow: var(--shadow2);
+    }
+    .ghostBtn:active{ transform: translateY(1px); }
+
+    .details{
+      margin-top: 10px;
+      border-top:1px solid var(--line);
+      padding-top: 10px;
+      display:none;
+    }
+    .details.open{ display:block; }
+    .detailsGrid{
+      display:grid;
+      grid-template-columns: 180px 1fr;
+      gap: 10px;
+      align-items:start;
+    }
+    @media (max-width: 720px){ .detailsGrid{ grid-template-columns: 1fr; } }
+
+    /* ---------- Usage (checkbox grids) ---------- */
+    .checkgrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 10px;
+      margin-top: 10px;
+    }
     @media (max-width: 720px){ .checkgrid{ grid-template-columns: 1fr; } }
     .cbrow{
       display:flex; gap:10px; align-items:flex-start;
-      padding: 8px 10px;
-      border:1px solid rgba(35,48,68,.75);
-      border-radius: 12px;
-      background: rgba(15,21,32,.55);
+      padding: 10px 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      box-shadow: var(--shadow2);
     }
     .cbrow input{ width:18px; height:18px; margin-top:2px; accent-color: var(--accent); }
     .cbrow span{ font-size: 13px; line-height: 1.25; }
 
-    .items{ display:flex; flex-direction:column; gap: 10px; margin-top: 10px; }
-    .item{
+    /* ---------- Acceptance compact row ---------- */
+    .acceptRow{
       border:1px solid var(--line);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
       border-radius: 14px;
       padding: 12px;
-      background: rgba(15,21,32,.85);
       box-shadow: var(--shadow2);
-    }
-    .item-top{ display:flex; align-items:flex-start; justify-content:space-between; gap: 10px; }
-    .item-title{ display:flex; gap:10px; align-items:flex-start; min-width: 0; }
-    .item-title input[type="checkbox"]{ width:18px; height:18px; margin-top: 3px; accent-color: var(--accent); }
-    .item h3{ margin:0; font-size: 14px; font-weight: 650; line-height: 1.25; word-break: break-word; }
-    .tag{ font-size: 12px; padding: 2px 8px; border-radius: 999px; border:1px solid var(--line); color: var(--muted); display:inline-block; margin-top: 6px; }
-    .badge-ok{ border-color: rgba(46,204,113,.45); color: var(--ok); }
-    .badge-bad{ border-color: rgba(255,92,92,.45); color: var(--bad); }
-    .item-actions{ display:flex; gap:8px; align-items:center; flex-shrink:0; }
-    .item-actions select{ width: 92px; padding: 8px 10px; border-radius: 12px; font-size: 12px; }
-
-    .proto pre{
-      white-space: pre-wrap;
-      background: rgba(15,21,32,.85);
-      border:1px solid var(--line);
-      padding: 12px;
-      border-radius: 14px;
-      margin:0;
-      max-height: 52vh;
-      overflow:auto;
-      font-size: 12.5px;
-      line-height: 1.35;
-    }
-
-    .worksum{ margin-top: 8px; font-size: 12.5px; color: var(--muted); }
-    .worksum b{ color: var(--text); }
-
-    .inspect-item{
-      border:1px solid rgba(35,48,68,.75);
-      border-radius: 14px;
-      padding: 12px;
-      background: rgba(15,21,32,.60);
       margin-top: 10px;
     }
-    .inspect-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
-    .inspect-name{ font-weight:650; font-size: 13px; line-height:1.25; }
-    .inspect-controls{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
-    .inspect-controls select{ width:120px; }
-    .inspect-used{
+    .acceptTop{
+      display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+    }
+    .acceptName{
+      font-weight:650; font-size: 13.5px; line-height:1.25;
+      word-break: break-word;
+    }
+    .acceptControls{
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;
+      flex-shrink:0;
+    }
+    .usedToggle{
       display:flex; align-items:center; gap:8px;
+      border:1px solid var(--line);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      border-radius: 999px;
       padding: 8px 10px;
-      border:1px solid rgba(35,48,68,.75);
-      border-radius: 12px;
-      background: rgba(15,21,32,.55);
-      font-size: 12.5px;
+      font-size: 12px;
       color: var(--muted);
     }
-    .inspect-used input{ width:18px; height:18px; accent-color: var(--accent); }
+    .usedToggle input{ width:18px; height:18px; accent-color: var(--accent); }
 
-    .inspect-note{ margin-top:8px; display:block; }
-    .inspect-note textarea{ min-height: 70px; }
+    .seg2{
+      display:inline-flex;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      overflow:hidden;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+    }
+    .seg2 button{
+      border:0;
+      background: transparent;
+      padding: 8px 10px;
+      font-weight:650;
+      font-size: 12px;
+      color: var(--muted);
+      cursor:pointer;
+    }
+    .seg2 button.on-ok{
+      background: color-mix(in srgb, var(--ok2) 55%, var(--card));
+      color: var(--text);
+    }
+    .seg2 button.on-bad{
+      background: color-mix(in srgb, var(--danger2) 55%, var(--card));
+      color: var(--text);
+    }
 
-    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+    .noteToggle{
+      border:1px solid var(--line);
+      background: transparent;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 12px;
+      cursor:pointer;
+      color: var(--text);
+    }
+
+    .acceptNote{
+      margin-top: 10px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      display:none;
+    }
+    .acceptNote.open{ display:block; }
+    .acceptNote textarea{ min-height: 72px; }
+
+    /* ---------- Preview ---------- */
+    .previewBox{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      box-shadow: var(--shadow2);
+      margin-top: 10px;
+    }
+    .summaryGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width:720px){ .summaryGrid{ grid-template-columns: 1fr; } }
+    .sumItem{
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+    }
+    .sumK{ color:var(--muted); font-size:12px; }
+    .sumV{ font-weight:650; margin-top:4px; }
+
+    /* ---------- Sticky action bar ---------- */
+    .sticky{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      border-top: 1px solid var(--line);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      backdrop-filter: blur(10px);
+      padding: 10px 14px;
+      height: var(--sticky-h);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index: 50;
+    }
+    .stickyInner{
+      width: min(1080px, 100%);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 0 6px;
+    }
+    .stickyLeft{ color:var(--muted); font-size: 12.5px; }
+    .stickyRight{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+
+    .primaryBtn{
+      border:1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+      background: color-mix(in srgb, var(--accent2) 65%, var(--card));
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-weight: 750;
+      cursor:pointer;
+      box-shadow: var(--shadow2);
+    }
+    .secondaryBtn{
+      border:1px solid var(--line);
+      background: transparent;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-weight: 650;
+      cursor:pointer;
+      box-shadow: var(--shadow2);
+    }
+    .primaryBtn:disabled,.secondaryBtn:disabled{ opacity:.55; cursor:not-allowed; }
+
+    /* ---------- Toasts ---------- */
+    .toasts{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(var(--sticky-h) + 12px);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      z-index: 60;
+      pointer-events:none;
+    }
+    .toast{
+      pointer-events:none;
+      min-width: 260px;
+      max-width: min(560px, calc(100vw - 24px));
+      border:1px solid var(--line);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow);
+      color: var(--text);
+      font-size: 13px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      opacity: 0;
+      transform: translateY(6px);
+      animation: toastIn .18s ease-out forwards;
+    }
+    .toast .tDot{ width:10px; height:10px; border-radius:999px; margin-top:4px; background: var(--accent); }
+    .toast.ok .tDot{ background: var(--ok); }
+    .toast.bad .tDot{ background: var(--danger); }
+    @keyframes toastIn{
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    /* ---------- Helper text ---------- */
+    .hint{
+      border:1px solid var(--line);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      border-radius: 14px;
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 12.5px;
+      box-shadow: var(--shadow2);
+      margin-top: 10px;
+    }
+
+    /* ---------- Inline warnings ---------- */
+    .warn{
+      border-color: color-mix(in srgb, var(--danger) 45%, var(--line));
+      background: color-mix(in srgb, var(--danger2) 55%, var(--card));
+      color: var(--text);
+    }
+
+    /* ---------- Print ---------- */
     @media print {
-      body { background:#fff; color:#000; }
-      header, .btns, .seg { display:none !important; }
-      .wrap{ max-width:none; padding:0; }
-      .card, .section, .item, .inspect-item { box-shadow:none; border-color:#ccc !important; background:#fff; }
-      input, textarea, select, button, .cbrow { border-color:#ccc !important; background:#fff !important; color:#000 !important; }
-      .proto pre { max-height:none; overflow:visible; }
+      .sticky, .toasts, .topActions, .stepper, .hint { display:none !important; }
+      body{ background:#fff; color:#000; }
+      .card{ box-shadow:none; }
+      .wrap{ padding:0; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <div>
+    <div class="topbar">
+      <div class="titleWrap">
         <h1>Hangar Studio – Studiomeister Protokolle</h1>
-        <div class="subtitle">Modus wählen → ausfüllen → Protokoll erstellen → Download / PDF / E-Mail.</div>
+        <div class="subtitle">Apple-style Flow: Schrittweise ausfüllen → Review → Export.</div>
+
+        <div class="stepper" id="stepper">
+          <div class="step" data-step="1"><span class="stepNum">1</span><span>Typ</span></div>
+          <div class="step" data-step="2"><span class="stepNum">2</span><span>Stammdaten</span></div>
+          <div class="step" data-step="3"><span class="stepNum">3</span><span>Inhalte</span></div>
+          <div class="step" data-step="4"><span class="stepNum">4</span><span>Review</span></div>
+        </div>
       </div>
-      <div class="pill" id="statusPill"><span class="dot"></span><span>Status: –</span></div>
-    </header>
+
+      <div class="topActions">
+        <div class="chip" id="statusChip"><span class="dot"></span><span>Status: –</span></div>
+
+        <button class="iconBtn" id="themeBtn" title="Theme wechseln">
+          <!-- sun/moon -->
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5 3.6 3.6M20.4 20.4 19 19M19 5l1.4-1.4M3.6 20.4 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <button class="iconBtn" id="saveBtnTop" title="Zwischenstand speichern">
+          <!-- save -->
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 7a3 3 0 0 1 3-3h9l4 4v13a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 4v6h8V4" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+
+        <button class="iconBtn" id="loadBtnTop" title="Zwischenstand laden">
+          <!-- download -->
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 3v10m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 17v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
 
     <div class="grid">
+      <!-- LEFT: Wizard -->
       <div class="card">
-        <h2>Protokolltyp</h2>
-        <div class="muted">Tagesprotokoll: Arbeitszeit + Closing + Nutzung · Abnahmeprotokoll: Genutzt + OK/Mängel + Notiz pro Punkt + „Besenrein“.</div>
-        <div class="seg">
-          <button id="modeDailyBtn" class="primary">Tagesprotokoll</button>
-          <button id="modeAcceptanceBtn">Abnahmeprotokoll</button>
-        </div>
-        <div class="muted" id="modeHint" style="margin-top:8px;"></div>
+        <!-- STEP 1: Type -->
+        <div class="stepPanel" id="step1">
+          <h2>Protokolltyp</h2>
+          <div class="small">Wähle den Modus. Danach führt dich der Wizard durch die relevanten Schritte.</div>
 
-        <h2 style="margin-top:16px;">Stammdaten</h2>
-        <div class="row">
-          <div>
-            <label>Projekt / Auftrag</label>
-            <input id="project" type="text" placeholder="z. B. Studiomeister – Tagesabschluss" />
-          </div>
-          <div>
-            <label>Datum</label>
-            <input id="date" type="date" />
-          </div>
-        </div>
-        <div class="row">
-          <div>
-            <label>Ort</label>
-            <input id="location" type="text" placeholder="Hangar Studio" />
-          </div>
-          <div>
-            <label>Bearbeiter:in</label>
-            <input id="author" type="text" placeholder="Name" />
-          </div>
-        </div>
-
-        <div class="section" id="workSection">
-          <div class="sectionHead">
-            <div>
-              <div class="sectionTitle">Arbeitszeit (Tagesprotokoll)</div>
-              <div class="sectionHint">Pause wird nicht abgezogen · Überstunden ab &gt;10h</div>
+          <div style="margin-top:12px;">
+            <div class="seg" id="modeSeg">
+              <button id="modeDailyBtn" class="active" type="button">Tagesprotokoll</button>
+              <button id="modeAcceptanceBtn" type="button">Abnahmeprotokoll</button>
             </div>
           </div>
+
+          <div class="hint" id="modeHint">
+            Tagesprotokoll: Arbeitszeit (Pause nicht abgezogen, Überstunden &gt;10h) + Closing-Checkliste + Nutzung (Studiotechnik/Räume).
+          </div>
+        </div>
+
+        <!-- STEP 2: Meta -->
+        <div class="stepPanel" id="step2" style="display:none;">
+          <h2>Stammdaten</h2>
+
           <div class="row">
             <div>
-              <label>Start</label>
-              <input id="workStart" type="time" />
+              <label>Projekt / Auftrag</label>
+              <input id="project" type="text" placeholder="z. B. Studiomeister – Tagesabschluss" />
             </div>
             <div>
-              <label>Ende</label>
-              <input id="workEnd" type="time" />
-            </div>
-            <div>
-              <label>Pause (Min.)</label>
-              <input id="workBreak" type="text" inputmode="numeric" placeholder="z. B. 60" />
+              <label>Datum</label>
+              <input id="date" type="date" />
             </div>
           </div>
-          <div class="worksum" id="workSummary">Gesamt: <b>–</b></div>
-        </div>
 
-        <div class="section" id="dailyChecklistSection">
-          <div class="sectionHead">
+          <div class="row">
             <div>
-              <div class="sectionTitle">Closing-Checkliste (Tagesprotokoll)</div>
-              <div class="sectionHint">Pflichtpunkte</div>
+              <label>Ort</label>
+              <input id="location" type="text" placeholder="Hangar Studio" />
+            </div>
+            <div>
+              <label>Bearbeiter:in</label>
+              <input id="author" type="text" placeholder="Name" />
+              <div class="small" style="margin-top:6px;">(Kein Default-Name gespeichert – wie gewünscht.)</div>
             </div>
           </div>
-          <div class="items" id="dailyItems"></div>
+
+          <label>Allgemeine Notizen</label>
+          <textarea id="generalNotes" placeholder="Kurz: Besonderheiten, Defekte, Abweichungen, Maßnahmen..."></textarea>
         </div>
 
-        <div class="section" id="dailyUsageTechSection">
-          <div class="sectionHead">
-            <div>
-              <div class="sectionTitle">Studiotechnik genutzt (Tagesprotokoll)</div>
-              <div class="sectionHint">ankreuzen, was genutzt wurde</div>
+        <!-- STEP 3: Content -->
+        <div class="stepPanel" id="step3" style="display:none;">
+          <h2>Inhalte</h2>
+
+          <!-- DAILY: Worktime -->
+          <div id="dailyWorkWrap" class="section">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+              <div>
+                <div style="font-weight:750;">Arbeitszeit</div>
+                <div class="small">Pause wird nicht abgezogen · Überstunden ab &gt;10h</div>
+              </div>
+              <div class="chipRow">
+                <button class="pillBtn" id="startNowBtn" type="button">Start: Jetzt</button>
+                <button class="pillBtn" id="endNowBtn" type="button">Ende: Jetzt</button>
+              </div>
             </div>
-            <div class="sectionActions">
-              <button id="techAllBtn">Alle genutzt</button>
-              <button id="techNoneBtn">Keine genutzt</button>
+
+            <div class="row" style="margin-top:10px;">
+              <div>
+                <label>Start</label>
+                <input id="workStart" type="time" />
+              </div>
+              <div>
+                <label>Ende</label>
+                <input id="workEnd" type="time" />
+              </div>
+              <div>
+                <label>Pause (Min.)</label>
+                <input id="workBreak" type="text" inputmode="numeric" placeholder="z. B. 60" />
+                <div class="chipRow">
+                  <button class="pillBtn" data-break="30" type="button">30</button>
+                  <button class="pillBtn" data-break="45" type="button">45</button>
+                  <button class="pillBtn primary" data-break="60" type="button">60</button>
+                </div>
+              </div>
+            </div>
+            <div class="hint" id="workSummary">Gesamt: –</div>
+          </div>
+
+          <!-- DAILY: Checklist -->
+          <div id="dailyChecklistWrap" class="section">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+              <div>
+                <div style="font-weight:750;">Closing-Checkliste</div>
+                <div class="small">Standard: nur abhaken. Details (Status/Notiz) nur bei Bedarf.</div>
+              </div>
+              <div class="chipRow">
+                <button class="pillBtn" id="dailyAllCheckBtn" type="button">Alle abhaken</button>
+                <button class="pillBtn" id="dailyAllOkBtn" type="button">Alle als OK</button>
+              </div>
+            </div>
+
+            <div class="hint warn" id="dailySafetyWarn" style="display:none;">
+              Hinweis: Alarm/Einfahrt/Licht sind nicht vollständig bestätigt. Export ist trotzdem möglich, wird aber markiert.
+            </div>
+
+            <div class="list" id="dailyList"></div>
+          </div>
+
+          <!-- DAILY: Usage -->
+          <div id="dailyUsageWrap" class="section">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+              <div>
+                <div style="font-weight:750;">Nutzung</div>
+                <div class="small">Checkboxen für „genutzt“. Schnellwahl vorhanden.</div>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+                <div style="font-weight:650;">Studiotechnik genutzt</div>
+                <div class="chipRow">
+                  <button class="pillBtn" id="techAllBtn" type="button">Alle</button>
+                  <button class="pillBtn" id="techNoneBtn" type="button">Keine</button>
+                </div>
+              </div>
+              <div class="checkgrid" id="techGrid"></div>
+            </div>
+
+            <div style="margin-top:14px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+                <div style="font-weight:650;">Räume genutzt</div>
+                <div class="chipRow">
+                  <button class="pillBtn" id="roomsAllBtn" type="button">Alle</button>
+                  <button class="pillBtn" id="roomsNoneBtn" type="button">Keine</button>
+                </div>
+              </div>
+              <div class="checkgrid" id="roomsGrid"></div>
             </div>
           </div>
-          <div class="checkgrid" id="techUsed"></div>
+
+          <!-- ACCEPTANCE: General -->
+          <div id="accGeneralWrap" class="section" style="display:none;">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+              <div>
+                <div style="font-weight:750;">Abnahme – Allgemein</div>
+                <div class="small">OK/Mängel + Notiz. (Kein „Genutzt“.)</div>
+              </div>
+              <div class="chipRow">
+                <button class="pillBtn" id="accGeneralAllOkBtn" type="button">Alle OK</button>
+              </div>
+            </div>
+            <div id="accGeneralList"></div>
+          </div>
+
+          <!-- ACCEPTANCE: Tech -->
+          <div id="accTechWrap" class="section" style="display:none;">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+              <div>
+                <div style="font-weight:750;">Abnahme – Studiotechnik</div>
+                <div class="small">Genutzt + OK/Mängel + Notiz. Notiz klappt bei Mängel automatisch auf.</div>
+              </div>
+              <div class="chipRow">
+                <button class="pillBtn" id="accTechAllOkBtn" type="button">Alle OK</button>
+              </div>
+            </div>
+            <div id="accTechList"></div>
+          </div>
+
+          <!-- ACCEPTANCE: Rooms -->
+          <div id="accRoomsWrap" class="section" style="display:none;">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+              <div>
+                <div style="font-weight:750;">Abnahme – Räume</div>
+                <div class="small">Genutzt + OK/Mängel + Notiz. Notiz klappt bei Mängel automatisch auf.</div>
+              </div>
+              <div class="chipRow">
+                <button class="pillBtn" id="accRoomsAllOkBtn" type="button">Alle OK</button>
+              </div>
+            </div>
+            <div id="accRoomsList"></div>
+          </div>
         </div>
 
-        <div class="section" id="dailyUsageRoomsSection">
-          <div class="sectionHead">
-            <div>
-              <div class="sectionTitle">Räume genutzt (Tagesprotokoll)</div>
-              <div class="sectionHint">ankreuzen, was genutzt wurde</div>
+        <!-- STEP 4: Review -->
+        <div class="stepPanel" id="step4" style="display:none;">
+          <h2>Review & Export</h2>
+          <div class="small">Kurzcheck, dann exportieren. (PDF über Drucken → PDF.)</div>
+
+          <div class="summaryGrid" style="margin-top:10px;">
+            <div class="sumItem">
+              <div class="sumK">Typ</div>
+              <div class="sumV" id="sumType">–</div>
             </div>
-            <div class="sectionActions">
-              <button id="roomsAllBtn">Alle genutzt</button>
-              <button id="roomsNoneBtn">Keine genutzt</button>
+            <div class="sumItem">
+              <div class="sumK">Dokument-ID</div>
+              <div class="sumV" id="sumId">–</div>
+            </div>
+            <div class="sumItem">
+              <div class="sumK">Safety-Check (Tagesprotokoll)</div>
+              <div class="sumV" id="sumSafety">–</div>
+            </div>
+            <div class="sumItem">
+              <div class="sumK">Überstunden (&gt;10h)</div>
+              <div class="sumV" id="sumOvertime">–</div>
             </div>
           </div>
-          <div class="checkgrid" id="roomsUsed"></div>
-        </div>
 
-        <div class="section" id="acceptanceGeneralSection">
-          <div class="sectionHead">
-            <div>
-              <div class="sectionTitle">Abnahme – Allgemein</div>
-              <div class="sectionHint">OK/Mängel + Notiz pro Punkt</div>
-            </div>
-            <div class="sectionActions">
-              <button id="acceptGeneralAllOkBtn">Alle OK</button>
-            </div>
+          <div class="previewBox">
+            <div style="font-weight:750;">Text-Vorschau</div>
+            <div class="small">Diese Vorschau ist der Mail-/TXT-Inhalt. PDF hat das saubere Layout.</div>
+            <pre id="previewText" style="margin:10px 0 0; font-family: var(--mono); font-size:12.5px; line-height:1.35; white-space:pre-wrap;"></pre>
           </div>
-          <div id="acceptGeneral"></div>
-        </div>
 
-        <div class="section" id="acceptanceTechSection">
-          <div class="sectionHead">
-            <div>
-              <div class="sectionTitle">Abnahme – Studiotechnik</div>
-              <div class="sectionHint">Genutzt + OK/Mängel + Notiz pro Punkt</div>
-            </div>
-            <div class="sectionActions">
-              <button id="acceptTechAllOkBtn">Alle OK</button>
-            </div>
+          <div class="hint" style="margin-top:12px;">
+            Export: <b>PDF</b> = Drucken/PDF · <b>E-Mail</b> = mailto (öffnet dein Standard-Mailprogramm) · <b>HTML</b> = druckbares Layout.
           </div>
-          <div id="acceptTech"></div>
-        </div>
 
-        <div class="section" id="acceptanceRoomsSection">
-          <div class="sectionHead">
-            <div>
-              <div class="sectionTitle">Abnahme – Räume</div>
-              <div class="sectionHint">Genutzt + OK/Mängel + Notiz pro Punkt</div>
-            </div>
-            <div class="sectionActions">
-              <button id="acceptRoomsAllOkBtn">Alle OK</button>
-            </div>
+          <div class="btns" style="margin-top:12px;">
+            <button class="secondaryBtn" id="reviewEmailBtn" type="button" disabled>E-Mail vorbereiten</button>
+            <button class="secondaryBtn" id="reviewTxtBtn" type="button" disabled>TXT speichern</button>
+            <button class="secondaryBtn" id="reviewHtmlBtn" type="button" disabled>HTML speichern</button>
+            <button class="primaryBtn" id="reviewPrintBtn" type="button" disabled>PDF drucken</button>
           </div>
-          <div id="acceptRooms"></div>
-        </div>
-
-        <label>Allgemeine Notizen</label>
-        <textarea id="generalNotes" placeholder="Kurz: Besonderheiten, Defekte, Abweichungen, Maßnahmen..."></textarea>
-
-        <div class="btns">
-          <button id="makeProtoBtn" class="primary">Protokoll erstellen</button>
-          <button id="emailBtn" disabled>E-Mail vorbereiten</button>
-          <button id="downloadHtmlBtn" disabled>Protokoll (.html)</button>
-          <button id="downloadTxtBtn" disabled>Protokoll (.txt)</button>
-          <button id="printBtn" disabled>Drucken / PDF</button>
-          <button id="saveStateBtn">Zwischenstand speichern</button>
-          <button id="loadStateBtn">Zwischenstand laden</button>
-          <button id="resetBtn" class="danger">Alles zurücksetzen</button>
-        </div>
-
-        <div class="muted" style="margin-top:8px;">
-          E-Mail = Mail-App via mailto (Empfänger: master@mastermoves.de). Direktes Senden ohne Backend ist nicht möglich.
         </div>
       </div>
 
-      <div class="card proto">
-        <h2>Protokoll-Vorschau</h2>
-        <div class="muted">Hier erscheint der exportierte Textinhalt.</div>
-        <div style="margin-top:12px;">
-          <pre id="protoText">Noch kein Protokoll erstellt.</pre>
+      <!-- RIGHT: Live preview / helper -->
+      <div class="card">
+        <h2>Live-Status</h2>
+
+        <div class="hint" id="liveHint">
+          Tipp: Weniger ist mehr. In der Checkliste einfach abhaken. Notizen nur bei Bedarf.
+        </div>
+
+        <div class="section">
+          <div style="font-weight:750;">Zwischenstand</div>
+          <div class="small">Lokale Speicherung im Browser (localStorage). Kein Name-Default wird gespeichert.</div>
+          <div class="btns" style="margin-top:10px;">
+            <button class="secondaryBtn" id="saveBtn" type="button">Speichern</button>
+            <button class="secondaryBtn" id="loadBtn" type="button">Laden</button>
+            <button class="secondaryBtn" id="resetBtn" type="button" style="border-color: color-mix(in srgb, var(--danger) 45%, var(--line)); background: var(--danger2);">Reset</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div style="font-weight:750;">Quick-Actions</div>
+          <div class="small">Review-Step erstellt automatisch das Protokoll.</div>
+          <div class="btns" style="margin-top:10px;">
+            <button class="secondaryBtn" id="goReviewBtn" type="button">Zu Review</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Sticky action bar -->
+  <div class="sticky">
+    <div class="stickyInner">
+      <div class="stickyLeft" id="stickyStatus">Schritt 1/4 · Nicht gespeichert</div>
+      <div class="stickyRight">
+        <button class="secondaryBtn" id="backBtn" type="button">Zurück</button>
+        <button class="primaryBtn" id="nextBtn" type="button">Weiter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div class="toasts" id="toasts"></div>
+
 <script>
+(() => {
   const EMAIL_TO = "master@mastermoves.de";
-  const STORAGE_KEY = "hangar_studiomeister_state_final_capitalized_v1";
+  const STORAGE_KEY = "hangar_studiomeister_ux_v1";
 
-  let mode = "daily"; // "daily" | "acceptance"
-
+  // ---- Config ----
   const DAILY_CHECK_ITEMS = [
     "Strom ausgeschaltet",
     "Studiotechnik ausgeschaltet",
@@ -369,204 +873,173 @@
     "Einfahrt verriegelt",
     "Licht aus"
   ];
-
   const TECH_OPTIONS = ["Schwerlast Nord","Schwerlast Süd","H-Traverse","Lichtsegel","Kreistraverse","Drehteller","Vorhang"];
   const ROOM_OPTIONS = ["Cafeteria","Maske 1","Maske 2","Schwarzer Raum","Werkstatt","Kameralager","Facility-Raum","Produktionsbüro"];
   const ACCEPT_GENERAL = ["Studio besenrein hinterlassen"];
 
-  const $ = (id) => document.getElementById(id);
+  // ---- State ----
+  let step = 1; // 1..4
+  let mode = "daily"; // daily | acceptance
+  let isDirty = false;
+  let lastProtocol = null; // { mode, meta, text, ... }
 
-  let dailyChecks = DAILY_CHECK_ITEMS.map(t => ({ title: t, checked:false, note:"", status:"auto" }));
+  // daily checklist item: {title, checked, status:'auto'|'ok'|'issue', note, detailsOpen}
+  let dailyChecks = DAILY_CHECK_ITEMS.map(t => ({ title: t, checked:false, status:"auto", note:"", detailsOpen:false }));
   let techUsed = Object.fromEntries(TECH_OPTIONS.map(x => [x, false]));
   let roomsUsed = Object.fromEntries(ROOM_OPTIONS.map(x => [x, false]));
 
-  function initInspectState(list, withUsed){
-    return Object.fromEntries(list.map(name => [name, withUsed ? { used:false, status:"ok", note:"" } : { status:"ok", note:"" }]));
-  }
-  let acceptGeneral = initInspectState(ACCEPT_GENERAL, false);
-  let acceptTech = initInspectState(TECH_OPTIONS, true);
-  let acceptRooms = initInspectState(ROOM_OPTIONS, true);
+  // acceptance item:
+  // general: {status:'ok'|'maengel', note}
+  // tech/rooms: {used:boolean, status:'ok'|'maengel', note, noteOpen}
+  const initInspectState = (list, withUsed) => Object.fromEntries(list.map(n => [n, withUsed ? {used:false,status:"ok",note:"",noteOpen:false} : {status:"ok",note:"",noteOpen:false}]));
+  let accGeneral = initInspectState(ACCEPT_GENERAL, false);
+  let accTech = initInspectState(TECH_OPTIONS, true);
+  let accRooms = initInspectState(ROOM_OPTIONS, true);
 
-  let lastProtocol = null;
+  // ---- DOM helpers ----
+  const $ = (id) => document.getElementById(id);
+  const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
+  // ---- Time helpers ----
+  const pad2 = (n) => String(n).padStart(2,"0");
   function todayISO(){
     const d = new Date();
-    const pad = (n)=>String(n).padStart(2,"0");
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
   }
-
+  function nowHHMM(){
+    const d = new Date();
+    return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+  }
   function sanitizeName(s){
-    return (s||"").replaceAll(/[^a-z0-9\-_ ]/gi,"").trim().replaceAll(/\s+/g,"_").slice(0,80) || "protokoll";
+    return (s || "").replaceAll(/[^a-z0-9\-_ ]/gi,"").trim().replaceAll(/\s+/g,"_").slice(0, 80) || "protokoll";
   }
 
-  function setExportEnabled(on){
-    $("emailBtn").disabled = !on;
-    $("downloadHtmlBtn").disabled = !on;
-    $("downloadTxtBtn").disabled = !on;
-    $("printBtn").disabled = !on;
+  // ---- Toasts ----
+  function showToast(msg, variant="ok"){
+    const host = $("toasts");
+    const el = document.createElement("div");
+    el.className = `toast ${variant}`;
+    el.innerHTML = `<span class="tDot"></span><div>${msg}</div>`;
+    host.appendChild(el);
+    setTimeout(() => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(6px)";
+      el.style.transition = "opacity .18s ease, transform .18s ease";
+      setTimeout(()=> el.remove(), 220);
+    }, 1800);
   }
 
+  // ---- Theme toggle ----
+  function getThemePref(){
+    return localStorage.getItem("hangar_theme") || "auto";
+  }
+  function applyThemePref(pref){
+    if (pref === "auto"){
+      document.documentElement.removeAttribute("data-theme");
+    } else {
+      document.documentElement.setAttribute("data-theme", pref);
+    }
+    localStorage.setItem("hangar_theme", pref);
+    showToast(`Theme: ${pref === "auto" ? "System" : pref}`, "ok");
+  }
+  $("themeBtn").addEventListener("click", () => {
+    const pref = getThemePref();
+    const next = pref === "auto" ? "light" : (pref === "light" ? "dark" : "auto");
+    applyThemePref(next);
+  });
+  applyThemePref(getThemePref());
+
+  // ---- Wizard nav ----
+  function setStep(n){
+    step = Math.max(1, Math.min(4, n));
+    ["step1","step2","step3","step4"].forEach((id, idx) => {
+      $(id).style.display = (idx+1 === step) ? "" : "none";
+    });
+
+    $$("#stepper .step").forEach(s => s.classList.toggle("active", Number(s.dataset.step) === step));
+    $("backBtn").disabled = (step === 1);
+    $("nextBtn").textContent = (step === 4) ? "Fertig" : "Weiter";
+
+    if (step === 4){
+      buildAndRenderReview();
+    }
+
+    updateSticky();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  $$("#stepper .step").forEach(el => el.addEventListener("click", () => setStep(Number(el.dataset.step))));
+  $("backBtn").addEventListener("click", () => setStep(step - 1));
+  $("nextBtn").addEventListener("click", () => {
+    if (step < 4){
+      // light validation hints
+      if (step === 2){
+        // minimal: date + location defaults already set
+        if (!$("project").value.trim()){
+          showToast("Hinweis: Projekt/Auftrag ist leer (optional).", "ok");
+        }
+      }
+      setStep(step + 1);
+    } else {
+      // finished — keep at review
+      showToast("Review abgeschlossen.", "ok");
+    }
+  });
+  $("goReviewBtn").addEventListener("click", () => setStep(4));
+
+  // ---- Mode switch ----
   function applyMode(newMode){
     mode = newMode;
 
-    $("modeDailyBtn").classList.toggle("active", mode==="daily");
-    $("modeAcceptanceBtn").classList.toggle("active", mode==="acceptance");
+    // segmented ui
+    $("modeDailyBtn").classList.toggle("active", mode === "daily");
+    $("modeAcceptanceBtn").classList.toggle("active", mode === "acceptance");
 
-    $("workSection").style.display = (mode==="daily") ? "" : "none";
-    $("dailyChecklistSection").style.display = (mode==="daily") ? "" : "none";
-    $("dailyUsageTechSection").style.display = (mode==="daily") ? "" : "none";
-    $("dailyUsageRoomsSection").style.display = (mode==="daily") ? "" : "none";
+    // content toggles
+    const dailyOn = (mode === "daily");
+    $("dailyWorkWrap").style.display = dailyOn ? "" : "none";
+    $("dailyChecklistWrap").style.display = dailyOn ? "" : "none";
+    $("dailyUsageWrap").style.display = dailyOn ? "" : "none";
 
-    $("acceptanceGeneralSection").style.display = (mode==="acceptance") ? "" : "none";
-    $("acceptanceTechSection").style.display = (mode==="acceptance") ? "" : "none";
-    $("acceptanceRoomsSection").style.display = (mode==="acceptance") ? "" : "none";
+    $("accGeneralWrap").style.display = dailyOn ? "none" : "";
+    $("accTechWrap").style.display = dailyOn ? "none" : "";
+    $("accRoomsWrap").style.display = dailyOn ? "none" : "";
 
-    $("modeHint").textContent = (mode==="daily")
-      ? "Tagesprotokoll aktiv: Arbeitszeit (Pause nicht abgezogen, Überstunden >10h) + Closing-Checkliste + Nutzung (Studiotechnik/Räume)."
-      : "Abnahmeprotokoll aktiv: Genutzt + OK/Mängel + Notiz pro Punkt + Besenrein. (Keine Arbeitszeit, keine Closing-Checkliste).";
+    $("modeHint").textContent = dailyOn
+      ? "Tagesprotokoll: Arbeitszeit (Pause nicht abgezogen, Überstunden >10h) + Closing-Checkliste + Nutzung."
+      : "Abnahmeprotokoll: Genutzt + OK/Mängel + Notiz pro Punkt + Besenrein.";
 
-    lastProtocol = null;
-    $("protoText").textContent = "Noch kein Protokoll erstellt.";
-    setExportEnabled(false);
-    $("statusPill").innerHTML = `<span class="dot"></span><span>Status: –</span>`;
+    setDirty(true);
+  }
+  $("modeDailyBtn").addEventListener("click", () => applyMode("daily"));
+  $("modeAcceptanceBtn").addEventListener("click", () => applyMode("acceptance"));
+
+  // ---- Dirty tracking ----
+  function setDirty(v){
+    isDirty = v;
+    updateSticky();
+    updateStatusChip();
+  }
+  function updateSticky(){
+    $("stickyStatus").textContent = `Schritt ${step}/4 · ${isDirty ? "Ungespeichert" : "Gespeichert"}`;
+  }
+  function updateStatusChip(text){
+    const t = text || (lastProtocol ? `${mode === "daily" ? "Tagesprotokoll" : "Abnahmeprotokoll"} bereit` : (isDirty ? "Ungespeichert" : "–"));
+    $("statusChip").innerHTML = `<span class="dot"></span><span>Status: ${t}</span>`;
   }
 
-  $("modeDailyBtn").addEventListener("click", ()=>applyMode("daily"));
-  $("modeAcceptanceBtn").addEventListener("click", ()=>applyMode("acceptance"));
+  // ---- Defaults ----
+  $("date").value = todayISO();
+  $("location").value = "Hangar Studio";
 
-  function effectiveStatus(it){
-    return (it.status==="auto") ? (it.checked ? "ok" : "issue") : it.status;
+  // ---- Worktime (pause not subtracted, overtime > 10h) ----
+  function parseMinutes(val){
+    const n = parseInt(String(val || "").trim(), 10);
+    return Number.isFinite(n) && n >= 0 ? n : 0;
   }
-
-  function renderDailyChecks(){
-    const container = $("dailyItems");
-    container.innerHTML = "";
-    dailyChecks.forEach((it, idx) => {
-      const wrapper = document.createElement("div");
-      wrapper.className = "item";
-
-      const top = document.createElement("div");
-      top.className = "item-top";
-
-      const left = document.createElement("div");
-      left.className = "item-title";
-
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.checked = !!it.checked;
-      cb.addEventListener("change", () => {
-        it.checked = cb.checked;
-        updateDailyBadge(wrapper, it);
-      });
-
-      const titleWrap = document.createElement("div");
-      titleWrap.style.minWidth = "0";
-
-      const h = document.createElement("h3");
-      h.textContent = it.title;
-
-      const badge = document.createElement("span");
-      badge.className = "tag";
-      titleWrap.appendChild(h);
-      titleWrap.appendChild(badge);
-
-      left.appendChild(cb);
-      left.appendChild(titleWrap);
-
-      const right = document.createElement("div");
-      right.className = "item-actions";
-
-      const status = document.createElement("select");
-      status.innerHTML = `
-        <option value="auto">Auto</option>
-        <option value="ok">OK</option>
-        <option value="issue">Issue</option>
-      `;
-      status.value = it.status || "auto";
-      status.addEventListener("change", () => {
-        it.status = status.value;
-        updateDailyBadge(wrapper, it);
-      });
-
-      const del = document.createElement("button");
-      del.textContent = "Löschen";
-      del.className = "danger";
-      del.addEventListener("click", () => {
-        dailyChecks.splice(idx,1);
-        renderDailyChecks();
-      });
-
-      right.appendChild(status);
-      right.appendChild(del);
-
-      top.appendChild(left);
-      top.appendChild(right);
-
-      const noteLabel = document.createElement("label");
-      noteLabel.textContent = "Notiz (optional)";
-      noteLabel.style.marginTop = "10px";
-
-      const ta = document.createElement("textarea");
-      ta.value = it.note || "";
-      ta.placeholder = "z. B. Abweichung, Defekt, Maßnahme...";
-      ta.addEventListener("input", () => it.note = ta.value);
-
-      wrapper.appendChild(top);
-      wrapper.appendChild(noteLabel);
-      wrapper.appendChild(ta);
-
-      container.appendChild(wrapper);
-      updateDailyBadge(wrapper, it);
-    });
-  }
-
-  function updateDailyBadge(wrapper, it){
-    const badge = wrapper.querySelector(".tag");
-    badge.classList.remove("badge-ok","badge-bad");
-    const eff = effectiveStatus(it);
-    badge.textContent = (eff==="ok") ? "OK" : "Issue";
-    badge.classList.add((eff==="ok") ? "badge-ok" : "badge-bad");
-  }
-
-  function renderUsage(containerId, options, stateObj){
-    const container = $(containerId);
-    container.innerHTML = "";
-    options.forEach(name => {
-      const row = document.createElement("label");
-      row.className = "cbrow";
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.checked = !!stateObj[name];
-      cb.addEventListener("change", ()=> stateObj[name]=cb.checked);
-      const txt = document.createElement("span");
-      txt.textContent = name;
-      row.appendChild(cb); row.appendChild(txt);
-      container.appendChild(row);
-    });
-  }
-
-  function selectedKeys(stateObj){
-    return Object.keys(stateObj).filter(k => !!stateObj[k]);
-  }
-
-  function setAllUsage(stateObj, value){
-    Object.keys(stateObj).forEach(k => stateObj[k] = value);
-  }
-
-  $("techAllBtn").addEventListener("click", () => { setAllUsage(techUsed, true); renderUsage("techUsed", TECH_OPTIONS, techUsed); });
-  $("techNoneBtn").addEventListener("click", () => { setAllUsage(techUsed, false); renderUsage("techUsed", TECH_OPTIONS, techUsed); });
-  $("roomsAllBtn").addEventListener("click", () => { setAllUsage(roomsUsed, true); renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed); });
-  $("roomsNoneBtn").addEventListener("click", () => { setAllUsage(roomsUsed, false); renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed); });
-
-  function parseMinutes(value){
-    const n = parseInt(String(value||"").trim(), 10);
-    return Number.isFinite(n) && n>=0 ? n : 0;
-  }
-
-  function calcWorkTimeNoBreakSubtract(){
+  function calcWork(){
     const start = $("workStart").value;
     const end = $("workEnd").value;
-    const br = parseMinutes($("workBreak").value);
+    const breakMin = parseMinutes($("workBreak").value);
 
     if (!start || !end) return null;
 
@@ -577,99 +1050,313 @@
     let endMin = eh*60 + em;
     if (endMin < startMin) endMin += 24*60;
 
-    const totalMin = Math.max(0, endMin - startMin);
-    const h = Math.floor(totalMin/60);
-    const m = totalMin%60;
+    const totalMin = Math.max(0, endMin - startMin); // pause NOT subtracted
+    const h = Math.floor(totalMin/60), m = totalMin%60;
     const dec = Math.round((totalMin/60)*100)/100;
 
     const overtimeMin = Math.max(0, totalMin - 10*60);
-    const oh = Math.floor(overtimeMin/60);
-    const om = overtimeMin%60;
+    const oh = Math.floor(overtimeMin/60), om = overtimeMin%60;
     const odec = Math.round((overtimeMin/60)*100)/100;
 
-    return { start, end, breakMin: br, totalMin, h, m, dec, overtimeMin, oh, om, odec };
+    return { start, end, breakMin, totalMin, h, m, dec, overtimeMin, oh, om, odec };
   }
-
   function updateWorkSummary(){
-    const wt = calcWorkTimeNoBreakSubtract();
+    const wt = calcWork();
     if (!wt){
-      $("workSummary").innerHTML = `Gesamt: <b>–</b>`;
+      $("workSummary").textContent = "Gesamt: –";
       return;
     }
-    const ot = `Überstunden (>10h): <b>${wt.oh}h ${String(wt.om).padStart(2,"0")}m</b> (${wt.odec} h)`;
     $("workSummary").innerHTML =
-      `Gesamt: <b>${wt.h}h ${String(wt.m).padStart(2,"0")}m</b> (${wt.dec} h) · Pause: ${wt.breakMin} min (nicht abgezogen) · ${ot}`;
+      `Gesamt: <b>${wt.h}h ${pad2(wt.m)}m</b> (${wt.dec} h) · Pause: ${wt.breakMin} min (nicht abgezogen) · Überstunden (&gt;10h): <b>${wt.oh}h ${pad2(wt.om)}m</b> (${wt.odec} h)`;
+  }
+  ["workStart","workEnd","workBreak"].forEach(id => $(id).addEventListener("input", () => { updateWorkSummary(); setDirty(true); }));
+
+  // Now buttons & break chips
+  $("startNowBtn").addEventListener("click", () => { $("workStart").value = nowHHMM(); updateWorkSummary(); setDirty(true); showToast("Startzeit gesetzt.", "ok"); });
+  $("endNowBtn").addEventListener("click", () => { $("workEnd").value = nowHHMM(); updateWorkSummary(); setDirty(true); showToast("Endzeit gesetzt.", "ok"); });
+  $$("#dailyWorkWrap [data-break]").forEach(btn => btn.addEventListener("click", () => {
+    $("workBreak").value = btn.dataset.break;
+    updateWorkSummary();
+    setDirty(true);
+  }));
+
+  // ---- Daily checklist render ----
+  function computeDailyEffStatus(it){
+    // auto: checkbox decides; ok/issue overrides
+    if (it.status === "auto") return it.checked ? "ok" : "issue";
+    return it.status;
+  }
+  function renderDaily(){
+    const host = $("dailyList");
+    host.innerHTML = "";
+
+    dailyChecks.forEach((it, idx) => {
+      const eff = computeDailyEffStatus(it);
+
+      const card = document.createElement("div");
+      card.className = "rowCard";
+
+      const top = document.createElement("div");
+      top.className = "rowTop";
+
+      const left = document.createElement("div");
+      left.className = "rowLeft";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!it.checked;
+      cb.addEventListener("change", () => {
+        it.checked = cb.checked;
+        // if user checks, keep details closed unless they already had note/status override
+        if (it.status === "auto" && (!it.note || !it.note.trim())) it.detailsOpen = false;
+        renderDaily();
+        setDirty(true);
+      });
+
+      const tWrap = document.createElement("div");
+      tWrap.style.minWidth = "0";
+
+      const title = document.createElement("div");
+      title.className = "rowTitle";
+      title.textContent = it.title;
+
+      const meta = document.createElement("div");
+      meta.className = "rowMeta";
+      const tag = document.createElement("span");
+      tag.className = `miniTag ${eff === "ok" ? "ok" : "bad"}`;
+      tag.textContent = eff === "ok" ? "OK" : "Issue";
+      meta.appendChild(tag);
+
+      if (it.note && it.note.trim()){
+        const noteTag = document.createElement("span");
+        noteTag.className = "miniTag";
+        noteTag.textContent = "Notiz";
+        meta.appendChild(noteTag);
+      }
+      if (it.status !== "auto"){
+        const stTag = document.createElement("span");
+        stTag.className = "miniTag";
+        stTag.textContent = "Status gesetzt";
+        meta.appendChild(stTag);
+      }
+
+      tWrap.appendChild(title);
+      tWrap.appendChild(meta);
+
+      left.appendChild(cb);
+      left.appendChild(tWrap);
+
+      const right = document.createElement("div");
+      right.className = "rowRight";
+
+      const detailsBtn = document.createElement("button");
+      detailsBtn.type = "button";
+      detailsBtn.className = "ghostBtn";
+      detailsBtn.textContent = it.detailsOpen ? "Weniger" : "Details";
+      detailsBtn.addEventListener("click", () => {
+        it.detailsOpen = !it.detailsOpen;
+        renderDaily();
+      });
+
+      right.appendChild(detailsBtn);
+
+      top.appendChild(left);
+      top.appendChild(right);
+
+      const details = document.createElement("div");
+      details.className = `details ${it.detailsOpen ? "open" : ""}`;
+
+      const grid = document.createElement("div");
+      grid.className = "detailsGrid";
+
+      const statusWrap = document.createElement("div");
+      const statusLabel = document.createElement("label");
+      statusLabel.textContent = "Status";
+      const sel = document.createElement("select");
+      sel.innerHTML = `
+        <option value="auto">Auto</option>
+        <option value="ok">OK</option>
+        <option value="issue">Issue</option>
+      `;
+      sel.value = it.status || "auto";
+      sel.addEventListener("change", () => { it.status = sel.value; setDirty(true); renderDaily(); });
+      statusWrap.appendChild(statusLabel);
+      statusWrap.appendChild(sel);
+
+      const noteWrap = document.createElement("div");
+      const noteLabel = document.createElement("label");
+      noteLabel.textContent = "Notiz (optional)";
+      const ta = document.createElement("textarea");
+      ta.value = it.note || "";
+      ta.placeholder = "Nur wenn nötig (z. B. Abweichung, Defekt, Maßnahme)";
+      ta.addEventListener("input", () => { it.note = ta.value; setDirty(true); });
+      // auto-open if user starts typing
+      ta.addEventListener("focus", () => { if (!it.detailsOpen){ it.detailsOpen = true; renderDaily(); } });
+      noteWrap.appendChild(noteLabel);
+      noteWrap.appendChild(ta);
+
+      grid.appendChild(statusWrap);
+      grid.appendChild(noteWrap);
+      details.appendChild(grid);
+
+      card.appendChild(top);
+      card.appendChild(details);
+      host.appendChild(card);
+    });
+
+    updateDailySafetyHint();
   }
 
-  ["workStart","workEnd","workBreak"].forEach(id => $(id).addEventListener("input", updateWorkSummary));
+  function updateDailySafetyHint(){
+    const isDaily = mode === "daily";
+    const warnEl = $("dailySafetyWarn");
+    if (!isDaily){ warnEl.style.display = "none"; return; }
 
-  function renderInspect(containerId, stateObj, withUsed){
-    const container = $(containerId);
-    container.innerHTML = "";
+    const must = ["Alarm scharf","Einfahrt verriegelt","Licht aus"];
+    const map = new Map(dailyChecks.map(x => [x.title, x]));
+    const ok = must.every(k => computeDailyEffStatus(map.get(k) || {status:"issue",checked:false}) === "ok");
+    warnEl.style.display = ok ? "none" : "";
+  }
+
+  // Daily bulk buttons
+  $("dailyAllCheckBtn").addEventListener("click", () => {
+    dailyChecks.forEach(it => it.checked = true);
+    setDirty(true);
+    renderDaily();
+    showToast("Alle Punkte abgehakt.", "ok");
+  });
+  $("dailyAllOkBtn").addEventListener("click", () => {
+    dailyChecks.forEach(it => it.status = "ok");
+    setDirty(true);
+    renderDaily();
+    showToast("Alle Punkte als OK gesetzt.", "ok");
+  });
+
+  // ---- Usage render ----
+  function renderUsageGrid(hostId, options, stateObj){
+    const host = $(hostId);
+    host.innerHTML = "";
+    options.forEach(name => {
+      const row = document.createElement("label");
+      row.className = "cbrow";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!stateObj[name];
+      cb.addEventListener("change", () => { stateObj[name] = cb.checked; setDirty(true); });
+      const span = document.createElement("span");
+      span.textContent = name;
+      row.appendChild(cb);
+      row.appendChild(span);
+      host.appendChild(row);
+    });
+  }
+  function setAllUsage(stateObj, value){
+    Object.keys(stateObj).forEach(k => stateObj[k] = value);
+    setDirty(true);
+  }
+  $("techAllBtn").addEventListener("click", () => { setAllUsage(techUsed, true); renderUsageGrid("techGrid", TECH_OPTIONS, techUsed); });
+  $("techNoneBtn").addEventListener("click", () => { setAllUsage(techUsed, false); renderUsageGrid("techGrid", TECH_OPTIONS, techUsed); });
+  $("roomsAllBtn").addEventListener("click", () => { setAllUsage(roomsUsed, true); renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed); });
+  $("roomsNoneBtn").addEventListener("click", () => { setAllUsage(roomsUsed, false); renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed); });
+
+  // ---- Acceptance render (compact rows) ----
+  function renderAccList(hostId, stateObj, withUsed){
+    const host = $(hostId);
+    host.innerHTML = "";
     Object.keys(stateObj).forEach(name => {
       const st = stateObj[name];
 
-      const box = document.createElement("div");
-      box.className = "inspect-item";
+      const card = document.createElement("div");
+      card.className = "acceptRow";
 
       const top = document.createElement("div");
-      top.className = "inspect-top";
+      top.className = "acceptTop";
 
       const nm = document.createElement("div");
-      nm.className = "inspect-name";
+      nm.className = "acceptName";
       nm.textContent = name;
 
       const controls = document.createElement("div");
-      controls.className = "inspect-controls";
+      controls.className = "acceptControls";
 
       if (withUsed){
-        const usedWrap = document.createElement("label");
-        usedWrap.className = "inspect-used";
-        const usedCb = document.createElement("input");
-        usedCb.type = "checkbox";
-        usedCb.checked = !!st.used;
-        usedCb.addEventListener("change", () => st.used = usedCb.checked);
-        const usedTxt = document.createElement("span");
-        usedTxt.textContent = "Genutzt";
-        usedWrap.appendChild(usedCb);
-        usedWrap.appendChild(usedTxt);
-        controls.appendChild(usedWrap);
+        const used = document.createElement("label");
+        used.className = "usedToggle";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = !!st.used;
+        cb.addEventListener("change", () => { st.used = cb.checked; setDirty(true); });
+        const txt = document.createElement("span");
+        txt.textContent = "Genutzt";
+        used.appendChild(cb);
+        used.appendChild(txt);
+        controls.appendChild(used);
       }
 
-      const sel = document.createElement("select");
-      sel.innerHTML = `<option value="ok">OK</option><option value="maengel">Mängel</option>`;
-      sel.value = st.status || "ok";
-      sel.addEventListener("change", () => st.status = sel.value);
-      controls.appendChild(sel);
+      const seg = document.createElement("div");
+      seg.className = "seg2";
+      const okBtn = document.createElement("button");
+      okBtn.type = "button";
+      okBtn.textContent = "OK";
+      const badBtn = document.createElement("button");
+      badBtn.type = "button";
+      badBtn.textContent = "Mängel";
+
+      const syncSeg = () => {
+        okBtn.classList.toggle("on-ok", st.status === "ok");
+        badBtn.classList.toggle("on-bad", st.status === "maengel");
+      };
+      okBtn.addEventListener("click", () => { st.status = "ok"; setDirty(true); syncSeg(); /* keep note state */ });
+      badBtn.addEventListener("click", () => { st.status = "maengel"; st.noteOpen = true; setDirty(true); syncSeg(); renderAccList(hostId, stateObj, withUsed); });
+
+      seg.appendChild(okBtn);
+      seg.appendChild(badBtn);
+      controls.appendChild(seg);
+
+      const noteBtn = document.createElement("button");
+      noteBtn.type = "button";
+      noteBtn.className = "noteToggle";
+      noteBtn.textContent = st.noteOpen ? "Notiz zu" : "Notiz";
+      noteBtn.addEventListener("click", () => { st.noteOpen = !st.noteOpen; setDirty(true); renderAccList(hostId, stateObj, withUsed); });
+      controls.appendChild(noteBtn);
 
       top.appendChild(nm);
       top.appendChild(controls);
 
-      const noteWrap = document.createElement("div");
-      noteWrap.className = "inspect-note";
-      const noteLabel = document.createElement("label");
-      noteLabel.textContent = "Notiz (optional)";
+      const note = document.createElement("div");
+      note.className = `acceptNote ${st.noteOpen ? "open" : ""}`;
+
+      const lab = document.createElement("label");
+      lab.textContent = "Notiz (optional)";
       const ta = document.createElement("textarea");
       ta.value = st.note || "";
-      ta.placeholder = "z. B. Zustand, Besonderheiten, Maßnahmen, ToDo...";
-      ta.addEventListener("input", ()=> st.note = ta.value);
-      noteWrap.appendChild(noteLabel);
-      noteWrap.appendChild(ta);
+      ta.placeholder = (st.status === "maengel") ? "Kurz den Mangel / Maßnahme dokumentieren" : "Optional (z. B. Zustand, Besonderheiten)";
+      ta.addEventListener("input", () => { st.note = ta.value; setDirty(true); });
+      note.appendChild(lab);
+      note.appendChild(ta);
 
-      box.appendChild(top);
-      box.appendChild(noteWrap);
-      container.appendChild(box);
+      card.appendChild(top);
+      card.appendChild(note);
+
+      host.appendChild(card);
+      syncSeg();
     });
   }
 
   function setAllOk(stateObj){
     Object.keys(stateObj).forEach(k => { stateObj[k].status = "ok"; });
+    setDirty(true);
   }
+  $("accGeneralAllOkBtn").addEventListener("click", () => { setAllOk(accGeneral); renderAccList("accGeneralList", accGeneral, false); showToast("Allgemein: Alle OK.", "ok"); });
+  $("accTechAllOkBtn").addEventListener("click", () => { setAllOk(accTech); renderAccList("accTechList", accTech, true); showToast("Studiotechnik: Alle OK.", "ok"); });
+  $("accRoomsAllOkBtn").addEventListener("click", () => { setAllOk(accRooms); renderAccList("accRoomsList", accRooms, true); showToast("Räume: Alle OK.", "ok"); });
 
-  $("acceptGeneralAllOkBtn").addEventListener("click", () => { setAllOk(acceptGeneral); renderInspect("acceptGeneral", acceptGeneral, false); });
-  $("acceptTechAllOkBtn").addEventListener("click", () => { setAllOk(acceptTech); renderInspect("acceptTech", acceptTech, true); });
-  $("acceptRoomsAllOkBtn").addEventListener("click", () => { setAllOk(acceptRooms); renderInspect("acceptRooms", acceptRooms, true); });
+  // ---- Meta change tracking ----
+  ["project","date","location","author","generalNotes"].forEach(id => {
+    $(id).addEventListener("input", () => setDirty(true));
+  });
 
+  // ---- Build protocols (text) ----
   function getMeta(){
     return {
       project: $("project").value.trim(),
@@ -679,15 +1366,19 @@
       generalNotes: $("generalNotes").value.trim(),
     };
   }
+  function selectedKeys(obj){ return Object.keys(obj).filter(k => !!obj[k]); }
 
-  function buildDailyProtocol(){
-    const meta = getMeta();
-    const wt = calcWorkTimeNoBreakSubtract();
+  function buildDailyText(meta){
+    const wt = calcWork();
     const usedTech = selectedKeys(techUsed);
     const usedRooms = selectedKeys(roomsUsed);
 
+    const must = ["Alarm scharf","Einfahrt verriegelt","Licht aus"];
+    const map = new Map(dailyChecks.map(x => [x.title, x]));
+    const safetyOk = must.every(k => computeDailyEffStatus(map.get(k) || {status:"issue",checked:false}) === "ok");
+
     const total = dailyChecks.length;
-    const okCount = dailyChecks.filter(it => effectiveStatus(it)==="ok").length;
+    const okCount = dailyChecks.filter(it => computeDailyEffStatus(it) === "ok").length;
     const issueCount = total - okCount;
 
     const lines = [];
@@ -697,47 +1388,58 @@
     lines.push(`Datum: ${meta.date || "-"}`);
     lines.push(`Ort: ${meta.location || "-"}`);
     lines.push(`Bearbeiter:in: ${meta.author || "-"}`);
+    lines.push(`Safety (Alarm/Einfahrt/Licht): ${safetyOk ? "OK" : "NICHT VOLLSTÄNDIG"}`);
+
     if (wt){
-      lines.push(`Arbeitszeit: ${wt.start}–${wt.end} = ${wt.h}h ${String(wt.m).padStart(2,"0")}m (${wt.dec} h)`);
+      lines.push(`Arbeitszeit: ${wt.start}–${wt.end} = ${wt.h}h ${pad2(wt.m)}m (${wt.dec} h)`);
       lines.push(`Pause: ${wt.breakMin} min (nicht abgezogen)`);
-      lines.push(`Überstunden (>10h): ${wt.oh}h ${String(wt.om).padStart(2,"0")}m (${wt.odec} h)`);
+      lines.push(`Überstunden (>10h): ${wt.oh}h ${pad2(wt.om)}m (${wt.odec} h)`);
     } else {
       lines.push("Arbeitszeit: -");
     }
+
     lines.push("");
     lines.push("Nutzung (Studiotechnik):");
     lines.push(usedTech.length ? `- ${usedTech.join(", ")}` : "- keine Angabe");
     lines.push("Nutzung (Räume):");
     lines.push(usedRooms.length ? `- ${usedRooms.join(", ")}` : "- keine Angabe");
+
     lines.push("");
     lines.push(`Closing-Status: ${okCount}/${total} OK, ${issueCount} Issues`);
     lines.push("");
+
     if (meta.generalNotes){
       lines.push("Allgemeine Notizen:");
       lines.push(meta.generalNotes);
       lines.push("");
     }
+
     lines.push("Closing-Checkliste:");
     dailyChecks.forEach((it, i) => {
-      const eff = effectiveStatus(it)==="ok" ? "OK" : "ISSUE";
-      lines.push(`${String(i+1).padStart(2,"0")}. [${eff}] ${it.title}${it.note && it.note.trim() ? " — " + it.note.trim() : ""}`);
+      const eff = computeDailyEffStatus(it) === "ok" ? "OK" : "ISSUE";
+      const note = (it.note && it.note.trim()) ? ` — ${it.note.trim()}` : "";
+      lines.push(`${pad2(i+1)}. [${eff}] ${it.title}${note}`);
     });
 
-    return { mode:"daily", meta, text: lines.join("\n"), wt, usedTech, usedRooms };
+    return { text: lines.join("\n"), wt, usedTech, usedRooms, safetyOk, okCount, issueCount, total };
   }
 
   function inspectRows(stateObj, withUsed){
     return Object.keys(stateObj).map(name => {
       const st = stateObj[name];
-      return { name, used: withUsed ? !!st.used : null, status: st.status, note: (st.note||"").trim() };
+      return {
+        name,
+        used: withUsed ? !!st.used : null,
+        status: st.status,
+        note: (st.note || "").trim()
+      };
     });
   }
 
-  function buildAcceptanceProtocol(){
-    const meta = getMeta();
-    const g = inspectRows(acceptGeneral, false);
-    const t = inspectRows(acceptTech, true);
-    const r = inspectRows(acceptRooms, true);
+  function buildAcceptanceText(meta){
+    const g = inspectRows(accGeneral, false);
+    const t = inspectRows(accTech, true);
+    const r = inspectRows(accRooms, true);
 
     const lines = [];
     lines.push("Abnahmeprotokoll – Hangar Studio (Studiomeister)");
@@ -747,6 +1449,7 @@
     lines.push(`Ort: ${meta.location || "-"}`);
     lines.push(`Bearbeiter:in: ${meta.author || "-"}`);
     lines.push("");
+
     if (meta.generalNotes){
       lines.push("Allgemeine Notizen:");
       lines.push(meta.generalNotes);
@@ -756,10 +1459,11 @@
     function block(title, rows, withUsed){
       lines.push(title + ":");
       rows.forEach((x, i) => {
-        const st = (x.status === "maengel") ? "MÄNGEL" : "OK";
+        const st = x.status === "maengel" ? "MÄNGEL" : "OK";
         const used = withUsed ? (x.used ? "Genutzt" : "Nicht genutzt") : null;
         const mid = withUsed ? ` [${used}]` : "";
-        lines.push(`${String(i+1).padStart(2,"0")}. [${st}]${mid} ${x.name}${x.note ? " — " + x.note : ""}`);
+        const note = x.note ? ` — ${x.note}` : "";
+        lines.push(`${pad2(i+1)}. [${st}]${mid} ${x.name}${note}`);
       });
       lines.push("");
     }
@@ -768,20 +1472,19 @@
     block("Abnahme – Studiotechnik", t, true);
     block("Abnahme – Räume", r, true);
 
-    return { mode:"acceptance", meta, text: lines.join("\n"), g, t, r };
+    return { text: lines.join("\n"), g, t, r };
   }
 
+  // ---- Clean HTML export (structured PDF) ----
   function escapeHtml(s){
     return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
   }
-
   function badgeHtml(status){
     const ok = status === "ok" || status === "OK";
     return ok
       ? `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#eaf7ee;color:#1a7f37;font-weight:700;font-size:12px;">OK</span>`
       : `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#fdecec;color:#b42318;font-weight:700;font-size:12px;">Mängel</span>`;
   }
-
   function yesNo(v){ return v ? "Ja" : "Nein"; }
 
   function renderAcceptanceTableHtml(title, rows, withUsed){
@@ -809,7 +1512,7 @@
       if (withUsed){
         return `
           <tr>
-            <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${String(i+1).padStart(2,"0")}</td>
+            <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${pad2(i+1)}</td>
             <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${esc(x.name)}</td>
             <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:90px;">${esc(yesNo(x.used))}</td>
             ${statusCell}
@@ -819,7 +1522,7 @@
       }
       return `
         <tr>
-          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${String(i+1).padStart(2,"0")}</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${pad2(i+1)}</td>
           <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${esc(x.name)}</td>
           ${statusCell}
           <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${x.note ? esc(x.note) : "–"}</td>
@@ -829,7 +1532,7 @@
 
     return `
       <div style="margin-top:14px; font-weight:700;">${esc(title)}</div>
-      <table style="table-layout:fixed;">
+      <table style="table-layout:fixed; width:100%; border-collapse:collapse; margin-top:10px; font-size:13px;">
         <thead>${thead}</thead>
         <tbody>${body}</tbody>
       </table>
@@ -838,22 +1541,20 @@
 
   function protocolAsHtml(protocol){
     const esc = escapeHtml;
-
-    // Only first letter uppercase (as requested)
-    const typeLabel = (protocol.mode==="daily") ? "Tagesprotokoll" : "Abnahme";
-
+    const typeLabel = (protocol.mode === "daily") ? "Tagesprotokoll" : "Abnahme";
     const baseName = `${protocol.meta.date || todayISO()}_${typeLabel}_${sanitizeName(protocol.meta.project || "Hangar_Studiomeister")}`;
+
     const meta = protocol.meta;
-    const isDaily = protocol.mode==="daily";
+    const isDaily = protocol.mode === "daily";
 
     const workBlock = isDaily ? `
       <div class="box" style="grid-column:1 / -1;">
         <div class="k">Arbeitszeit (Studiomeister)</div>
-        <div class="v">${protocol.wt ? esc(`${protocol.wt.start}–${protocol.wt.end} = ${protocol.wt.h}h ${String(protocol.wt.m).padStart(2,"0")}m (${protocol.wt.dec} h)`) : "–"}</div>
+        <div class="v">${protocol.wt ? esc(`${protocol.wt.start}–${protocol.wt.end} = ${protocol.wt.h}h ${pad2(protocol.wt.m)}m (${protocol.wt.dec} h)`) : "–"}</div>
         <div class="k" style="margin-top:6px;">Pause</div>
         <div class="v">${protocol.wt ? esc(`${protocol.wt.breakMin} min (nicht abgezogen)`) : "–"}</div>
         <div class="k" style="margin-top:6px;">Überstunden (&gt;10h)</div>
-        <div class="v">${protocol.wt ? esc(`${protocol.wt.oh}h ${String(protocol.wt.om).padStart(2,"0")}m (${protocol.wt.odec} h)`) : "–"}</div>
+        <div class="v">${protocol.wt ? esc(`${protocol.wt.oh}h ${pad2(protocol.wt.om)}m (${protocol.wt.odec} h)`) : "–"}</div>
       </div>
     ` : "";
 
@@ -868,7 +1569,7 @@
       </div>
     ` : "";
 
-    const generalNotesBlock = meta.generalNotes ? `
+    const notesBlock = meta.generalNotes ? `
       <div class="box" style="margin-top:14px;">
         <div class="k">Allgemeine Notizen</div>
         <div style="margin-top:6px; white-space:pre-wrap;">${esc(meta.generalNotes)}</div>
@@ -877,7 +1578,7 @@
 
     const dailyTable = isDaily ? `
       <div style="margin-top:14px; font-weight:700;">Closing-Checkliste</div>
-      <table style="table-layout:fixed;">
+      <table style="table-layout:fixed; width:100%; border-collapse:collapse; margin-top:10px; font-size:13px;">
         <thead>
           <tr>
             <th style="width:48px;">#</th>
@@ -888,10 +1589,10 @@
         </thead>
         <tbody>
           ${dailyChecks.map((it, i) => {
-            const eff = effectiveStatus(it);
+            const eff = computeDailyEffStatus(it);
             return `
               <tr>
-                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${String(i+1).padStart(2,"0")}</td>
+                <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${pad2(i+1)}</td>
                 <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${esc(it.title)}</td>
                 <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:110px;text-align:right;">
                   ${badgeHtml(eff==="ok" ? "ok" : "maengel")}
@@ -928,7 +1629,6 @@
   .box{border:1px solid #ddd; border-radius:12px; padding:12px; background:#fafafa;}
   .k{color:#555; font-size:12px;}
   .v{font-weight:650; margin-top:3px;}
-  table{width:100%; border-collapse:collapse; margin-top:14px; font-size:13px; table-layout:fixed;}
   th{background:#f3f4f6; text-align:left; padding:10px; border-bottom:1px solid #ddd; font-size:12px; color:#444;}
   @media print{ body{padding:0;} .page{max-width:none;} .box{background:#fff;} }
 </style>
@@ -955,17 +1655,14 @@
       ${usageBlocks}
     </div>
 
-    ${generalNotesBlock}
-
-    ${isDaily ? dailyTable : `
-      <div style="margin-top:14px; font-weight:700;">Abnahme</div>
-      ${acceptanceTables}
-    `}
+    ${notesBlock}
+    ${isDaily ? dailyTable : `<div style="margin-top:14px; font-weight:700;">Abnahme</div>${acceptanceTables}`}
   </div>
 </body>
 </html>`;
   }
 
+  // ---- Review actions ----
   function download(filename, mime, content){
     const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);
@@ -977,45 +1674,66 @@
     a.remove();
     URL.revokeObjectURL(url);
   }
-
-  function makeMailto(protocolText){
+  function makeMailto(text){
     const meta = getMeta();
-    const typeName = (mode==="daily") ? "Tagesprotokoll" : "Abnahmeprotokoll";
+    const typeName = (mode === "daily") ? "Tagesprotokoll" : "Abnahmeprotokoll";
     const subject = `${typeName} – ${meta.date || ""} – ${meta.project || "Hangar Studio"}`.trim();
-    return `mailto:${encodeURIComponent(EMAIL_TO)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(protocolText)}`;
+    return `mailto:${encodeURIComponent(EMAIL_TO)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
   }
 
-  $("makeProtoBtn").addEventListener("click", () => {
-    lastProtocol = (mode==="daily") ? buildDailyProtocol() : buildAcceptanceProtocol();
-    $("protoText").textContent = lastProtocol.text;
-    setExportEnabled(true);
-    const name = (mode==="daily") ? "Tagesprotokoll bereit" : "Abnahmeprotokoll bereit";
-    $("statusPill").innerHTML = `<span class="dot"></span><span>${name}</span>`;
-  });
+  function buildAndRenderReview(){
+    const meta = getMeta();
+    if (mode === "daily"){
+      const out = buildDailyText(meta);
+      lastProtocol = { mode:"daily", meta, text: out.text, wt: out.wt, usedTech: out.usedTech, usedRooms: out.usedRooms, safetyOk: out.safetyOk };
+      $("sumType").textContent = "Tagesprotokoll";
+      $("sumSafety").textContent = out.safetyOk ? "OK" : "NICHT VOLLSTÄNDIG";
+      $("sumOvertime").textContent = out.wt ? `${out.wt.oh}h ${pad2(out.wt.om)}m` : "–";
+    } else {
+      const out = buildAcceptanceText(meta);
+      lastProtocol = { mode:"acceptance", meta, text: out.text, g: out.g, t: out.t, r: out.r };
+      $("sumType").textContent = "Abnahmeprotokoll";
+      $("sumSafety").textContent = "–";
+      $("sumOvertime").textContent = "–";
+    }
 
-  $("emailBtn").addEventListener("click", () => {
+    const typeLabel = (lastProtocol.mode === "daily") ? "Tagesprotokoll" : "Abnahme";
+    const docId = `${lastProtocol.meta.date || todayISO()}_${typeLabel}_${sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister")}`;
+    $("sumId").textContent = docId;
+
+    $("previewText").textContent = lastProtocol.text;
+
+    updateStatusChip("Review bereit");
+    setExportButtonsEnabled(true);
+
+    // also show safety warning on content step
+    updateDailySafetyHint();
+  }
+
+  function setExportButtonsEnabled(on){
+    ["reviewEmailBtn","reviewTxtBtn","reviewHtmlBtn","reviewPrintBtn"].forEach(id => $(id).disabled = !on);
+  }
+  setExportButtonsEnabled(false);
+
+  $("reviewEmailBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
     window.location.href = makeMailto(lastProtocol.text);
   });
-
-  $("downloadTxtBtn").addEventListener("click", () => {
+  $("reviewTxtBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
-    const typeLabel = (lastProtocol.mode==="daily") ? "Tagesprotokoll" : "Abnahme";
+    const typeLabel = (lastProtocol.mode === "daily") ? "Tagesprotokoll" : "Abnahme";
     const date = lastProtocol.meta.date || todayISO();
     const name = sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister");
     download(`${date}_${typeLabel}_${name}.txt`, "text/plain;charset=utf-8", lastProtocol.text);
   });
-
-  $("downloadHtmlBtn").addEventListener("click", () => {
+  $("reviewHtmlBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
-    const typeLabel = (lastProtocol.mode==="daily") ? "Tagesprotokoll" : "Abnahme";
+    const typeLabel = (lastProtocol.mode === "daily") ? "Tagesprotokoll" : "Abnahme";
     const date = lastProtocol.meta.date || todayISO();
     const name = sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister");
-    const html = protocolAsHtml(lastProtocol);
-    download(`${date}_${typeLabel}_${name}.html`, "text/html;charset=utf-8", html);
+    download(`${date}_${typeLabel}_${name}.html`, "text/html;charset=utf-8", protocolAsHtml(lastProtocol));
   });
-
-  $("printBtn").addEventListener("click", () => {
+  $("reviewPrintBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
     const html = protocolAsHtml(lastProtocol);
     const w = window.open("", "_blank");
@@ -1023,186 +1741,160 @@
     w.focus(); w.print();
   });
 
-  $("saveStateBtn").addEventListener("click", () => {
+  // ---- Save / Load / Reset (no default-name persistence) ----
+  function saveState(){
+    const meta = getMeta();
+    // IMPORTANT: author is stored only as current input (not as a default template)
     const state = {
+      step,
       mode,
-      meta: getMeta(),
+      meta,
       dailyChecks,
       work: { start: $("workStart").value, end: $("workEnd").value, breakMin: $("workBreak").value },
       used: { techUsed, roomsUsed },
-      acceptGeneral, acceptTech, acceptRooms
+      accGeneral, accTech, accRooms,
+      theme: getThemePref()
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    alert("Zwischenstand gespeichert.");
-  });
+    isDirty = false;
+    updateSticky();
+    updateStatusChip("Gespeichert");
+    showToast("Zwischenstand gespeichert.", "ok");
+  }
 
-  $("loadStateBtn").addEventListener("click", () => {
+  function loadState(){
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return alert("Kein gespeicherter Zwischenstand gefunden.");
+    if (!raw){
+      showToast("Kein gespeicherter Zwischenstand gefunden.", "bad");
+      return;
+    }
     const state = JSON.parse(raw);
 
+    // mode first
     applyMode(state.mode || "daily");
 
+    // meta
     $("project").value = state.meta?.project || "";
     $("date").value = state.meta?.date || todayISO();
     $("location").value = state.meta?.location || "Hangar Studio";
     $("author").value = state.meta?.author || "";
     $("generalNotes").value = state.meta?.generalNotes || "";
 
-    dailyChecks = Array.isArray(state.dailyChecks) ? state.dailyChecks : dailyChecks;
-
+    // work
     $("workStart").value = state.work?.start || "";
     $("workEnd").value = state.work?.end || "";
     $("workBreak").value = state.work?.breakMin || "";
 
+    dailyChecks = Array.isArray(state.dailyChecks) ? state.dailyChecks : dailyChecks;
     techUsed = state.used?.techUsed || techUsed;
     roomsUsed = state.used?.roomsUsed || roomsUsed;
 
-    acceptGeneral = state.acceptGeneral || acceptGeneral;
-    acceptTech = state.acceptTech || acceptTech;
-    acceptRooms = state.acceptRooms || acceptRooms;
+    accGeneral = state.accGeneral || accGeneral;
+    accTech = state.accTech || accTech;
+    accRooms = state.accRooms || accRooms;
 
-    renderDailyChecks();
-    renderUsage("techUsed", TECH_OPTIONS, techUsed);
-    renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed);
-
-    renderInspect("acceptGeneral", acceptGeneral, false);
-    renderInspect("acceptTech", acceptTech, true);
-    renderInspect("acceptRooms", acceptRooms, true);
+    // render
+    renderDaily();
+    renderUsageGrid("techGrid", TECH_OPTIONS, techUsed);
+    renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed);
+    renderAccList("accGeneralList", accGeneral, false);
+    renderAccList("accTechList", accTech, true);
+    renderAccList("accRoomsList", accRooms, true);
 
     updateWorkSummary();
 
+    isDirty = false;
     lastProtocol = null;
-    $("protoText").textContent = "Noch kein Protokoll erstellt.";
-    setExportEnabled(false);
-    $("statusPill").innerHTML = `<span class="dot"></span><span>Status: –</span>`;
-    alert("Zwischenstand geladen.");
-  });
+    updateSticky();
+    updateStatusChip("Geladen");
+    showToast("Zwischenstand geladen.", "ok");
 
-  $("resetBtn").addEventListener("click", () => {
+    setStep(state.step || 1);
+  }
+
+  function resetAll(){
     if (!confirm("Wirklich alles zurücksetzen?")) return;
 
-    dailyChecks = DAILY_CHECK_ITEMS.map(t => ({ title: t, checked:false, note:"", status:"auto" }));
+    mode = "daily";
+    dailyChecks = DAILY_CHECK_ITEMS.map(t => ({ title: t, checked:false, status:"auto", note:"", detailsOpen:false }));
     techUsed = Object.fromEntries(TECH_OPTIONS.map(x => [x, false]));
     roomsUsed = Object.fromEntries(ROOM_OPTIONS.map(x => [x, false]));
-    acceptGeneral = initInspectState(ACCEPT_GENERAL, false);
-    acceptTech = initInspectState(TECH_OPTIONS, true);
-    acceptRooms = initInspectState(ROOM_OPTIONS, true);
+    accGeneral = initInspectState(ACCEPT_GENERAL, false);
+    accTech = initInspectState(TECH_OPTIONS, true);
+    accRooms = initInspectState(ROOM_OPTIONS, true);
 
     $("project").value = "";
     $("date").value = todayISO();
     $("location").value = "Hangar Studio";
     $("author").value = "";
     $("generalNotes").value = "";
+
     $("workStart").value = "";
     $("workEnd").value = "";
     $("workBreak").value = "";
 
-    renderDailyChecks();
-    renderUsage("techUsed", TECH_OPTIONS, techUsed);
-    renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed);
-
-    renderInspect("acceptGeneral", acceptGeneral, false);
-    renderInspect("acceptTech", acceptTech, true);
-    renderInspect("acceptRooms", acceptRooms, true);
+    applyMode("daily");
+    renderDaily();
+    renderUsageGrid("techGrid", TECH_OPTIONS, techUsed);
+    renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed);
+    renderAccList("accGeneralList", accGeneral, false);
+    renderAccList("accTechList", accTech, true);
+    renderAccList("accRoomsList", accRooms, true);
 
     updateWorkSummary();
-    applyMode("daily");
-
     lastProtocol = null;
-    $("protoText").textContent = "Noch kein Protokoll erstellt.";
-    setExportEnabled(false);
-    $("statusPill").innerHTML = `<span class="dot"></span><span>Status: –</span>`;
-  });
+    setExportButtonsEnabled(false);
+    setDirty(false);
 
-  function renderInspect(containerId, stateObj, withUsed){
-    const container = $(containerId);
-    container.innerHTML = "";
-    Object.keys(stateObj).forEach(name => {
-      const st = stateObj[name];
-
-      const box = document.createElement("div");
-      box.className = "inspect-item";
-
-      const top = document.createElement("div");
-      top.className = "inspect-top";
-
-      const nm = document.createElement("div");
-      nm.className = "inspect-name";
-      nm.textContent = name;
-
-      const controls = document.createElement("div");
-      controls.className = "inspect-controls";
-
-      if (withUsed){
-        const usedWrap = document.createElement("label");
-        usedWrap.className = "inspect-used";
-        const usedCb = document.createElement("input");
-        usedCb.type = "checkbox";
-        usedCb.checked = !!st.used;
-        usedCb.addEventListener("change", () => st.used = usedCb.checked);
-        const usedTxt = document.createElement("span");
-        usedTxt.textContent = "Genutzt";
-        usedWrap.appendChild(usedCb);
-        usedWrap.appendChild(usedTxt);
-        controls.appendChild(usedWrap);
-      }
-
-      const sel = document.createElement("select");
-      sel.innerHTML = `<option value="ok">OK</option><option value="maengel">Mängel</option>`;
-      sel.value = st.status || "ok";
-      sel.addEventListener("change", () => st.status = sel.value);
-      controls.appendChild(sel);
-
-      top.appendChild(nm);
-      top.appendChild(controls);
-
-      const noteWrap = document.createElement("div");
-      noteWrap.className = "inspect-note";
-      const noteLabel = document.createElement("label");
-      noteLabel.textContent = "Notiz (optional)";
-      const ta = document.createElement("textarea");
-      ta.value = st.note || "";
-      ta.placeholder = "z. B. Zustand, Besonderheiten, Maßnahmen, ToDo...";
-      ta.addEventListener("input", ()=> st.note = ta.value);
-      noteWrap.appendChild(noteLabel);
-      noteWrap.appendChild(ta);
-
-      box.appendChild(top);
-      box.appendChild(noteWrap);
-      container.appendChild(box);
-    });
+    showToast("Zurückgesetzt.", "ok");
+    setStep(1);
   }
 
-  function renderUsage(containerId, options, stateObj){
-    const container = $(containerId);
-    container.innerHTML = "";
-    options.forEach(name => {
-      const row = document.createElement("label");
-      row.className = "cbrow";
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.checked = !!stateObj[name];
-      cb.addEventListener("change", ()=> stateObj[name]=cb.checked);
-      const txt = document.createElement("span");
-      txt.textContent = name;
-      row.appendChild(cb); row.appendChild(txt);
-      container.appendChild(row);
-    });
+  $("saveBtn").addEventListener("click", saveState);
+  $("saveBtnTop").addEventListener("click", saveState);
+  $("loadBtn").addEventListener("click", loadState);
+  $("loadBtnTop").addEventListener("click", loadState);
+  $("resetBtn").addEventListener("click", resetAll);
+
+  // ---- Live hint tuning ----
+  function refreshLiveHint(){
+    $("liveHint").innerHTML =
+      mode === "daily"
+        ? "Daily-Flow: abhaken → nur bei Bedarf Details/Notiz. Safety-Punkte (Alarm/Einfahrt/Licht) bitte bewusst bestätigen."
+        : "Abnahme-Flow: pro Punkt Genutzt + OK/Mängel. Notiz optional; bei Mängel klappt sie automatisch auf.";
   }
 
-  // Init
-  $("date").value = todayISO();
-  if (!$("location").value) $("location").value = "Hangar Studio";
-  renderDailyChecks();
-  renderUsage("techUsed", TECH_OPTIONS, techUsed);
-  renderUsage("roomsUsed", ROOM_OPTIONS, roomsUsed);
-  renderInspect("acceptGeneral", acceptGeneral, false);
-  renderInspect("acceptTech", acceptTech, true);
-  renderInspect("acceptRooms", acceptRooms, true);
+  // ---- Initialize render ----
+  renderDaily();
+  renderUsageGrid("techGrid", TECH_OPTIONS, techUsed);
+  renderUsageGrid("roomsGrid", ROOM_OPTIONS, roomsUsed);
+  renderAccList("accGeneralList", accGeneral, false);
+  renderAccList("accTechList", accTech, true);
+  renderAccList("accRoomsList", accRooms, true);
   updateWorkSummary();
   applyMode("daily");
-  setExportEnabled(false);
+  refreshLiveHint();
+  updateSticky();
+  updateStatusChip();
+
+  // watch mode change to update hint
+  const origApplyMode = applyMode;
+  applyMode = function(newMode){
+    origApplyMode(newMode);
+    refreshLiveHint();
+  };
+
+  // Step init
+  setStep(1);
+
+  // mark dirty on any meta changes
+  ["project","date","location","author","generalNotes"].forEach(id => {
+    $(id).addEventListener("input", () => {
+      setDirty(true);
+    });
+  });
+
+})();
 </script>
 </body>
 </html>
