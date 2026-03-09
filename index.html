@@ -15,7 +15,7 @@
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; /* <- UI Schrift */
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
       background:
         radial-gradient(900px 500px at 15% 0%, rgba(79,140,255,.18), transparent 55%),
@@ -24,38 +24,14 @@
         var(--bg);
     }
     .wrap{ max-width: 1040px; margin:0 auto; padding: 22px; }
-    header{
-      display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
-      margin: 4px 0 14px;
-    }
+    header{ display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin: 4px 0 14px; }
     h1{ font-size: 20px; margin:0; letter-spacing:.2px; }
     .subtitle{ color:var(--muted); font-size: 13px; margin-top:6px; }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border:1px solid var(--line);
-      background: rgba(15,21,32,.75);
-      font-size: 12px;
-      color: var(--muted);
-      white-space:nowrap;
-    }
+    .pill{ display:inline-flex; align-items:center; gap:8px; padding: 8px 10px; border-radius: 999px; border:1px solid var(--line); background: rgba(15,21,32,.75); font-size: 12px; color: var(--muted); white-space:nowrap; }
     .dot{ width:8px; height:8px; border-radius:99px; background: var(--accent); display:inline-block; }
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 16px;
-      align-items:start;
-    }
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
-    }
+    .grid{ display:grid; grid-template-columns: 1.15fr 0.85fr; gap: 16px; align-items:start; }
+    .card{ background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)); border:1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); backdrop-filter: blur(6px); }
     h2{ margin:0 0 10px; font-size: 15px; letter-spacing:.2px; }
     .muted{ color:var(--muted); font-size: 13px; }
 
@@ -73,108 +49,50 @@
     .row{ display:flex; gap:10px; }
     .row > *{ flex:1; }
 
-    .section{
-      margin-top: 12px;
-      border:1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px;
-      background: rgba(15,21,32,.70);
-    }
-    .sectionHead{
-      display:flex; align-items:baseline; justify-content:space-between; gap:10px;
-      margin-bottom: 8px;
-    }
+    .section{ margin-top: 12px; border:1px solid var(--line); border-radius: 14px; padding: 12px; background: rgba(15,21,32,.70); }
+    .sectionHead{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom: 8px; }
     .sectionTitle{ font-weight: 650; font-size: 13px; }
     .sectionHint{ color:var(--muted); font-size:12px; }
 
-    .checkgrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 12px;
-    }
-    @media (max-width: 720px){
-      .checkgrid{ grid-template-columns: 1fr; }
-    }
-    .cbrow{
-      display:flex; gap:10px; align-items:flex-start;
-      padding: 8px 10px;
-      border:1px solid rgba(35,48,68,.75);
-      border-radius: 12px;
-      background: rgba(15,21,32,.55);
-    }
+    .checkgrid{ display:grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+    @media (max-width: 720px){ .checkgrid{ grid-template-columns: 1fr; } }
+    .cbrow{ display:flex; gap:10px; align-items:flex-start; padding: 8px 10px; border:1px solid rgba(35,48,68,.75); border-radius: 12px; background: rgba(15,21,32,.55); }
     .cbrow input{ width:18px; height:18px; margin-top:2px; accent-color: var(--accent); }
     .cbrow span{ font-size: 13px; line-height: 1.25; }
 
     .items{ display:flex; flex-direction:column; gap: 10px; margin-top: 10px; }
-    .item{
-      border:1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px;
-      background: rgba(15,21,32,.85);
-      box-shadow: var(--shadow2);
-    }
+    .item{ border:1px solid var(--line); border-radius: 14px; padding: 12px; background: rgba(15,21,32,.85); box-shadow: var(--shadow2); }
     .item-top{ display:flex; align-items:flex-start; justify-content:space-between; gap: 10px; }
     .item-title{ display:flex; gap:10px; align-items:flex-start; min-width: 0; }
     .item-title input[type="checkbox"]{ width:18px; height:18px; margin-top: 3px; accent-color: var(--accent); }
     .item h3{ margin:0; font-size: 14px; font-weight: 650; line-height: 1.25; word-break: break-word; }
-    .tag{
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border:1px solid var(--line);
-      color: var(--muted);
-      display:inline-block;
-      margin-top: 6px;
-    }
+    .tag{ font-size: 12px; padding: 2px 8px; border-radius: 999px; border:1px solid var(--line); color: var(--muted); display:inline-block; margin-top: 6px; }
     .badge-ok{ border-color: rgba(46,204,113,.45); color: var(--ok); }
     .badge-bad{ border-color: rgba(255,92,92,.45); color: var(--bad); }
     .item-actions{ display:flex; gap:8px; align-items:center; flex-shrink:0; }
     .item-actions select{ width: 92px; padding: 8px 10px; border-radius: 12px; font-size: 12px; }
 
     .btns{ display:flex; flex-wrap:wrap; gap: 10px; margin-top: 12px; }
-    button{
-      border:1px solid var(--line);
-      background: rgba(15,21,32,.9);
-      color:var(--text);
-      padding: 10px 12px;
-      border-radius: 12px;
-      cursor:pointer;
-      font-weight: 650;
-      font-size: 13px;
-    }
-    button.primary{
-      background: linear-gradient(180deg, rgba(79,140,255,.28), rgba(79,140,255,.14));
-      border-color: rgba(79,140,255,.55);
-    }
+    button{ border:1px solid var(--line); background: rgba(15,21,32,.9); color:var(--text); padding: 10px 12px; border-radius: 12px; cursor:pointer; font-weight: 650; font-size: 13px; }
+    button.primary{ background: linear-gradient(180deg, rgba(79,140,255,.28), rgba(79,140,255,.14)); border-color: rgba(79,140,255,.55); }
     button.danger{ background: rgba(255,92,92,.12); border-color: rgba(255,92,92,.35); }
     button:disabled{ opacity:.55; cursor:not-allowed; }
 
-    .small{ font-size: 12px; color:var(--muted); margin-top: 8px; }
-    .proto pre{
-      white-space: pre-wrap;
-      background: rgba(15,21,32,.85);
-      border:1px solid var(--line);
-      padding: 12px;
-      border-radius: 14px;
-      margin:0;
-      max-height: 52vh;
-      overflow:auto;
-      font-size: 12.5px;
-      line-height: 1.35;
-    }
+    .seg{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+    .seg button{ border-radius: 999px; padding: 10px 14px; }
+    .seg button.active{ background: rgba(79,140,255,.22); border-color: rgba(79,140,255,.55); }
 
-    .worksum{
-      margin-top: 8px;
-      font-size: 12.5px;
-      color: var(--muted);
-    }
+    .small{ font-size: 12px; color:var(--muted); margin-top: 8px; }
+    .proto pre{ white-space: pre-wrap; background: rgba(15,21,32,.85); border:1px solid var(--line); padding: 12px; border-radius: 14px; margin:0; max-height: 52vh; overflow:auto; font-size: 12.5px; line-height: 1.35; }
+
+    .worksum{ margin-top: 8px; font-size: 12.5px; color: var(--muted); }
     .worksum b{ color: var(--text); }
 
     @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
 
     @media print {
       body { background:#fff; color:#000; }
-      header, .btns, .small { display:none !important; }
+      header, .btns, .small, .seg { display:none !important; }
       .wrap{ max-width:none; padding:0; }
       .card, .section { box-shadow:none; border-color:#ccc !important; background:#fff; }
       input, textarea, select, button, .item, .cbrow { border-color:#ccc !important; background:#fff !important; color:#000 !important; }
@@ -187,14 +105,22 @@
     <header>
       <div>
         <h1>Hangar Studio – Studiomeister Checkliste</h1>
-        <div class="subtitle">Checkliste ausfüllen → Protokoll erstellen → Download oder Drucken (PDF).</div>
+        <div class="subtitle">Protokolltyp wählen → ausfüllen → Protokoll erstellen → Download / PDF / E-Mail.</div>
       </div>
       <div class="pill" id="statusPill"><span class="dot"></span><span>Status: –</span></div>
     </header>
 
     <div class="grid">
       <div class="card">
-        <h2>Checkliste</h2>
+        <h2>Protokolltyp</h2>
+        <div class="muted">Tagesprotokoll = Checkliste + Arbeitszeit · Abnahmeprotokoll = zusätzlich Räume & Studiotechnik.</div>
+        <div class="seg">
+          <button id="modeDailyBtn" class="primary">Tagesprotokoll</button>
+          <button id="modeAcceptanceBtn">Abnahmeprotokoll</button>
+        </div>
+        <div class="small" id="modeHint"></div>
+
+        <h2 style="margin-top:16px;">Checkliste</h2>
 
         <div class="row">
           <div>
@@ -218,7 +144,8 @@
           </div>
         </div>
 
-        <div class="section">
+        <!-- Worktime: visible in BOTH modes -->
+        <div class="section" id="workSection">
           <div class="sectionHead">
             <div class="sectionTitle">Arbeitszeit (Studiomeister)</div>
             <div class="sectionHint">optional</div>
@@ -240,7 +167,8 @@
           <div class="worksum" id="workSummary">Gesamt: <b>–</b></div>
         </div>
 
-        <div class="section">
+        <!-- Acceptance-only: Technik -->
+        <div class="section" id="techSection">
           <div class="sectionHead">
             <div class="sectionTitle">Studiotechnik genutzt</div>
             <div class="sectionHint">ankreuzen, was genutzt wurde</div>
@@ -248,7 +176,8 @@
           <div class="checkgrid" id="techUsed"></div>
         </div>
 
-        <div class="section">
+        <!-- Acceptance-only: Räume -->
+        <div class="section" id="roomsSection">
           <div class="sectionHead">
             <div class="sectionTitle">Räume genutzt</div>
             <div class="sectionHint">ankreuzen, was genutzt wurde</div>
@@ -282,12 +211,13 @@
 
         <div class="btns">
           <button id="makeProtoBtn" class="primary">Protokoll erstellen</button>
+          <button id="emailBtn" disabled>E-Mail vorbereiten</button>
           <button id="saveStateBtn">Zwischenstand speichern</button>
           <button id="loadStateBtn">Zwischenstand laden</button>
           <button id="resetBtn" class="danger">Alles zurücksetzen</button>
         </div>
 
-        <div class="small">Hinweis: Zwischenstand wird lokal im Browser gespeichert (localStorage).</div>
+        <div class="small">E-Mail öffnet die Mail-App (mailto). Direktes Senden ohne Backend ist nicht möglich.</div>
       </div>
 
       <div class="card proto">
@@ -308,7 +238,10 @@
   </div>
 
 <script>
-  const STORAGE_KEY = "hangar_studiomeister_state_ui_v1";
+  const EMAIL_TO = "master@mastermoves.de";
+  const STORAGE_KEY = "hangar_studiomeister_state_mode_v2";
+
+  let mode = "acceptance"; // "daily" | "acceptance"
 
   const DEFAULT_ITEMS = [
     { title: "Strom ausgeschaltet", checked: false, note: "", status: "auto" },
@@ -322,26 +255,8 @@
     { title: "Licht aus", checked: false, note: "", status: "auto" },
   ];
 
-  const TECH_OPTIONS = [
-    "Schwerlast Nord",
-    "Schwerlast Süd",
-    "H-Traverse",
-    "Lichtsegel",
-    "Kreistraverse",
-    "Drehteller",
-    "Vorhang"
-  ];
-
-  const ROOM_OPTIONS = [
-    "Cafeteria",
-    "Maske 1",
-    "Maske 2",
-    "Schwarzer Raum",
-    "Werkstatt",
-    "Kameralager",
-    "Facility-Raum",
-    "Produktionsbüro"
-  ];
+  const TECH_OPTIONS = ["Schwerlast Nord","Schwerlast Süd","H-Traverse","Lichtsegel","Kreistraverse","Drehteller","Vorhang"];
+  const ROOM_OPTIONS = ["Cafeteria","Maske 1","Maske 2","Schwarzer Raum","Werkstatt","Kameralager","Facility-Raum","Produktionsbüro"];
 
   let items = structuredClone(DEFAULT_ITEMS);
   let lastProtocol = null;
@@ -541,6 +456,25 @@
     return Object.keys(stateObj).filter(k => !!stateObj[k]);
   }
 
+  function applyMode(newMode){
+    mode = newMode;
+    const isAcceptance = (mode === "acceptance");
+
+    $("modeAcceptanceBtn").classList.toggle("active", isAcceptance);
+    $("modeDailyBtn").classList.toggle("active", !isAcceptance);
+
+    // Work is ALWAYS visible
+    $("workSection").style.display = "";
+
+    // Only show tech/rooms for acceptance
+    $("techSection").style.display = isAcceptance ? "" : "none";
+    $("roomsSection").style.display = isAcceptance ? "" : "none";
+
+    $("modeHint").textContent = isAcceptance
+      ? "Abnahmeprotokoll aktiv: Checkliste + Arbeitszeit + Studiotechnik + Räume."
+      : "Tagesprotokoll aktiv: Checkliste + Arbeitszeit (ohne Studiotechnik/Räume).";
+  }
+
   function buildProtocol() {
     const meta = {
       project: $("project").value.trim(),
@@ -551,15 +485,14 @@
     };
 
     const wt = calcWorkTime();
-    const usedTech = selectedKeys(techUsed);
-    const usedRooms = selectedKeys(roomsUsed);
 
     const total = items.length;
     const okCount = items.filter(it => effectiveStatus(it)==="ok").length;
     const issueCount = total - okCount;
 
     const lines = [];
-    lines.push("PROTOKOLL – Hangar Studio (Studiomeister)");
+    const typeName = (mode === "acceptance") ? "ABNAHMEPROTOKOLL" : "TAGESPROTOKOLL";
+    lines.push(`${typeName} – Hangar Studio (Studiomeister)`);
     lines.push("========================================");
     lines.push(`Projekt: ${meta.project || "-"}`);
     lines.push(`Datum: ${meta.date || "-"}`);
@@ -572,11 +505,15 @@
       lines.push(`Arbeitszeit: -`);
     }
 
-    lines.push("");
-    lines.push("Nutzung (Studiotechnik):");
-    lines.push(usedTech.length ? `- ${usedTech.join(", ")}` : "- keine Angabe");
-    lines.push("Nutzung (Räume):");
-    lines.push(usedRooms.length ? `- ${usedRooms.join(", ")}` : "- keine Angabe");
+    if (mode === "acceptance"){
+      const usedTech = selectedKeys(techUsed);
+      const usedRooms = selectedKeys(roomsUsed);
+      lines.push("");
+      lines.push("Nutzung (Studiotechnik):");
+      lines.push(usedTech.length ? `- ${usedTech.join(", ")}` : "- keine Angabe");
+      lines.push("Nutzung (Räume):");
+      lines.push(usedRooms.length ? `- ${usedRooms.join(", ")}` : "- keine Angabe");
+    }
 
     lines.push("");
     lines.push(`Status: ${okCount}/${total} OK, ${issueCount} Issues`);
@@ -595,7 +532,7 @@
       if (it.note && it.note.trim().length) lines.push(`    Notiz: ${it.note.trim()}`);
     });
 
-    return { meta, okCount, issueCount, total, wt, usedTech, usedRooms, text: lines.join("\n") };
+    return { meta, okCount, issueCount, total, wt, mode, text: lines.join("\n") };
   }
 
   function download(filename, mime, content) {
@@ -616,14 +553,16 @@
 
   function protocolAsHtml(protocol) {
     const esc = escapeHtml;
-    const baseName = `${protocol.meta.date || todayISO()}_${sanitizeName(protocol.meta.project || "Hangar_Studiomeister")}`;
+    const typeShort = (protocol.mode === "acceptance") ? "abnahme" : "tage";
+    const baseName = `${protocol.meta.date || todayISO()}_${typeShort}_${sanitizeName(protocol.meta.project || "Hangar_Studiomeister")}`;
 
     const workLine = protocol.wt
       ? `${esc(protocol.wt.start)}–${esc(protocol.wt.end)} (Pause ${protocol.wt.breakMin} min) = <b>${protocol.wt.h}h ${String(protocol.wt.m).padStart(2,"0")}m</b> (<b>${protocol.wt.dec} h</b>)`
       : `–`;
 
-    const techLine = protocol.usedTech.length ? esc(protocol.usedTech.join(", ")) : "–";
-    const roomLine = protocol.usedRooms.length ? esc(protocol.usedRooms.join(", ")) : "–";
+    const isAcceptance = (protocol.mode === "acceptance");
+    const techLine = isAcceptance ? (Object.keys(techUsed).filter(k => techUsed[k]).join(", ") || "–") : null;
+    const roomLine = isAcceptance ? (Object.keys(roomsUsed).filter(k => roomsUsed[k]).join(", ") || "–") : null;
 
     const rows = items.map((it, i) => {
       const eff = effectiveStatus(it)==="ok" ? "OK" : "ISSUE";
@@ -643,7 +582,6 @@
       `;
     }).join("");
 
-    /* IMPORTANT: Export HTML (PDF) Schrift ebenfalls system-ui */
     return `<!doctype html>
 <html lang="de">
 <head>
@@ -671,7 +609,7 @@
   <div class="page">
     <div class="hdr">
       <div>
-        <h1>Protokoll – Hangar Studio (Studiomeister)</h1>
+        <h1>${protocol.mode === "acceptance" ? "Abnahmeprotokoll" : "Tagesprotokoll"} – Hangar Studio (Studiomeister)</h1>
         <div class="sub">Datum: ${esc(protocol.meta.date || "-")} · Ort: ${esc(protocol.meta.location || "-")}</div>
       </div>
       <div style="text-align:right;">
@@ -691,15 +629,15 @@
         <div class="v">${workLine}</div>
       </div>
 
+      ${isAcceptance ? `
       <div class="box" style="grid-column:1 / -1;">
         <div class="k">Studiotechnik genutzt</div>
-        <div class="v">${techLine}</div>
+        <div class="v">${esc(techLine)}</div>
       </div>
-
       <div class="box" style="grid-column:1 / -1;">
         <div class="k">Räume genutzt</div>
-        <div class="v">${roomLine}</div>
-      </div>
+        <div class="v">${esc(roomLine)}</div>
+      </div>` : ""}
     </div>
 
     <div class="summary">
@@ -734,33 +672,35 @@
     $("downloadHtmlBtn").disabled = !enabled;
     $("downloadTxtBtn").disabled = !enabled;
     $("printBtn").disabled = !enabled;
+    $("emailBtn").disabled = !enabled;
   }
 
-  ["workStart","workEnd","workBreak"].forEach(id => {
-    $(id).addEventListener("input", updateWorkSummary);
-  });
+  function makeMailto(protocolText){
+    const meta = {
+      project: $("project").value.trim(),
+      date: $("date").value || "",
+      location: $("location").value.trim(),
+    };
+    const typeName = (mode === "acceptance") ? "Abnahmeprotokoll" : "Tagesprotokoll";
+    const subject = `${typeName} – ${meta.date || ""} – ${meta.project || "Hangar Studio"}`.trim();
+    const body = protocolText;
 
-  function renderOptionGroup(containerId, options, stateObj){
-    const container = $(containerId);
-    container.innerHTML = "";
-    options.forEach(name => {
-      const row = document.createElement("label");
-      row.className = "cbrow";
-
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.checked = !!stateObj[name];
-      cb.addEventListener("change", () => { stateObj[name] = cb.checked; });
-
-      const txt = document.createElement("span");
-      txt.textContent = name;
-
-      row.appendChild(cb);
-      row.appendChild(txt);
-      container.appendChild(row);
-    });
+    const url = `mailto:${encodeURIComponent(EMAIL_TO)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    return url;
   }
 
+  // Mode buttons
+  $("modeDailyBtn").addEventListener("click", () => applyMode("daily"));
+  $("modeAcceptanceBtn").addEventListener("click", () => applyMode("acceptance"));
+
+  // Live worktime update
+  ["workStart","workEnd","workBreak"].forEach(id => $(id).addEventListener("input", updateWorkSummary));
+
+  // Option groups render
+  renderOptionGroup("techUsed", TECH_OPTIONS, techUsed);
+  renderOptionGroup("roomsUsed", ROOM_OPTIONS, roomsUsed);
+
+  // Add row
   $("addItemBtn").addEventListener("click", () => {
     const title = $("newItemTitle").value.trim();
     if (!title) return;
@@ -773,25 +713,35 @@
     updateStatusPill();
   });
 
+  // Build protocol
   $("makeProtoBtn").addEventListener("click", () => {
     lastProtocol = buildProtocol();
     $("protoText").textContent = lastProtocol.text;
     enableProtoButtons(true);
   });
 
+  // Email
+  $("emailBtn").addEventListener("click", () => {
+    if (!lastProtocol) return;
+    window.location.href = makeMailto(lastProtocol.text);
+  });
+
+  // Downloads + print
   $("downloadTxtBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
+    const typeShort = (mode === "acceptance") ? "abnahme" : "tage";
     const date = lastProtocol.meta.date || todayISO();
     const name = sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister");
-    download(`${date}_${name}.txt`, "text/plain;charset=utf-8", lastProtocol.text);
+    download(`${date}_${typeShort}_${name}.txt`, "text/plain;charset=utf-8", lastProtocol.text);
   });
 
   $("downloadHtmlBtn").addEventListener("click", () => {
     if (!lastProtocol) return;
+    const typeShort = (mode === "acceptance") ? "abnahme" : "tage";
     const date = lastProtocol.meta.date || todayISO();
     const name = sanitizeName(lastProtocol.meta.project || "Hangar_Studiomeister");
     const html = protocolAsHtml(lastProtocol);
-    download(`${date}_${name}.html`, "text/html;charset=utf-8", html);
+    download(`${date}_${typeShort}_${name}.html`, "text/html;charset=utf-8", html);
   });
 
   $("printBtn").addEventListener("click", () => {
@@ -805,8 +755,10 @@
     w.print();
   });
 
+  // Save / load / reset
   $("saveStateBtn").addEventListener("click", () => {
     const state = {
+      mode,
       meta: {
         project: $("project").value,
         date: $("date").value,
@@ -830,6 +782,8 @@
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return alert("Kein gespeicherter Zwischenstand gefunden.");
     const state = JSON.parse(raw);
+
+    applyMode(state.mode || "acceptance");
 
     $("project").value = state.meta.project || "";
     $("date").value = state.meta.date || todayISO();
@@ -855,7 +809,6 @@
 
   $("resetBtn").addEventListener("click", () => {
     if (!confirm("Wirklich alles zurücksetzen?")) return;
-
     items = structuredClone(DEFAULT_ITEMS);
     techUsed = Object.fromEntries(TECH_OPTIONS.map(x => [x, false]));
     roomsUsed = Object.fromEntries(ROOM_OPTIONS.map(x => [x, false]));
@@ -871,9 +824,9 @@
     $("workEnd").value = "";
     $("workBreak").value = "";
     $("protoText").textContent = "Noch kein Protokoll erstellt.";
-    enableProtoButtons(false);
-    lastProtocol = null;
+    $("emailBtn").disabled = true;
 
+    lastProtocol = null;
     renderItems();
     updateStatusPill();
     updateWorkSummary();
@@ -883,13 +836,152 @@
   $("date").value = todayISO();
   if (!$("location").value) $("location").value = "Hangar Studio";
 
+  function renderOptionGroup(containerId, options, stateObj){
+    const container = $(containerId);
+    container.innerHTML = "";
+    options.forEach(name => {
+      const row = document.createElement("label");
+      row.className = "cbrow";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!stateObj[name];
+      cb.addEventListener("change", () => { stateObj[name] = cb.checked; });
+      const txt = document.createElement("span");
+      txt.textContent = name;
+      row.appendChild(cb); row.appendChild(txt);
+      container.appendChild(row);
+    });
+  }
+
+  // Render initial state
   renderOptionGroup("techUsed", TECH_OPTIONS, techUsed);
   renderOptionGroup("roomsUsed", ROOM_OPTIONS, roomsUsed);
-
   items = ensureItemsValid(items);
   renderItems();
   updateStatusPill();
   updateWorkSummary();
+  applyMode("acceptance");
+
+  // helpers used above
+  function selectedKeys(stateObj){ return Object.keys(stateObj).filter(k => !!stateObj[k]); }
+  function protocolAsHtml(protocol){ return (function(){
+    const esc = escapeHtml;
+    const typeShort = (protocol.mode === "acceptance") ? "abnahme" : "tage";
+    const baseName = `${protocol.meta.date || todayISO()}_${typeShort}_${sanitizeName(protocol.meta.project || "Hangar_Studiomeister")}`;
+
+    const workLine = protocol.wt
+      ? `${esc(protocol.wt.start)}–${esc(protocol.wt.end)} (Pause ${protocol.wt.breakMin} min) = <b>${protocol.wt.h}h ${String(protocol.wt.m).padStart(2,"0")}m</b> (<b>${protocol.wt.dec} h</b>)`
+      : `–`;
+
+    const isAcceptance = (protocol.mode === "acceptance");
+    const techLine = isAcceptance ? (selectedKeys(techUsed).join(", ") || "–") : null;
+    const roomLine = isAcceptance ? (selectedKeys(roomsUsed).join(", ") || "–") : null;
+
+    const rows = items.map((it, i) => {
+      const eff = effectiveStatus(it)==="ok" ? "OK" : "ISSUE";
+      const badge = eff === "OK"
+        ? `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#eaf7ee;color:#1a7f37;font-weight:700;font-size:12px;">OK</span>`
+        : `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#fdecec;color:#b42318;font-weight:700;font-size:12px;">ISSUE</span>`;
+      const note = it.note && it.note.trim()
+        ? `<div style="margin-top:4px;color:#333;"><b>Notiz:</b> ${esc(it.note.trim())}</div>`
+        : `<div style="margin-top:4px;color:#777;">–</div>`;
+      return `
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:48px;">${String(i+1).padStart(2,"0")}</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${esc(it.title)}</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;width:90px;text-align:right;">${badge}</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${note}</td>
+        </tr>
+      `;
+    }).join("");
+
+    return `<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>${esc(baseName)}</title>
+<style>
+  body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; padding:26px; color:#111; background:#fff;}
+  .page{max-width: 900px; margin:0 auto;}
+  .hdr{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding-bottom:12px; border-bottom:2px solid #111;}
+  h1{margin:0; font-size:20px;}
+  .sub{color:#555; font-size:12px; margin-top:4px;}
+  .meta{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:14px;}
+  .box{border:1px solid #ddd; border-radius:12px; padding:12px; background:#fafafa;}
+  .k{color:#555; font-size:12px;}
+  .v{font-weight:650; margin-top:3px;}
+  .summary{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;}
+  .pill{border:1px solid #ddd; border-radius:999px; padding:6px 10px; font-size:12px; background:#fafafa;}
+  table{width:100%; border-collapse:collapse; margin-top:14px; font-size:13px;}
+  th{background:#f3f4f6; text-align:left; padding:10px; border-bottom:1px solid #ddd; font-size:12px; color:#444;}
+  @media print{ body{padding:0;} .page{max-width:none;} .box, .pill{background:#fff;} }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="hdr">
+      <div>
+        <h1>${protocol.mode === "acceptance" ? "Abnahmeprotokoll" : "Tagesprotokoll"} – Hangar Studio (Studiomeister)</h1>
+        <div class="sub">Datum: ${esc(protocol.meta.date || "-")} · Ort: ${esc(protocol.meta.location || "-")}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="sub">Dokument-ID</div>
+        <div style="font-weight:700;">${esc(baseName)}</div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <div class="box"><div class="k">Projekt / Auftrag</div><div class="v">${esc(protocol.meta.project) || "-"}</div></div>
+      <div class="box"><div class="k">Bearbeiter:in</div><div class="v">${esc(protocol.meta.author) || "-"}</div></div>
+      <div class="box"><div class="k">Datum</div><div class="v">${esc(protocol.meta.date) || "-"}</div></div>
+      <div class="box"><div class="k">Ort</div><div class="v">${esc(protocol.meta.location) || "-"}</div></div>
+
+      <div class="box" style="grid-column:1 / -1;">
+        <div class="k">Arbeitszeit (Studiomeister)</div>
+        <div class="v">${workLine}</div>
+      </div>
+
+      ${isAcceptance ? `
+      <div class="box" style="grid-column:1 / -1;">
+        <div class="k">Studiotechnik genutzt</div>
+        <div class="v">${esc(techLine)}</div>
+      </div>
+      <div class="box" style="grid-column:1 / -1;">
+        <div class="k">Räume genutzt</div>
+        <div class="v">${esc(roomLine)}</div>
+      </div>` : ""}
+    </div>
+
+    <div class="summary">
+      <div class="pill"><b>Status:</b> ${protocol.okCount}/${protocol.total} OK</div>
+      <div class="pill"><b>Issues:</b> ${protocol.issueCount}</div>
+    </div>
+
+    ${protocol.meta.generalNotes ? `
+      <div style="margin-top:14px;" class="box">
+        <div class="k">Allgemeine Notizen</div>
+        <div style="margin-top:6px; white-space:pre-wrap;">${esc(protocol.meta.generalNotes)}</div>
+      </div>
+    ` : ""}
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:48px;">#</th>
+          <th>Punkt</th>
+          <th style="width:90px; text-align:right;">Status</th>
+          <th>Notiz</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>
+</body>
+</html>`;
+  })(); }
+
+  function escapeHtml(s){ return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"); }
 </script>
 </body>
 </html>
